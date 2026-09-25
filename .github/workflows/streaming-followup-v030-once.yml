@@ -1,0 +1,84 @@
+name: Aplicar seguimiento Streaming v0.3.0 una vez
+on:
+  push:
+    paths:
+      - '.github/workflows/streaming-followup-v030-once.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar seguimiento y versionado
+        shell: python
+        run: |
+          from pathlib import Path
+
+          js_path = Path('panel/streaming.js')
+          css_path = Path('panel/streaming.css')
+          panel_path = Path('panel/index.html')
+          demo_path = Path('panel/demo.html')
+          test_path = Path('tests/streaming-check.mjs')
+
+          js = js_path.read_text()
+          css = css_path.read_text()
+          panel = panel_path.read_text()
+          demo = demo_path.read_text()
+          test = test_path.read_text()
+
+          js = js.replace('núcleo operativo v0.2.1', 'núcleo operativo v0.3.0')
+          css = css.replace('interfaz operativa v0.2.0', 'interfaz operativa v0.3.0')
+
+          old_filters = '''<button class="ghost active" data-streaming-filter="all" onclick="setStreamingSubscriptionView('all',this)">Todas</button><button class="ghost" data-streaming-filter="active" onclick="setStreamingSubscriptionView('active',this)">Activas</button><button class="ghost" data-streaming-filter="expiring" onclick="setStreamingSubscriptionView('expiring',this)">Por vencer</button><button class="ghost" data-streaming-filter="expired" onclick="setStreamingSubscriptionView('expired',this)">Vencidas</button>'''
+          new_filters = '''<button class="ghost active" data-streaming-filter="all" onclick="setStreamingSubscriptionView('all',this)">Todas</button><button class="ghost" data-streaming-filter="active" onclick="setStreamingSubscriptionView('active',this)">Activas</button><button class="ghost" data-streaming-filter="today" onclick="setStreamingSubscriptionView('today',this)">Hoy</button><button class="ghost" data-streaming-filter="urgent" onclick="setStreamingSubscriptionView('urgent',this)">Próx. 3 días</button><button class="ghost" data-streaming-filter="expiring" onclick="setStreamingSubscriptionView('expiring',this)">7 días</button><button class="ghost" data-streaming-filter="expired" onclick="setStreamingSubscriptionView('expired',this)">Vencidas</button>'''
+          if old_filters not in js:
+              raise SystemExit('No se encontró bloque de filtros esperado')
+          js = js.replace(old_filters, new_filters)
+
+          old_cond = '''if(streamingSubscriptionView==="active"&&st!=="active")return false;if(streamingSubscriptionView==="expiring"&&!(st==="active"&&d!=null&&d>=0&&d<=7))return false;if(streamingSubscriptionView==="expired"&&st!=="expired")return false;'''
+          new_cond = '''if(streamingSubscriptionView==="active"&&st!=="active")return false;if(streamingSubscriptionView==="today"&&!(st==="active"&&d===0))return false;if(streamingSubscriptionView==="urgent"&&!(st==="active"&&d!=null&&d>=0&&d<=3))return false;if(streamingSubscriptionView==="expiring"&&!(st==="active"&&d!=null&&d>=0&&d<=7))return false;if(streamingSubscriptionView==="expired"&&st!=="expired")return false;'''
+          if old_cond not in js:
+              raise SystemExit('No se encontró condición de filtros esperada')
+          js = js.replace(old_cond, new_cond)
+
+          old_wa = '''function streamingOpenWhatsApp(id){const s=streamingSubscription(id),c=s&&streamingCustomer(s.customer_id),p=s&&streamingPlatform(s.platform_id);if(!c?.phone)return streamingToast("Este cliente no tiene WhatsApp registrado");const days=streamingDaysLeft(s.expires_at),when=days<0?`venció el ${streamingDate(s.expires_at)}`:days===0?"vence hoy":`vence el ${streamingDate(s.expires_at)}`;window.open(streamingPhoneUrl(c.phone,`Hola ${c.full_name}, tu suscripción de ${p?.name||"streaming"} ${when}. Escríbeme para renovarla.`),"_blank","noopener")}'''
+          new_wa = '''function streamingOpenWhatsApp(id){const s=streamingSubscription(id),c=s&&streamingCustomer(s.customer_id),p=s&&streamingPlatform(s.platform_id);if(!c?.phone)return streamingToast("Este cliente no tiene WhatsApp registrado");const days=streamingDaysLeft(s.expires_at),date=streamingDate(s.expires_at);let detail="";if(days<0)detail=`venció el ${date}`;else if(days===0)detail="vence hoy";else if(days===1)detail=`vence mañana, ${date}`;else if(days<=3)detail=`vence en ${days} días, el ${date}`;else detail=`vence el ${date}`;const message=`Hola ${c.full_name}, te escribo para recordarte que tu suscripción de ${p?.name||"streaming"} ${detail}. Si deseas renovarla, respóndeme a este mensaje y la gestionamos.`;window.open(streamingPhoneUrl(c.phone,message),"_blank","noopener")}'''
+          if old_wa not in js:
+              raise SystemExit('No se encontró función WhatsApp esperada')
+          js = js.replace(old_wa, new_wa)
+
+          old_status = '''const status=document.getElementById("statusChart");if(status){const expired=streamingSubscriptions.filter(s=>streamingDerivedStatus(s)==="expired").length;status.innerHTML=`<div class="item"><b>Activas</b><span class="pill">${active.length}</span></div><div class="item"><b>Por vencer ≤ 7 días</b><span class="pill">${expiring.length}</span></div><div class="item"><b>Vencidas</b><span class="pill">${expired}</span></div>`}'''
+          new_status = '''const status=document.getElementById("statusChart");if(status){const expired=streamingSubscriptions.filter(s=>streamingDerivedStatus(s)==="expired").length,today=active.filter(s=>streamingDaysLeft(s.expires_at)===0).length,urgent=active.filter(s=>{const d=streamingDaysLeft(s.expires_at);return d!=null&&d>=0&&d<=3}).length;status.innerHTML=`<div class="item"><b>Activas</b><span class="pill">${active.length}</span></div><div class="item"><b>Vencen hoy</b><span class="pill">${today}</span></div><div class="item"><b>Próximos 3 días</b><span class="pill">${urgent}</span></div><div class="item"><b>Por vencer ≤ 7 días</b><span class="pill">${expiring.length}</span></div><div class="item"><b>Vencidas</b><span class="pill">${expired}</span></div>`}'''
+          if old_status not in js:
+              raise SystemExit('No se encontró estado dashboard esperado')
+          js = js.replace(old_status, new_status)
+
+          css += '\n/* Seguimiento de vencimientos v0.3.0 */\n@media(max-width:800px){.streaming-filters{grid-template-columns:repeat(3,minmax(0,1fr))}}\n@media(max-width:460px){.streaming-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}\n'
+
+          panel = panel.replace('Streaming · Versión v0.2.1', 'Streaming · Versión v0.3.0')
+          panel = panel.replace('/panel/streaming.js?v=0201', '/panel/streaming.js?v=0300')
+          panel = panel.replace('/panel/streaming.css?v=0200', '/panel/streaming.css?v=0300')
+          demo = demo.replace('Versión demo · v0.2.1', 'Versión demo · v0.3.0')
+
+          test = test.replace('Streaming · Versión v0.2.1', 'Streaming · Versión v0.3.0')
+          test = test.replace('/panel/streaming.js?v=0201', '/panel/streaming.js?v=0300')
+          test = test.replace('núcleo operativo v0.2.1', 'núcleo operativo v0.3.0')
+          test = test.replace('Versión demo · v0.2.1', 'Versión demo · v0.3.0')
+          test = test.replace('Panel Streaming v0.2.1 validado sin landing propia y con filtro de cupos', 'Panel Streaming v0.3.0 validado con seguimiento de vencimientos')
+          marker = "'Sin cupos · asignación actual'"
+          if marker in test and "'Próx. 3 días'" not in test:
+              test = test.replace(marker, marker+",\n  'Próx. 3 días',\n  'te escribo para recordarte que tu suscripción'")
+
+          js_path.write_text(js)
+          css_path.write_text(css)
+          panel_path.write_text(panel)
+          demo_path.write_text(demo)
+          test_path.write_text(test)
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add panel/streaming.js panel/streaming.css panel/index.html panel/demo.html tests/streaming-check.mjs
+          git commit -m "feat(streaming): seguimiento de vencimientos v0.3.0"
+          git push
