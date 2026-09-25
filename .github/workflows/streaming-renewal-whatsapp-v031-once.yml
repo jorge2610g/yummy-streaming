@@ -1,0 +1,45 @@
+name: Aplicar confirmación WhatsApp Streaming v0.3.1 una vez
+on:
+  push:
+    paths:
+      - '.github/workflows/streaming-renewal-whatsapp-v031-once.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aplicar confirmación de renovación
+        shell: python
+        run: |
+          from pathlib import Path
+          js_path=Path('panel/streaming.js')
+          panel_path=Path('panel/index.html')
+          demo_path=Path('panel/demo.html')
+          test_path=Path('tests/streaming-check.mjs')
+          spec_path=Path('tests/streaming.spec.js')
+          js=js_path.read_text(); panel=panel_path.read_text(); demo=demo_path.read_text(); test=test_path.read_text(); spec=spec_path.read_text()
+          js=js.replace('núcleo operativo v0.3.0','núcleo operativo v0.3.1')
+          old='''function renderStreamingRenewals(){const root=document.getElementById("streamingRenewalList");if(!root)return;root.innerHTML=streamingRenewals.map(r=>{const s=streamingSubscription(r.subscription_id),c=s?streamingCustomer(s.customer_id):null,p=s?streamingPlatform(s.platform_id):null;return `<article class="streaming-row"><div class="streaming-row-main"><div class="streaming-row-title"><b>${streamingEsc(c?.full_name||"Cliente")}</b><span class="streaming-badge good">Renovada</span></div><div class="streaming-row-meta"><span>▶ ${streamingEsc(p?.name||"Plataforma")}</span><span>${streamingDate(r.previous_expires_at)} → ${streamingDate(r.new_expires_at)}</span>${r.payment_method?`<span>${streamingEsc(r.payment_method)}</span>`:""}${Number(r.amount)>0?`<span>${streamingMoney(r.amount,r.currency_code)}</span>`:""}</div><small class="mut">${streamingDate(r.created_at,true)}${r.notes?` · ${streamingEsc(r.notes)}`:""}</small></div></article>`}).join("")||'<div class="streaming-empty">Las renovaciones aparecerán aquí automáticamente.</div>'}'''
+          new='''function renderStreamingRenewals(){const root=document.getElementById("streamingRenewalList");if(!root)return;root.innerHTML=streamingRenewals.map(r=>{const s=streamingSubscription(r.subscription_id),c=s?streamingCustomer(s.customer_id):null,p=s?streamingPlatform(s.platform_id):null;return `<article class="streaming-row"><div class="streaming-row-main"><div class="streaming-row-title"><b>${streamingEsc(c?.full_name||"Cliente")}</b><span class="streaming-badge good">Renovada</span></div><div class="streaming-row-meta"><span>▶ ${streamingEsc(p?.name||"Plataforma")}</span><span>${streamingDate(r.previous_expires_at)} → ${streamingDate(r.new_expires_at)}</span>${r.payment_method?`<span>${streamingEsc(r.payment_method)}</span>`:""}${Number(r.amount)>0?`<span>${streamingMoney(r.amount,r.currency_code)}</span>`:""}</div><small class="mut">${streamingDate(r.created_at,true)}${r.notes?` · ${streamingEsc(r.notes)}`:""}</small></div>${c?.phone?`<div class="streaming-row-actions"><button class="ghost" type="button" onclick="streamingRenewalWhatsApp(${r.id})">WhatsApp confirmación</button></div>`:""}</article>`}).join("")||'<div class="streaming-empty">Las renovaciones aparecerán aquí automáticamente.</div>'}'''
+          if old not in js: raise SystemExit('renderStreamingRenewals esperado no encontrado')
+          js=js.replace(old,new)
+          marker='''function streamingCustomerWhatsApp(id){const c=streamingCustomer(id);if(!c?.phone)return;window.open(streamingPhoneUrl(c.phone,`Hola ${c.full_name}, te escribo por tu servicio de streaming.`),"_blank","noopener")}'''
+          addition=marker+'''\nfunction streamingRenewalWhatsApp(id){const r=streamingRenewals.find(x=>Number(x.id)===Number(id));if(!r)return streamingToast("No encontramos esta renovación");const s=streamingSubscription(r.subscription_id),c=s&&streamingCustomer(s.customer_id),p=s&&streamingPlatform(s.platform_id);if(!c?.phone)return streamingToast("Este cliente no tiene WhatsApp registrado");const message=`Hola ${c.full_name}, tu renovación de ${p?.name||"streaming"} quedó registrada correctamente. Tu servicio queda vigente hasta el ${streamingDate(r.new_expires_at)}. Gracias.`;window.open(streamingPhoneUrl(c.phone,message),"_blank","noopener")}'''
+          if marker not in js: raise SystemExit('streamingCustomerWhatsApp esperado no encontrado')
+          js=js.replace(marker,addition)
+          panel=panel.replace('Streaming · Versión v0.3.0','Streaming · Versión v0.3.1').replace('/panel/streaming.js?v=0300','/panel/streaming.js?v=0301')
+          demo=demo.replace('Versión demo · v0.3.0','Versión demo · v0.3.1')
+          test=test.replace('Streaming · Versión v0.3.0','Streaming · Versión v0.3.1').replace('/panel/streaming.js?v=0300','/panel/streaming.js?v=0301').replace('núcleo operativo v0.3.0','núcleo operativo v0.3.1').replace('Versión demo · v0.3.0','Versión demo · v0.3.1').replace('Panel Streaming v0.3.0 validado con seguimiento de vencimientos','Panel Streaming v0.3.1 validado con confirmación de renovación por WhatsApp')
+          if "'WhatsApp confirmación'" not in test:
+              test=test.replace("'te escribo para recordarte que tu suscripción'", "'te escribo para recordarte que tu suscripción',\n  'WhatsApp confirmación',\n  'tu renovación de'")
+          spec=spec.replace('Versión demo · v0.3.0','Versión demo · v0.3.1')
+          js_path.write_text(js); panel_path.write_text(panel); demo_path.write_text(demo); test_path.write_text(test); spec_path.write_text(spec)
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add panel/streaming.js panel/index.html panel/demo.html tests/streaming-check.mjs tests/streaming.spec.js
+          git commit -m "feat(streaming): confirmación WhatsApp v0.3.1"
+          git push
