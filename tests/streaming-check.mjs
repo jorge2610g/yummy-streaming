@@ -19,7 +19,7 @@ const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const cname = readFileSync('CNAME','utf8').trim();
 
 const panelInlineScripts=[...panel.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)]
-  .filter(m=>!/\\bsrc\\s*=/i.test(m[1]||'')&&!/application\\/ld\\+json/i.test(m[1]||''));
+  .filter(m=>!/\bsrc\s*=/i.test(m[1]||'')&&!/application\/ld\+json/i.test(m[1]||''));
 for (const [index,match] of panelInlineScripts.entries()) {
   try { new Script(match[2],{filename:`panel-inline-${index+1}.js`}); }
   catch (error) { throw new Error(`panel/index.html contiene JavaScript inline inválido: ${error.message}`); }
