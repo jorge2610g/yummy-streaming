@@ -6,27 +6,92 @@
 <meta name="theme-color" content="#0b1020">
 <title>Demo · YummyPro Streaming</title>
 <style>
-:root{--bg:#070b16;--card:#101728;--soft:#151f34;--line:#25314b;--txt:#f8fafc;--mut:#9ca9bd;--a:#8b5cf6;--a2:#c084fc;--ok:#2dd4bf;--warn:#f59e0b}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 80% 5%,#8b5cf625,transparent 32%),var(--bg);color:var(--txt)}button,a{font:inherit}.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}.side{border-right:1px solid var(--line);background:#090f1dcc;padding:22px 14px;position:sticky;top:0;height:100vh}.brand{font-size:23px;font-weight:950;padding:8px 10px 22px}.brand span{color:var(--a2)}.nav{display:grid;gap:8px}.nav button{border:0;text-align:left;padding:12px 14px;border-radius:12px;background:transparent;color:var(--mut);font-weight:800}.nav button.active{background:#8b5cf620;color:#fff}.content{padding:24px;min-width:0}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:900;color:var(--a2)}h1{margin:5px 0 2px;font-size:30px}.mut{color:var(--mut)}.badge{padding:8px 11px;border-radius:999px;background:#8b5cf61d;border:1px solid #8b5cf650;color:#d8c7ff;font-weight:850;font-size:12px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:18px}.card{background:linear-gradient(145deg,#121a2d,#0d1424);border:1px solid var(--line);border-radius:18px;padding:18px}.metric{grid-column:span 3}.wide{grid-column:span 8}.sidecard{grid-column:span 4}.metric strong{display:block;font-size:30px;margin-top:9px}.list{display:grid;gap:10px;margin-top:14px}.item{display:grid;grid-template-columns:42px 1fr auto;gap:11px;align-items:center;padding:12px;border-radius:14px;background:var(--soft);border:1px solid #ffffff08}.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#ffffff0b;font-size:22px}.pill{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#ffffff0b}.ok{color:var(--ok)}.warn{color:var(--warn)}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:900}.primary{background:var(--a);color:white}.ghost{border:1px solid var(--line);color:white}.notice{margin-top:18px;padding:13px 15px;border-radius:14px;background:#8b5cf612;border:1px solid #8b5cf640;color:#d8c7ff}.bar{height:8px;border-radius:999px;background:#ffffff0c;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--a2))}.v1{width:78%}.v2{width:44%}.v3{width:22%}@media(max-width:900px){.shell{grid-template-columns:1fr}.side{height:auto;position:static;border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(3,1fr)}.content{padding:16px}.metric{grid-column:span 6}.wide,.sidecard{grid-column:1/-1}}@media(max-width:520px){.nav{grid-template-columns:1fr 1fr}.metric{grid-column:1/-1}.top{align-items:flex-start;flex-direction:column}.item{grid-template-columns:38px 1fr}.item>.pill{grid-column:2}.cta{display:grid}.btn{width:100%}}
+:root{--bg:#070b16;--card:#101728;--soft:#151f34;--line:#25314b;--txt:#f8fafc;--mut:#9ca9bd;--a:#8b5cf6;--a2:#c084fc;--ok:#2dd4bf;--warn:#f59e0b;--bad:#fb7185}*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 80% 5%,#8b5cf625,transparent 32%),var(--bg);color:var(--txt)}button,a{font:inherit}.shell{display:grid;grid-template-columns:230px 1fr;min-height:100vh}.side{border-right:1px solid var(--line);background:#090f1dcc;padding:22px 14px;position:sticky;top:0;height:100vh}.brand{font-size:23px;font-weight:950;padding:8px 10px 22px}.brand span{color:var(--a2)}.nav{display:grid;gap:8px}.nav button{border:0;text-align:left;padding:12px 14px;border-radius:12px;background:transparent;color:var(--mut);font-weight:800;cursor:pointer}.nav button.active{background:#8b5cf620;color:#fff}.content{padding:24px;min-width:0}.top{display:flex;justify-content:space-between;gap:12px;align-items:center}.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:900;color:var(--a2)}h1{margin:5px 0 2px;font-size:30px}.mut{color:var(--mut)}.badge{padding:8px 11px;border-radius:999px;background:#8b5cf61d;border:1px solid #8b5cf650;color:#d8c7ff;font-weight:850;font-size:12px}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin-top:18px}.card{background:linear-gradient(145deg,#121a2d,#0d1424);border:1px solid var(--line);border-radius:18px;padding:18px}.metric{grid-column:span 3}.wide{grid-column:span 8}.sidecard{grid-column:span 4}.metric strong{display:block;font-size:30px;margin-top:9px}.list{display:grid;gap:10px;margin-top:14px}.item{display:grid;grid-template-columns:42px 1fr auto;gap:11px;align-items:center;padding:12px;border-radius:14px;background:var(--soft);border:1px solid #ffffff08}.logo{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#ffffff0b;font-size:22px}.pill{font-size:11px;font-weight:900;padding:6px 8px;border-radius:999px;background:#ffffff0b}.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 16px;border-radius:12px;text-decoration:none;font-weight:900}.primary{background:var(--a);color:white}.ghost{border:1px solid var(--line);color:white}.notice{margin-top:18px;padding:13px 15px;border-radius:14px;background:#8b5cf612;border:1px solid #8b5cf640;color:#d8c7ff}.bar{height:8px;border-radius:999px;background:#ffffff0c;overflow:hidden;margin-top:9px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--a2))}.v1{width:78%}.v2{width:44%}.v3{width:22%}.demo-section{display:none}.demo-section.active{display:block}.section-title{margin:6px 0 0}.table-head{display:grid;grid-template-columns:1.2fr 1fr 1fr .8fr;gap:10px;padding:0 12px 8px;color:var(--mut);font-size:11px;font-weight:900;text-transform:uppercase}.row4{display:grid;grid-template-columns:1.2fr 1fr 1fr .8fr;gap:10px;align-items:center}.empty{padding:28px;text-align:center;color:var(--mut)}@media(max-width:900px){.shell{grid-template-columns:1fr}.side{height:auto;position:static;border-right:0;border-bottom:1px solid var(--line)}.nav{grid-template-columns:repeat(3,1fr)}.content{padding:16px}.metric{grid-column:span 6}.wide,.sidecard{grid-column:1/-1}}@media(max-width:620px){.nav{grid-template-columns:1fr 1fr}.metric{grid-column:1/-1}.top{align-items:flex-start;flex-direction:column}.item{grid-template-columns:38px 1fr}.item>.pill{grid-column:2}.cta{display:grid}.btn{width:100%}.table-head{display:none}.row4{grid-template-columns:1fr}.row4 .pill{justify-self:start}}
 </style>
 </head>
 <body>
 <div class="shell">
-<aside class="side"><div class="brand">Yummy<span>Pro</span> Streaming</div><div class="nav"><button class="active">▦ Dashboard</button><button>▣ Suscripciones</button><button>◎ Clientes</button><button>▣ Cuentas / Cupos</button><button>▶ Plataformas</button><button>↻ Renovaciones</button></div></aside>
+<aside class="side">
+ <div class="brand">Yummy<span>Pro</span> Streaming</div>
+ <div class="nav" id="demoNav">
+  <button class="active" data-section="dashboard">▦ Dashboard</button>
+  <button data-section="subscriptions">▣ Suscripciones</button>
+  <button data-section="customers">◎ Clientes</button>
+  <button data-section="accounts">▣ Cuentas / Cupos</button>
+  <button data-section="platforms">▶ Plataformas</button>
+  <button data-section="renewals">↻ Renovaciones</button>
+ </div>
+</aside>
 <main class="content">
-<div class="top"><div><div class="eyebrow">DEMOSTRACIÓN · SOLO LECTURA</div><h1>Panel Streaming</h1><div class="mut">Ejemplo del control de clientes, cupos, cobros, entregas, vencimientos y renovaciones.</div></div><span class="badge">Versión demo · v0.5.0</span></div>
-<div class="grid">
-<section class="card metric"><span class="mut">Suscripciones activas</span><strong>128</strong><small class="ok">Accesos vigentes</small></section>
-<section class="card metric"><span class="mut">Vencen en 7 días</span><strong>24</strong><small class="warn">Requieren seguimiento</small></section>
-<section class="card metric"><span class="mut">Clientes activos</span><strong>97</strong><small class="mut">Directorio actual</small></section>
-<section class="card metric"><span class="mut">Cupos libres</span><strong>37</strong><small class="ok">Disponibles ahora</small></section>
-<section class="card wide"><div class="eyebrow">VENCIMIENTOS PRÓXIMOS</div><h2 style="margin:6px 0 0">Clientes por renovar</h2><div class="list">
-<div class="item"><div class="logo">📺</div><div><b>Ana · Netflix</b><div class="mut">Cuenta Familiar 1 · contacto por WhatsApp</div><div class="bar"><i class="v1"></i></div></div><span class="pill warn">1 día</span></div>
-<div class="item"><div class="logo">▶️</div><div><b>Carlos · Prime Video</b><div class="mut">Cuenta Principal · renovación mensual</div><div class="bar"><i class="v2"></i></div></div><span class="pill">5 días</span></div>
-<div class="item"><div class="logo">✨</div><div><b>María · Disney+</b><div class="mut">Perfil 3 · plan activo</div><div class="bar"><i class="v3"></i></div></div><span class="pill ok">12 días</span></div>
-</div></section>
-<section class="card sidecard"><div class="eyebrow">CUENTAS Y CUPOS</div><h2 style="margin:6px 0 12px">Disponibilidad</h2><div class="list"><div class="item"><div class="logo">📺</div><div><b>Netflix Familiar 1</b><div class="mut">3 de 5 en uso</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">▶️</div><div><b>Prime Principal</b><div class="mut">4 de 6 en uso</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">✨</div><div><b>Disney Familia</b><div class="mut">5 de 5 en uso</div></div><span class="pill warn">Lleno</span></div></div></section>
-</div>
-<div class="notice">La versión real registra clientes, plataformas, cuentas/cupos, suscripciones, vencimientos y cada renovación. Las contraseñas de los servicios de streaming no se almacenan en YummyPro.</div>
-<div class="cta"><a class="btn primary" href="https://web.yummypro.online/#streaming">Crear cuenta · 30 días gratis</a><a class="btn ghost" href="https://web.yummypro.online/#streaming">Volver a YummyPro</a></div>
+<div class="top"><div><div class="eyebrow">DEMOSTRACIÓN · SOLO LECTURA</div><h1 id="demoTitle">Panel Streaming</h1><div class="mut">Ejemplo navegable del control de clientes, cupos, cobros, entregas, vencimientos y renovaciones.</div></div><span class="badge">Versión demo · v1.0.0</span></div>
+
+<section class="demo-section active" data-panel="dashboard">
+ <div class="grid">
+  <section class="card metric"><span class="mut">Suscripciones activas</span><strong>128</strong><small class="ok">Accesos vigentes</small></section>
+  <section class="card metric"><span class="mut">Vencen en 7 días</span><strong>24</strong><small class="warn">Requieren seguimiento</small></section>
+  <section class="card metric"><span class="mut">Clientes activos</span><strong>97</strong><small class="mut">Directorio actual</small></section>
+  <section class="card metric"><span class="mut">Cupos libres</span><strong>37</strong><small class="ok">Disponibles ahora</small></section>
+  <section class="card wide"><div class="eyebrow">VENCIMIENTOS PRÓXIMOS</div><h2 class="section-title">Clientes por renovar</h2><div class="list">
+   <div class="item"><div class="logo">📺</div><div><b>Ana · Netflix</b><div class="mut">Cuenta Familiar 1 · contacto por WhatsApp</div><div class="bar"><i class="v1"></i></div></div><span class="pill warn">1 día</span></div>
+   <div class="item"><div class="logo">▶️</div><div><b>Carlos · Prime Video</b><div class="mut">Cuenta Principal · renovación mensual</div><div class="bar"><i class="v2"></i></div></div><span class="pill">5 días</span></div>
+   <div class="item"><div class="logo">✨</div><div><b>María · Disney+</b><div class="mut">Perfil 3 · plan activo</div><div class="bar"><i class="v3"></i></div></div><span class="pill ok">12 días</span></div>
+  </div></section>
+  <section class="card sidecard"><div class="eyebrow">CUENTAS Y CUPOS</div><h2 class="section-title">Disponibilidad</h2><div class="list"><div class="item"><div class="logo">📺</div><div><b>Netflix Familiar 1</b><div class="mut">3 de 5 en uso</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">▶️</div><div><b>Prime Principal</b><div class="mut">4 de 6 en uso</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">✨</div><div><b>Disney Familia</b><div class="mut">5 de 5 en uso</div></div><span class="pill warn">Lleno</span></div></div></section>
+ </div>
+</section>
+
+<section class="demo-section" data-panel="subscriptions">
+ <div class="card" style="margin-top:18px"><div class="eyebrow">SUSCRIPCIONES</div><h2 class="section-title">Control de accesos activos</h2><div class="list">
+  <div class="item row4"><b>Ana Pérez</b><span>Netflix Premium</span><span class="warn">Vence mañana</span><span class="pill ok">Pagada</span></div>
+  <div class="item row4"><b>Carlos Rojas</b><span>Prime Video</span><span>5 días</span><span class="pill warn">Por cobrar</span></div>
+  <div class="item row4"><b>María Soto</b><span>Disney+</span><span>12 días</span><span class="pill ok">Entregada</span></div>
+ </div></div>
+</section>
+
+<section class="demo-section" data-panel="customers">
+ <div class="grid">
+  <section class="card metric"><span class="mut">Clientes</span><strong>97</strong><small class="ok">91 activos</small></section>
+  <section class="card metric"><span class="mut">Con WhatsApp</span><strong>89</strong><small class="mut">Listos para avisos</small></section>
+  <section class="card wide"><div class="eyebrow">DIRECTORIO</div><div class="list"><div class="item"><div class="logo">AP</div><div><b>Ana Pérez</b><div class="mut">Netflix · +56 9 0000 0001</div></div><span class="pill ok">Activa</span></div><div class="item"><div class="logo">CR</div><div><b>Carlos Rojas</b><div class="mut">Prime Video · +56 9 0000 0002</div></div><span class="pill">Cliente</span></div><div class="item"><div class="logo">MS</div><div><b>María Soto</b><div class="mut">Disney+ · +56 9 0000 0003</div></div><span class="pill ok">Activa</span></div></div></section>
+ </div>
+</section>
+
+<section class="demo-section" data-panel="accounts">
+ <div class="grid">
+  <section class="card metric"><span class="mut">Cuentas activas</span><strong>31</strong></section>
+  <section class="card metric"><span class="mut">Cupos totales</span><strong>142</strong></section>
+  <section class="card metric"><span class="mut">Cupos libres</span><strong>37</strong><small class="ok">Disponibles</small></section>
+  <section class="card wide"><div class="eyebrow">CUENTAS</div><div class="list"><div class="item"><div class="logo">📺</div><div><b>Netflix Familiar 1</b><div class="mut">3 de 5 cupos ocupados</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">▶️</div><div><b>Prime Principal</b><div class="mut">4 de 6 cupos ocupados</div></div><span class="pill ok">2 libres</span></div><div class="item"><div class="logo">✨</div><div><b>Disney Familia</b><div class="mut">5 de 5 cupos ocupados</div></div><span class="pill warn">Lleno</span></div></div></section>
+ </div>
+</section>
+
+<section class="demo-section" data-panel="platforms">
+ <div class="grid">
+  <section class="card metric"><span class="mut">Plataformas</span><strong>8</strong><small class="ok">7 activas</small></section>
+  <section class="card wide"><div class="eyebrow">CATÁLOGO</div><div class="list"><div class="item"><div class="logo">📺</div><div><b>Netflix</b><div class="mut">Mensual · perfiles disponibles</div></div><span class="pill ok">Activa</span></div><div class="item"><div class="logo">▶️</div><div><b>Prime Video</b><div class="mut">Mensual · acceso principal</div></div><span class="pill ok">Activa</span></div><div class="item"><div class="logo">✨</div><div><b>Disney+</b><div class="mut">Mensual · familiar</div></div><span class="pill ok">Activa</span></div></div></section>
+ </div>
+</section>
+
+<section class="demo-section" data-panel="renewals">
+ <div class="grid">
+  <section class="card metric"><span class="mut">Renovaciones · 7 días</span><strong>18</strong><small class="ok">Registradas</small></section>
+  <section class="card metric"><span class="mut">Pendientes hoy</span><strong>6</strong><small class="warn">Revisar</small></section>
+  <section class="card wide"><div class="eyebrow">HISTORIAL RECIENTE</div><div class="list"><div class="item"><div class="logo">↻</div><div><b>Ana Pérez</b><div class="mut">Netflix · renovada por 30 días</div></div><span class="pill ok">Hoy</span></div><div class="item"><div class="logo">↻</div><div><b>Pedro Díaz</b><div class="mut">Disney+ · renovada por 30 días</div></div><span class="pill">Ayer</span></div><div class="item"><div class="logo">↻</div><div><b>Laura Mora</b><div class="mut">Prime Video · renovada por 30 días</div></div><span class="pill">Hace 2 días</span></div></div></section>
+ </div>
+</section>
+
+<div class="notice">Esta demostración es solo lectura y no usa datos reales. El panel real permite gestionar clientes, plataformas, cuentas/cupos, suscripciones, cobros, entregas, vencimientos y renovaciones. Las contraseñas de servicios de streaming no se almacenan en YummyPro.</div>
+<div class="cta"><a class="btn primary" href="https://streaming.yummypro.online/panel/">Ingresar a mi panel</a><a class="btn ghost" href="https://web.yummypro.online/#streaming">Crear cuenta · 30 días gratis</a><a class="btn ghost" href="https://web.yummypro.online/#streaming">Volver a YummyPro</a></div>
 </main></div>
+<script>
+const titles={dashboard:'Panel Streaming',subscriptions:'Suscripciones',customers:'Clientes',accounts:'Cuentas / Cupos',platforms:'Plataformas',renewals:'Renovaciones'};
+document.getElementById('demoNav').addEventListener('click',e=>{
+ const btn=e.target.closest('button[data-section]');if(!btn)return;
+ const section=btn.dataset.section;
+ document.querySelectorAll('#demoNav button').forEach(b=>b.classList.toggle('active',b===btn));
+ document.querySelectorAll('.demo-section').forEach(p=>p.classList.toggle('active',p.dataset.panel===section));
+ document.getElementById('demoTitle').textContent=titles[section]||'Panel Streaming';
+ window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
 </body></html>
