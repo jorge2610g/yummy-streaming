@@ -1,11 +1,11 @@
-// Validación E2E final YummyPro Streaming v1.1.1
+// Validación E2E final YummyPro Streaming v1.1.2
 const { test, expect } = require('@playwright/test');
 
 test('tienda Streaming muestra la experiencia de compra del cliente sin etiquetas demo', async ({ page }) => {
   await page.goto('/demo/');
   await expect(page).toHaveTitle(/YummyPlay · Streaming/);
   await expect(page.getByText('STREAMING · ENTRETENIMIENTO')).toBeVisible();
-  await expect(page.getByText('Powered by YummyPro · v1.1.1')).toBeVisible();
+  await expect(page.getByText('Powered by YummyPro · v1.1.2')).toBeVisible();
   await expect(page.getByText(/TIENDA DEMO|Demo comercial|DEMOSTRACIÓN DEL NEGOCIO/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: /Elige tu plataforma/ })).toBeVisible();
   await expect(page.getByText('Servicios disponibles')).toBeVisible();
@@ -131,4 +131,16 @@ test('centro de control Streaming v1.0.0 esta disponible y no exporta secretos',
   expect(body).toContain('streamingControlSafeSnapshot');
   expect(body).not.toContain('access_token');
   expect(body).not.toContain('client_secret');
+});
+
+
+test('vista administrativa valida negocio y tiene timeout de arranque', async ({ request }) => {
+  const response = await request.get('/panel/');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('adminPreviewTimed');
+  expect(body).toContain('clearAdminPreviewSessionHash');
+  expect(body).toContain('La verificación del negocio');
+  expect(body).toContain('ya no existe');
+  expect(body).toContain('maybeSingle()');
 });
