@@ -3272,14 +3272,25 @@ function applyRoleAccess(){
  syncSubscriptionBannerForActiveTab();
  document.getElementById("viewMenuLink")?.style.setProperty("display",currentRole==="restaurant"&&!isStreamingBusiness()?"":"none",currentRole==="restaurant"&&!isStreamingBusiness()?"":"important");
 }
+function clearAdminPreviewSessionHash(){
+ const raw=String(location.hash||"").replace(/^#/,"");if(!raw)return;
+ const params=new URLSearchParams(raw);
+ params.delete("admin_access");params.delete("admin_refresh");
+ const clean=location.pathname+location.search+(params.toString()?"#"+params.toString():"");
+ history.replaceState(null,"",clean)
+}
 function consumeAdminPreviewSessionHash(){
  const raw=String(location.hash||"").replace(/^#/,"");if(!raw)return null;
  const params=new URLSearchParams(raw),access_token=params.get("admin_access"),refresh_token=params.get("admin_refresh");
  if(!access_token||!refresh_token)return null;
- params.delete("admin_access");params.delete("admin_refresh");
- const clean=location.pathname+location.search+(params.toString()?"#"+params.toString():"");
- history.replaceState(null,"",clean);
  return {access_token,refresh_token}
+}
+function adminPreviewTimed(promise,label,timeoutMs=8000){
+ let timer=null;
+ return Promise.race([
+  Promise.resolve(promise),
+  new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error(label+" tardó demasiado.")),timeoutMs)})
+ ]).finally(()=>{if(timer)clearTimeout(timer)})
 }
 function consumeLandingSessionHash(){
  const raw=String(location.hash||"").replace(/^#/,"");if(!raw)return null;
@@ -3305,14 +3316,39 @@ async function bootAdminPreview(payload){
  if(adminPreviewInitialized)return;
  if(adminPreviewBootPromise)return adminPreviewBootPromise;
  adminPreviewBootPromise=(async()=>{try{
-  if(payload?.access_token&&payload?.refresh_token){const {error:setSessionError}=await sb.auth.setSession({access_token:payload.access_token,refresh_token:payload.refresh_token});if(setSessionError)throw setSessionError;}
+  if(payload?.access_token&&payload?.refresh_token){
+   const sessionResult=await adminPreviewTimed(
+    sb.auth.setSession({access_token:payload.access_token,refresh_token:payload.refresh_token}),
+    "La validación de la sesión administrativa",
+    8000
+   );
+   if(sessionResult.error)throw sessionResult.error;
+   clearAdminPreviewSessionHash();
+  }
   if(payload?.restaurant_id){const url=new URL(location.href);url.searchParams.set("admin_preview",payload.restaurant_id);url.searchParams.set("tab",payload.tab||"dashboard");history.replaceState(null,"",url)}
   const previewId=Number(new URLSearchParams(location.search).get("admin_preview")||payload?.restaurant_id||0);
   if(!previewId)throw new Error("No se recibió el negocio que debe abrirse.");
-  const {data:{user}}=await sb.auth.getUser();if(!user)throw new Error("No se recibió una sesión administrativa válida.");
-  const {data:role,error:roleError}=await sb.rpc("current_account_role");if(roleError||role!=="admin")throw new Error("La sesión recibida no corresponde al administrador.");
-  await enter(user);adminPreviewInitialized=adminPreviewMode;
+
+  const userResult=await adminPreviewTimed(sb.auth.getUser(),"La verificación del administrador",8000);
+  const user=userResult?.data?.user||null;
+  if(!user)throw new Error("No se recibió una sesión administrativa válida.");
+
+  const roleResult=await adminPreviewTimed(sb.rpc("current_account_role"),"La verificación del rol administrador",8000);
+  if(roleResult.error||roleResult.data!=="admin")throw new Error("La sesión recibida no corresponde al administrador.");
+
+  const businessResult=await adminPreviewTimed(
+   sb.from("restaurants").select("id,name,business_type,active").eq("id",previewId).maybeSingle(),
+   "La verificación del negocio",
+   8000
+  );
+  if(businessResult.error)throw businessResult.error;
+  if(!businessResult.data)throw new Error("El negocio #"+previewId+" ya no existe. Actualiza el panel de administración y vuelve a intentarlo.");
+  if(String(businessResult.data.business_type||"").toLowerCase()!=="streaming")throw new Error("El negocio seleccionado no pertenece al módulo Streaming.");
+
+  await adminPreviewTimed(enter(user),"La apertura del panel Streaming",18000);
+  adminPreviewInitialized=adminPreviewMode;
  }catch(err){
+  clearAdminPreviewSessionHash();
   console.error("No se pudo iniciar la vista administrativa",err);
   showAdminPreviewFailure((err.message||"No se pudo abrir la vista administrativa.")+" Vuelve al administrador e inténtalo nuevamente.");
  }finally{adminPreviewBootPromise=null}})();
@@ -4361,7 +4397,9 @@ async function loadRestaurants(){
   if(error)throw error;
   restaurants=data||[];
   const r=restaurants[0];
-  if(r){currentRestaurantConfig=r;syncBusinessTypeUi();syncRestaurantHeader(r);renderSubscriptionBanner(r);if((currentRole==="restaurant"||currentRole==="manager")&&subscriptionModuleAccess!==null){await loadSubscriptionModuleAccess();applyRoleAccess()}}
+  if(!r)throw new Error("El negocio #"+currentRestaurant+" ya no existe o no está disponible.");
+  currentRestaurantConfig=r;syncBusinessTypeUi();syncRestaurantHeader(r);renderSubscriptionBanner(r);
+  if((currentRole==="restaurant"||currentRole==="manager")&&subscriptionModuleAccess!==null){await loadSubscriptionModuleAccess();applyRoleAccess()}
 }
 async function loadCategories(){const {data,error}=await sb.from("restaurant_categories").select("*").eq("restaurant_id",currentRestaurant).order("sort_order");if(error)return toast(error.message);categories=data||[];const categoryListEl=document.getElementById("categoryList");if(!categoryListEl)return;categoryListEl.innerHTML=categories.map(c=>`<article class="item"><div class="row between"><div><span class="pill">Orden ${Number(c.sort_order||0)}</span><h3 style="margin-top:10px">${esc(c.name)}</h3><div class="mut">/${esc(c.slug)}</div><div class="${c.active?"status-active":"status-inactive"}" style="margin-top:8px;font-weight:800">${c.active?"● Visible en el menú":"● Categoría oculta"}</div></div><div class="actions"><button class="ghost" onclick="editCategory(${c.id})">Editar</button><button class="danger" onclick="deleteCategory(${c.id})">Eliminar</button></div></div></article>`).join("")||"<p class='mut'>Todavía no tienes categorías. Crea una para organizar tu menú.</p>";pcat.innerHTML='<option value="">Sin categoría</option>'+categories.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("")}
 function openCategoryModal(){clearCategory();document.getElementById("categoryTitle").textContent="Nueva categoría";document.getElementById("categoryModal")?.classList.add("open");document.getElementById("categoryModal")?.setAttribute("aria-hidden","false");setTimeout(()=>cname?.focus(),80)}
