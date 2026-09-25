@@ -26,11 +26,11 @@ for (const marker of [
   'streaming_platforms',
   'streaming_renewals',
   'QR / Enlace',
-  'Streaming · Versión v0.5.0',
+  'Streaming · Versión v0.6.0',
   'create_my_trial_restaurant_v3',
   'manifest.webmanifest',
   '/panel/streaming.js?v=0400',
-  '/panel/streaming-delivery.js?v=0500'
+  '/panel/streaming-delivery.js?v=0600'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 
 for (const marker of [
