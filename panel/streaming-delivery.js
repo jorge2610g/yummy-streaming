@@ -58,7 +58,7 @@ function streamingOpenDelivery(id){
 async function saveStreamingDelivery(){
  const id=Number(document.getElementById('streamingDeliverySubId')?.value),state=document.getElementById('streamingDeliveryState')?.value==='delivered'?'delivered':'pending',s=streamingSubscription(id);if(!id||!s)return streamingToast('Suscripción no encontrada');
  const row={delivery_status:state,delivered_at:state==='delivered'?(s.delivered_at||new Date().toISOString()):null,updated_at:new Date().toISOString()};
- const {error}=await sb.from('streaming_subscriptions').update(row).eq('id',id).eq('restaurant_id',currentRestaurant);if(error)return streamingToast(error.message);streamingCloseModal();await streamingFetchAll();renderStreamingSubscriptions();streamingToast(state==='delivered'?'Suscripción marcada como entregada':'Entrega marcada como pendiente')
+ const {error}=await sb.from('streaming_subscriptions').update(row).eq('id',id).eq('restaurant_id',currentRestaurant);if(error)return streamingToast(error.message);const orderId=s.order_id||null;streamingCloseModal();await streamingFetchAll();renderStreamingSubscriptions();if(orderId&&typeof streamingNotifyCustomerOrder==='function')await streamingNotifyCustomerOrder(orderId,state==='delivered'?'access_delivered':'delivery_pending');streamingToast(state==='delivered'?'Suscripción marcada como entregada':'Entrega marcada como pendiente')
 }
 function streamingDeliveryWhatsApp(id){
  const s=streamingSubscription(id),c=s&&streamingCustomer(s.customer_id),p=s&&streamingPlatform(s.platform_id);if(!c?.phone)return streamingToast('Este cliente no tiene WhatsApp registrado');
