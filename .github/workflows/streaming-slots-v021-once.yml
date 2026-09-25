@@ -1,0 +1,60 @@
+name: Aplicar filtro de cupos Streaming v0.2.1 una vez
+on:
+  push:
+    paths:
+      - '.github/workflows/streaming-slots-v021-once.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ocultar cuentas llenas sin romper ediciones
+        shell: python
+        run: |
+          from pathlib import Path
+
+          js_path = Path('panel/streaming.js')
+          text = js_path.read_text(encoding='utf-8')
+          old = '''function streamingAccountOptions(platformId,selected){return `<option value="">Sin cuenta asignada</option>`+streamingAccounts.filter(a=>(a.active||Number(a.id)===Number(selected))&&(!platformId||Number(a.platform_id)===Number(platformId))).map(a=>{const free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id));return `<option value="${a.id}" ${Number(a.id)===Number(selected)?"selected":""}>${streamingEsc(a.label)} · ${free}/${a.max_slots} libres</option>`}).join("")}'''
+          new = '''function streamingAccountOptions(platformId,selected){const selectedId=Number(selected)||null;return `<option value="">Sin cuenta asignada</option>`+streamingAccounts.filter(a=>{if(platformId&&Number(a.platform_id)!==Number(platformId))return false;const isSelected=selectedId!=null&&Number(a.id)===selectedId,free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id));return isSelected||(a.active&&free>0)}).map(a=>{const free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id)),isSelected=selectedId!=null&&Number(a.id)===selectedId,availability=free>0?`${free}/${a.max_slots} libres`:isSelected?"Sin cupos · asignación actual":"Sin cupos";return `<option value="${a.id}" ${isSelected?"selected":""}>${streamingEsc(a.label)} · ${availability}</option>`}).join("")}'''
+          if old not in text:
+              raise SystemExit('No se encontro streamingAccountOptions esperado')
+          text = text.replace(old, new, 1)
+          text = text.replace('núcleo operativo v0.2.0', 'núcleo operativo v0.2.1', 1)
+          text = text.replace('/panel/streaming.css?v=0200', '/panel/streaming.css?v=0201', 1)
+          js_path.write_text(text, encoding='utf-8')
+
+          panel = Path('panel/index.html')
+          p = panel.read_text(encoding='utf-8')
+          p = p.replace('Streaming · Versión v0.2.0', 'Streaming · Versión v0.2.1', 1)
+          p = p.replace('/panel/streaming.js?v=0200', '/panel/streaming.js?v=0201', 1)
+          panel.write_text(p, encoding='utf-8')
+
+          demo = Path('panel/demo.html')
+          d = demo.read_text(encoding='utf-8').replace('Versión demo · v0.2.0', 'Versión demo · v0.2.1')
+          demo.write_text(d, encoding='utf-8')
+
+          spec = Path('tests/streaming.spec.js')
+          s = spec.read_text(encoding='utf-8').replace('Versión demo · v0.2.0', 'Versión demo · v0.2.1')
+          spec.write_text(s, encoding='utf-8')
+
+          check = Path('tests/streaming-check.mjs')
+          c = check.read_text(encoding='utf-8')
+          c = c.replace('Streaming · Versión v0.2.0', 'Streaming · Versión v0.2.1')
+          c = c.replace('/panel/streaming.js?v=0200', '/panel/streaming.js?v=0201')
+          c = c.replace('núcleo operativo v0.2.0', 'núcleo operativo v0.2.1')
+          c = c.replace('Versión demo · v0.2.0', 'Versión demo · v0.2.1')
+          c = c.replace('Demo Streaming v0.2.0 incompleta', 'Demo Streaming v0.2.1 incompleta')
+          c = c.replace("'YummyPro no guarda contraseñas'", "'YummyPro no guarda contraseñas',\n  'Sin cupos · asignación actual'")
+          c = c.replace("console.log('Panel Streaming v0.2.0 validado sin landing propia');", "console.log('Panel Streaming v0.2.1 validado sin landing propia y con filtro de cupos');")
+          check.write_text(c, encoding='utf-8')
+      - name: Guardar cambio y retirar automatizacion temporal
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm .github/workflows/streaming-slots-v021-once.yml
+          git add panel/streaming.js panel/index.html panel/demo.html tests/streaming.spec.js tests/streaming-check.mjs .github/workflows/streaming-slots-v021-once.yml
+          git commit -m "fix(streaming): ocultar cuentas sin cupos v0.2.1"
+          git push
