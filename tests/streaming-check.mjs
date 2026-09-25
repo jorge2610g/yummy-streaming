@@ -80,6 +80,21 @@ for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','str
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-for (const marker of ['entrega y activación v0.5.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación']) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
+for (const marker of [
+  'entrega, activación y centro de acciones v0.6.0',
+  'delivery_status',
+  'delivered_at',
+  'streamingOpenDelivery',
+  'Por entregar',
+  'Avisar activación',
+  'streamingActionCenter',
+  'Centro de acciones',
+  'Cobros pendientes',
+  'Entregas pendientes',
+  'Vencen en 3 días',
+  'Suscripciones vencidas',
+  "streamingActionFilter('payment_pending')",
+  "streamingActionFilter('delivery_pending')"
+]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
 
-console.log('Panel Streaming v0.5.0 validado; raíz y demo públicas aisladas del panel real');
+console.log('Panel Streaming v0.6.0 validado con centro de acciones; raíz y demo públicas aisladas del panel real');
