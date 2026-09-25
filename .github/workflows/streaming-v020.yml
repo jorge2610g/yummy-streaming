@@ -1,0 +1,23 @@
+name: Integrar Streaming v0.2.0
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/streaming-v020.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrar panel Streaming
+        run: python scripts/patch_streaming_v020.py
+      - name: Guardar integración
+        run: |
+          git config user.name "YummyPro Automation"
+          git config user.email "actions@users.noreply.github.com"
+          git add panel/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(streaming): activar núcleo real v0.2.0"
+          git push
