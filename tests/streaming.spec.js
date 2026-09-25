@@ -1,4 +1,4 @@
-// Validación E2E final YummyPro Streaming v0.8.0
+// Validación E2E final YummyPro Streaming v0.9.0
 const { test, expect } = require('@playwright/test');
 
 test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
@@ -51,16 +51,14 @@ test('recordatorios Streaming v0.8.0 estan publicados y persistentes', async ({ 
   expect(body).not.toContain('localStorage');
 });
 
-
 test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v0.8.0');
+  expect(body).toContain('Streaming · Versión v0.9.0');
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
-
 
 test('agenda diaria Streaming v0.9.0 esta disponible', async ({ request }) => {
   const response = await request.get('/panel/streaming-agenda.js?v=0900');
