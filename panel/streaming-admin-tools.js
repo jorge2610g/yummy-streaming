@@ -1,4 +1,4 @@
-/* YummyPro Streaming · herramientas de administración v1.1.5 */
+/* YummyPro Streaming · herramientas de administración v1.2.0 */
 (function(){
  const PLAN_MODULES=[
   ["dashboard","Dashboard"],
