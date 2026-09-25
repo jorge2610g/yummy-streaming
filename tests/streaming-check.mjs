@@ -55,8 +55,8 @@ if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('
 for (const marker of ['Servicios disponibles','Netflix Premium','Disney+ Premium','Prime Video','Spotify Premium','Comprar','Finalizar pedido','Iniciar sesión','Mis cuentas','whatsappBtn','themeBtn']) if (!storeDemo.includes(marker)) throw new Error(`Tienda Streaming: falta ${marker}`);
 for (const forbidden of ['Panel Streaming','DEMOSTRACIÓN · SOLO LECTURA','DEMOSTRACIÓN DEL NEGOCIO','TIENDA DEMO','Demo comercial','Precio demo','Finalizar pedido demo','No se realizará ningún cobro real.','streamingOpenSubscription','streamingOpenPayment','supabase-js','SB_URL']) if (storeDemo.includes(forbidden)) throw new Error(`Tienda Streaming expone texto demo, panel o integración interna: ${forbidden}`);
 
-for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · v1.1.6']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
-if (catalog.includes("return phone?'https://wa.me/'+phone+'?text='+encodeURIComponent(text):'#'")) throw new Error('catalogo/index.html no debe usar # como fallback de WhatsApp');
+for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · Streaming tienda v1.2.0']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
+for (const marker of ['Carrito','Iniciar sesión','Mis pedidos','create-streaming-payment','streaming_create_order','Seguimiento del pedido','Recordatorios de renovación']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta flujo cliente ${marker}`);
 for (const marker of ['streamingPreviewCatalog','Previsualizar catálogo','streamingPlatformPrice','sale_price']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta vista previa de catálogo ${marker}`);
 
 if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v1.0.0')) throw new Error('Demo Streaming v1.0.0 incompleta');
