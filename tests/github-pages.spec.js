@@ -9,5 +9,9 @@ test('Streaming Pruebas carga desde GitHub Pages', async ({ page }) => {
   await expect(page.locator('body')).not.toBeEmpty();
   expect(errors).toEqual([]);
   const html=await page.content();
-  expect(html).toContain('wodqqheeesrelsbacmgx');
+  expect(html).toContain('YummyPlay');
+  expect(page.url()).toContain('/yummy-streaming-pruebas/demo/');
+  const panel=await page.request.get(new URL('../panel/',page.url()).href);
+  expect(panel.ok()).toBeTruthy();
+  expect(await panel.text()).toContain('wodqqheeesrelsbacmgx');
 });

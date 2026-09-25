@@ -4,11 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta http-equiv="refresh" content="0;url=/demo/">
   <title>YummyPlay · Streaming</title>
-  <script>location.replace('/demo/');</script>
+  <script>
+    const target=new URL("demo/",location.href).href;
+    location.replace(target);
+  </script>
 </head>
 <body>
-  <p>Abriendo YummyPlay… <a href="/demo/">Abrir tienda</a></p>
+  <p>Abriendo YummyPlay… <a id="demoLink" href="./demo/">Abrir tienda</a></p>
+  <script>document.getElementById("demoLink").href=new URL("demo/",location.href).href;</script>
 </body>
 </html>
