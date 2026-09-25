@@ -7,7 +7,7 @@ test('tienda Streaming muestra la experiencia de compra del cliente sin etiqueta
   await expect(page.getByText('STREAMING · ENTRETENIMIENTO')).toBeVisible();
   await expect(page.getByText('Powered by YummyPro · v1.1.2')).toBeVisible();
   await expect(page.getByText(/TIENDA DEMO|Demo comercial|DEMOSTRACIÓN DEL NEGOCIO/i)).toHaveCount(0);
-  await expect(page.getByRole('heading', { name: /Elige tu plataforma/ })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Tus plataformas favoritas/ })).toBeVisible();
   await expect(page.getByText('Servicios disponibles')).toBeVisible();
   await expect(page.getByText('Netflix Premium', { exact: true }).first()).toBeVisible();
   await page.getByRole('button', { name: 'Comprar' }).first().click();
