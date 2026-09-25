@@ -2971,7 +2971,7 @@ async function logout(){
  const previewRequested=adminPreviewMode||document.body.classList.contains("admin-preview")||new URLSearchParams(location.search).has("admin_preview");
  if(previewRequested){return returnFromAdminPreview()}
  try{await sb.auth.signOut()}catch(e){console.warn("No se pudo cerrar la sesión remota",e)}
- window.location.replace("https://web.yummypro.online/?logout=1")
+ window.location.replace("https://web.yummypro.online/?logout=1#streaming")
 }
 async function enter(user){
   currentUserId=user?.id||null;
@@ -3003,8 +3003,8 @@ async function enter(user){
     }
     msg.textContent="Cargando restaurante...";
     const {data:accountRole,error:roleError}=await sb.rpc("current_account_role");
-    if(roleError){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="No se pudo verificar el tipo de cuenta.";window.location.replace("https://web.yummypro.online/");return}
-    if(accountRole!=="restaurant"){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent=accountRole==="admin"?"Esta cuenta es de administrador. Ingresa desde el panel de administración.":accountRole==="customer"?"Esta cuenta es de cliente y no tiene acceso al panel de negocio.":"Esta cuenta no está clasificada como negocio.";window.location.replace("https://web.yummypro.online/");return}
+    if(roleError){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="No se pudo verificar el tipo de cuenta.";window.location.replace("https://web.yummypro.online/#streaming");return}
+    if(accountRole!=="restaurant"){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent=accountRole==="admin"?"Esta cuenta es de administrador. Ingresa desde el panel de administración.":accountRole==="customer"?"Esta cuenta es de cliente y no tiene acceso al panel de negocio.":"Esta cuenta no está clasificada como negocio.";window.location.replace("https://web.yummypro.online/#streaming");return}
     let {data:membership,error:membershipError}=await sb.from("restaurant_staff")
       .select("restaurant_id,role,permissions")
       .eq("user_id",user.id).eq("active",true);
@@ -3012,7 +3012,7 @@ async function enter(user){
     membership=membership||[];
     if(!membership.length && user.user_metadata?.trial_restaurant_name){
       const requestedTrialType=String(user.user_metadata.trial_business_type||PANEL_DEFAULT_BUSINESS_TYPE).toLowerCase();
-      if(!panelBusinessTypeAllowed(requestedTrialType)){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta solicitud de prueba corresponde a "+panelBusinessTypeLabel(requestedTrialType)+". Ábrela desde su dominio correspondiente.";window.location.replace("https://web.yummypro.online/");return}
+      if(!panelBusinessTypeAllowed(requestedTrialType)){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta solicitud de prueba corresponde a "+panelBusinessTypeLabel(requestedTrialType)+". Ábrela desde su dominio correspondiente.";window.location.replace("https://web.yummypro.online/#streaming");return}
       const cr=await sb.rpc("create_my_trial_restaurant_v3",{
         p_name:user.user_metadata.trial_restaurant_name,
         p_whatsapp:user.user_metadata.trial_whatsapp||"",
@@ -3027,13 +3027,13 @@ async function enter(user){
         membership=retry.data||[];
       }
     }
-    if(!membership.length){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta cuenta no tiene un negocio asignado.";window.location.replace("https://web.yummypro.online/");return}
+    if(!membership.length){await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta cuenta no tiene un negocio asignado.";window.location.replace("https://web.yummypro.online/#streaming");return}
     const membershipIds=membership.map(x=>Number(x.restaurant_id)).filter(Number.isFinite);
     const {data:membershipBusinesses,error:membershipBusinessError}=await sb.from("restaurants").select("id,business_type").in("id",membershipIds);
     if(membershipBusinessError)throw membershipBusinessError;
     const allowedBusinessIds=new Set((membershipBusinesses||[]).filter(x=>panelBusinessTypeAllowed(x.business_type)).map(x=>Number(x.id)));
     const verticalMembership=membership.find(x=>allowedBusinessIds.has(Number(x.restaurant_id)));
-    if(!verticalMembership){const actual=(membershipBusinesses||[])[0]?.business_type||"";await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta cuenta pertenece a "+panelBusinessTypeLabel(actual)+", no al panel "+PANEL_VERTICAL_LABEL+".";window.location.replace("https://web.yummypro.online/");return}
+    if(!verticalMembership){const actual=(membershipBusinesses||[])[0]?.business_type||"";await sb.auth.signOut();document.body.classList.remove("auth-loading");msg.textContent="Esta cuenta pertenece a "+panelBusinessTypeLabel(actual)+", no al panel "+PANEL_VERTICAL_LABEL+".";window.location.replace("https://web.yummypro.online/#streaming");return}
     currentRestaurant=Number(verticalMembership.restaurant_id);
     currentRole=verticalMembership.role||"restaurant";
     trackRestaurantEvent("session_started","dashboard",{role:currentRole});
@@ -3080,7 +3080,7 @@ async function enter(user){
     if(adminPreviewMode||new URLSearchParams(location.search).has("admin_preview")){
       showAdminPreviewFailure(e.message||"No se pudo cargar la información del negocio.");
     }else{
-      window.location.replace("https://web.yummypro.online/");
+      window.location.replace("https://web.yummypro.online/#streaming");
     }
   }
 }
@@ -3107,6 +3107,11 @@ const roleTabsByBusiness={
   professional:["dashboard","appointments","clients"],
   receptionist:["dashboard","appointments","clients","cash"],
   editor:["services","professionals"]
+ },
+ streaming:{
+  restaurant:["dashboard","orders","products","categories","qr","plans","settings"],
+  manager:["dashboard","orders","products","categories","qr","settings"],
+  editor:["orders","products","categories"]
  }
 };
 const retailTabModule={retail_orders:"retail_orders",retail_pos:"retail_pos",retail_products:"retail_products",retail_suppliers:"retail_suppliers",retail_purchases:"retail_purchases"};
@@ -3114,7 +3119,8 @@ function currentBusinessType(){return String(currentRestaurantConfig?.business_t
 function currentBusinessIsDemo(){const r=currentRestaurantConfig||restaurants.find(x=>Number(x.id)===Number(currentRestaurant));return !!r?.is_demo}
 function isRetailBusiness(){return ["supermarket","minimarket"].includes(currentBusinessType())}
 function isProfessionalBusiness(){return currentBusinessType()==="professional"}
-function currentBusinessLabel(){const type=currentBusinessType();return type==="supermarket"?"Supermercado":type==="minimarket"?"Minimarket":type==="professional"?"Profesional / Servicios":"Streaming"}
+function isStreamingBusiness(){return currentBusinessType()==="streaming"}
+function currentBusinessLabel(){const type=currentBusinessType();return type==="supermarket"?"Supermercado":type==="minimarket"?"Minimarket":type==="professional"?"Profesional / Servicios":type==="streaming"?"Streaming":"Restaurante"}
 function setNavTabLabel(tabName,label,title=label){const tab=document.querySelector('.tab[data-tab="'+tabName+'"]');if(!tab)return;const text=tab.querySelector(".nav-label");if(text)text.textContent=label;tab.title=title;tab.dataset.baseTitle=title}
 function syncBusinessTypeUi(){
  const type=currentBusinessType(),retail=isRetailBusiness(),professional=isProfessionalBusiness(),label=currentBusinessLabel();
@@ -3196,7 +3202,7 @@ function startSubscriptionAccessRealtime(){
   }).subscribe();
 }
 function effectiveTabs(){
- const businessKey=isRetailBusiness()?"retail":isProfessionalBusiness()?"professional":"restaurant",roleKey=adminPreviewMode?"restaurant":currentRole;
+ const businessKey=isStreamingBusiness()?"streaming":isRetailBusiness()?"retail":isProfessionalBusiness()?"professional":"restaurant",roleKey=adminPreviewMode?"restaurant":currentRole;
  const raw=roleTabsByBusiness[businessKey]?.[roleKey]||roleTabsByBusiness[businessKey]?.restaurant||["dashboard"];
  // Vista administrativa: mismo menú que el propietario del tipo de negocio seleccionado,
  // incluyendo Planes y Configuración, sin restricciones de suscripción.
@@ -3257,8 +3263,14 @@ function applyRoleAccess(){
  let selected=allowed.includes(activeTab)?activeTab:(adminPreviewMode&&allowed.includes(adminPreviewTab)?adminPreviewTab:(allowed.includes("dashboard")?"dashboard":allowed[0]));
  if(operationalTabLockReason(selected))selected=allowed.includes("dashboard")?"dashboard":allowed.find(x=>!operationalTabLockReason(x));
  const button=document.querySelector('.tab[data-tab="'+selected+'"]');if(button)button.classList.add("active");if(selected)document.getElementById(selected)?.classList.add("active");
+ if(isStreamingBusiness()){
+  setNavTabLabel("orders","Ventas / Entregas","Ventas / Entregas");
+  setNavTabLabel("products","Suscripciones","Suscripciones");
+  setNavTabLabel("categories","Plataformas","Plataformas");
+  setNavTabLabel("qr","QR / Enlace","QR / Enlace");
+ }
  syncSubscriptionBannerForActiveTab();
- document.getElementById("viewMenuLink")?.style.setProperty("display",currentRole==="restaurant"?"":"none",currentRole==="restaurant"?"":"important");
+ document.getElementById("viewMenuLink")?.style.setProperty("display",currentRole==="restaurant"&&!isStreamingBusiness()?"":"none",currentRole==="restaurant"&&!isStreamingBusiness()?"":"important");
 }
 function consumeAdminPreviewSessionHash(){
  const raw=String(location.hash||"").replace(/^#/,"");if(!raw)return null;
@@ -3388,7 +3400,7 @@ async function restoreSession(){
     }
     return
    }
-   window.location.replace("https://web.yummypro.online/");return
+   window.location.replace("https://web.yummypro.online/#streaming");return
   }
  }catch(e){
   document.body.classList.remove("auth-loading");document.body.classList.add("auth-ready");
@@ -3396,7 +3408,7 @@ async function restoreSession(){
   if(preview){
    showAdminPreviewFailure(e.message||"No se pudo validar la sesión administrativa.");
   }else{
-   window.location.replace("https://web.yummypro.online/");
+   window.location.replace("https://web.yummypro.online/#streaming");
    return
   }
  }finally{
@@ -3664,7 +3676,7 @@ function syncRestaurantHeader(r){
  if(!r)return;
  const name=String(r.name||("Negocio #"+currentRestaurant)).trim(),type=String(r.business_type||"restaurant"),retail=["supermarket","minimarket"].includes(type);
  const slug=String(r.slug||currentRestaurant),menuLink=document.getElementById("viewMenuLink");
- if(menuLink){menuLink.href="https://menu.yummypro.online/?r="+encodeURIComponent(slug);menuLink.title=retail?"Ver tienda online":"Ver menú";menuLink.style.removeProperty("display")}
+ if(menuLink){if(type==="streaming"){menuLink.style.setProperty("display","none","important")}else{menuLink.href="https://menu.yummypro.online/?r="+encodeURIComponent(slug);menuLink.title=retail?"Ver tienda online":"Ver menú";menuLink.style.removeProperty("display")}}
  const who=document.getElementById("who"),sessionEmail=String(who?.dataset.email||who?.textContent||"").trim();if(who&&!who.dataset.email)who.dataset.email=sessionEmail;
  const panelTitle=document.getElementById("panelMainTitle");if(panelTitle)panelTitle.textContent=PANEL_BRAND_NAME;
  document.title=PANEL_BRAND_NAME;
@@ -6539,7 +6551,7 @@ window.saveOrderDetail=async function(){const old=orders.find(x=>Number(x.id)===
     <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="ghost" type="button" onclick="restaurantIssueDialog.close()">Cancelar</button><button class="primary" type="button" onclick="submitRestaurantIssueReport()">Enviar reporte</button></div>
   </div>
 </dialog>
-<footer class="admin-version">Streaming · Versión v2.5.64</footer></main></div><script>
+<footer class="admin-version">Streaming · Versión v0.1.1</footer></main></div><script>
 async function verifySubscriptionMercadoPago(){
  const box=document.getElementById("subscriptionMpStatus");
  if(!box)return;
