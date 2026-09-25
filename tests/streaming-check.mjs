@@ -59,7 +59,7 @@ for (const forbidden of ['orders','products','categories','pos','kitchen','cash'
   if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 }
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.3.0')) throw new Error('Demo Streaming v0.2.1 incompleta');
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.3.0')) throw new Error('Demo Streaming v0.3.0 incompleta');
 for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
   if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
 }
