@@ -5,32 +5,37 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090b12">
 <meta name="robots" content="noindex,nofollow">
-<title>YummyPlay Demo · Tienda Streaming</title>
+<title>YummyPlay · Streaming</title>
 <style>
 :root{--bg:#080a10;--card:#111522;--soft:#171c2b;--line:#252c3d;--txt:#f8fafc;--mut:#a6afc0;--a:#8b5cf6;--a2:#c084fc;--ok:#34d399;--warn:#f59e0b}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 80% 0,#8b5cf620,transparent 30%),var(--bg);color:var(--txt)}
 button,input,select{font:inherit}a{text-decoration:none;color:inherit}.wrap{width:min(1140px,calc(100% - 28px));margin:auto}
 .topbar{position:sticky;top:0;z-index:30;background:#080a10e8;backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
-.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{font-size:23px;font-weight:950;letter-spacing:-.8px}.brand b{color:var(--a2)}.demoBadge{font-size:11px;font-weight:900;letter-spacing:.08em;padding:7px 10px;border-radius:999px;background:#8b5cf61a;border:1px solid #8b5cf64a;color:#dbc9ff}
+.nav{min-height:68px;display:flex;align-items:center;justify-content:space-between;gap:14px}.brand{font-size:23px;font-weight:950;letter-spacing:-.8px}.brand b{color:var(--a2)}
 .navActions{display:flex;align-items:center;gap:8px}.iconBtn{border:1px solid var(--line);background:#111522;color:#fff;border-radius:11px;padding:10px 12px;font-weight:850;cursor:pointer}.cartCount{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:999px;background:var(--a);font-size:11px;margin-left:5px}
 .hero{padding:58px 0 34px}.heroGrid{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:center}.eyebrow{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--a2)}h1{font-size:clamp(40px,7vw,68px);line-height:.98;letter-spacing:-3px;margin:14px 0 18px}.accent{color:var(--a2)}.lead{font-size:18px;line-height:1.6;color:var(--mut);max-width:650px}.heroCard{border:1px solid var(--line);border-radius:24px;padding:22px;background:linear-gradient(145deg,#151a29,#0f1320);box-shadow:0 28px 70px #0007}.heroCardTop{display:flex;align-items:center;justify-content:space-between;gap:12px}.heroLogo{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--a),var(--a2));font-size:25px}.heroList{display:grid;gap:10px;margin-top:18px}.mini{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:11px;border-radius:14px;background:#ffffff08}.miniIcon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:#ffffff0d;font-size:20px}.pill{display:inline-flex;align-items:center;justify-content:center;padding:6px 9px;border-radius:999px;background:#ffffff0b;font-size:11px;font-weight:900}.ok{color:var(--ok)}.warn{color:var(--warn)}
 .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:16px 0 22px}.search{flex:1;min-width:220px;display:flex;align-items:center;gap:9px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#0f1420}.search input{width:100%;border:0;outline:0;background:transparent;color:#fff}.filters{display:flex;gap:7px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:#111522;color:var(--mut);padding:10px 13px;border-radius:999px;font-weight:850;cursor:pointer}.filter.active{background:#8b5cf622;border-color:#8b5cf65a;color:#fff}
 .sectionHead{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:8px 0 16px}.sectionHead h2{margin:3px 0 0;font-size:28px}.mut{color:var(--mut)}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product{display:flex;flex-direction:column;min-height:280px;border:1px solid var(--line);border-radius:20px;padding:17px;background:linear-gradient(145deg,#121725,#0e121c);transition:.2s}.product:hover{transform:translateY(-2px);border-color:#8b5cf65a}.productTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.productIcon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#ffffff0b;font-size:25px}.product h3{margin:13px 0 5px;font-size:21px}.productDesc{color:var(--mut);line-height:1.5;font-size:14px}.priceRow{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-top:auto;padding-top:18px}.price{font-size:25px;font-weight:950}.price small{display:block;font-size:11px;color:var(--mut);font-weight:700;margin-bottom:2px}.buy{border:0;border-radius:12px;padding:11px 15px;background:var(--a);color:white;font-weight:950;cursor:pointer}.stock{font-size:11px;font-weight:900;color:var(--ok);margin-top:8px}.notice{margin:28px 0;padding:15px 17px;border:1px solid #8b5cf642;background:#8b5cf610;border-radius:15px;color:#d7c8ff;line-height:1.5}.footer{padding:30px 0 38px;color:var(--mut);text-align:center;font-size:13px}.footer a{text-decoration:underline}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.product{display:flex;flex-direction:column;min-height:280px;border:1px solid var(--line);border-radius:20px;padding:17px;background:linear-gradient(145deg,#121725,#0e121c);transition:.2s}.product:hover{transform:translateY(-2px);border-color:#8b5cf65a}.productTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.productIcon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:#ffffff0b;font-size:25px}.product h3{margin:13px 0 5px;font-size:21px}.productDesc{color:var(--mut);line-height:1.5;font-size:14px}.priceRow{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-top:auto;padding-top:18px}.price{font-size:25px;font-weight:950}.price small{display:block;font-size:11px;color:var(--mut);font-weight:700;margin-bottom:2px}.buy{border:0;border-radius:12px;padding:11px 15px;background:var(--a);color:white;font-weight:950;cursor:pointer}.stock{font-size:11px;font-weight:900;color:var(--ok);margin-top:8px}.footer{padding:30px 0 38px;color:var(--mut);text-align:center;font-size:13px}.footer a{text-decoration:underline}
 .modal{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:18px;background:#000a}.modal.open{display:grid}.modalBox{width:min(510px,100%);max-height:min(720px,92vh);overflow:auto;background:#101522;border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 35px 90px #000}.modalHead{display:flex;align-items:start;justify-content:space-between;gap:12px}.close{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:#171c2b;color:#fff;cursor:pointer}.orderCard{margin:15px 0;padding:14px;border-radius:15px;background:#171c2b;border:1px solid #ffffff0b}.formGrid{display:grid;gap:12px}.field{display:grid;gap:6px}.field label{font-size:12px;font-weight:850;color:#cbd5e1}.field input,.field select{width:100%;border:1px solid var(--line);border-radius:12px;background:#0d111b;color:#fff;padding:12px;outline:0}.demoAction{margin-top:15px;width:100%;border:0;border-radius:13px;background:var(--a);color:#fff;padding:13px;font-weight:950;cursor:pointer}.success{display:none;text-align:center;padding:18px 6px}.success.show{display:block}.successIcon{width:66px;height:66px;border-radius:999px;background:#34d3991b;color:var(--ok);display:grid;place-items:center;margin:0 auto 12px;font-size:30px}
 .toast{position:fixed;left:50%;bottom:24px;z-index:120;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:#171c2b;border:1px solid var(--line);padding:11px 14px;border-radius:12px;font-weight:800;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
+[data-theme="light"]{--bg:#f6f7fb;--card:#fff;--soft:#eef1f7;--line:#dce2ec;--txt:#151821;--mut:#667085;--a:#7c3aed;--a2:#9333ea;--ok:#059669;--warn:#b45309}
+[data-theme="light"] body{background:radial-gradient(circle at 80% 0,#8b5cf615,transparent 30%),var(--bg)}
+[data-theme="light"] .topbar{background:#f6f7fbe8}
+[data-theme="light"] .iconBtn,[data-theme="light"] .filter,[data-theme="light"] .modalBox,[data-theme="light"] .search{background:#fff;color:#151821}
+[data-theme="light"] .product,[data-theme="light"] .heroCard{background:linear-gradient(145deg,#fff,#f7f8fb)}
 @media(max-width:900px){.heroGrid{grid-template-columns:1fr}.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.wrap{width:min(100% - 20px,1140px)}.nav{align-items:center}.brand{font-size:20px}.navActions .iconBtn:first-child{display:none}.hero{padding-top:38px}.heroGrid{gap:18px}.grid{grid-template-columns:1fr}.sectionHead{align-items:start;flex-direction:column}.product{min-height:0}.modalBox{padding:16px}}
 </style>
 </head>
 <body>
 <header class="topbar"><div class="wrap nav">
-  <div><div class="brand">Yummy<b>Play</b> Demo</div><div class="demoBadge" style="display:inline-flex;margin-top:3px">TIENDA DEMO · v1.1.0</div></div>
-  <div class="navActions"><a class="iconBtn" href="https://web.yummypro.online/#streaming">← Volver a YummyPro</a><button class="iconBtn" id="cartBtn">🛒 Carrito <span class="cartCount" id="cartCount">0</span></button></div>
+  <div class="brand">Yummy<b>Play</b></div>
+  <div class="navActions"><button class="iconBtn" id="whatsappBtn">WhatsApp</button><button class="iconBtn" id="loginBtn">Iniciar sesión</button><button class="iconBtn" id="accountsBtn">Mis cuentas</button><button class="iconBtn" id="themeBtn" aria-label="Cambiar tema">☀️</button><button class="iconBtn" id="cartBtn">🛒 <span class="cartCount" id="cartCount">0</span></button></div>
 </div></header>
 
 <main>
 <section class="hero"><div class="wrap heroGrid">
-  <div><div class="eyebrow">DEMOSTRACIÓN DEL NEGOCIO · VISTA DEL CLIENTE</div><h1>Elige tu plataforma y <span class="accent">compra en minutos.</span></h1><p class="lead">Así se vería la tienda de un negocio que vende accesos de streaming con YummyPro: catálogo, precios, disponibilidad y un flujo de compra simple para el cliente.</p></div>
+  <div><div class="eyebrow">STREAMING · ENTRETENIMIENTO</div><h1>Tus plataformas favoritas, <span class="accent">listas para activar.</span></h1><p class="lead">Elige el servicio que necesitas, revisa la disponibilidad y completa tu pedido en pocos pasos.</p></div>
   <div class="heroCard"><div class="heroCardTop"><div><div class="eyebrow">DISPONIBLE AHORA</div><h2 style="margin:5px 0">Planes destacados</h2></div><div class="heroLogo">▶</div></div><div class="heroList">
    <div class="mini"><div class="miniIcon">📺</div><div><b>Netflix Premium</b><div class="mut">1 mes · perfil individual</div></div><span class="pill ok">2 cupos</span></div>
    <div class="mini"><div class="miniIcon">✨</div><div><b>Disney+ Premium</b><div class="mut">1 mes · acceso inmediato</div></div><span class="pill ok">4 cupos</span></div>
@@ -39,17 +44,16 @@ button,input,select{font:inherit}a{text-decoration:none;color:inherit}.wrap{widt
 </div></section>
 
 <section><div class="wrap">
- <div class="sectionHead"><div><div class="eyebrow">CATÁLOGO</div><h2>Servicios disponibles</h2></div><span class="mut">Datos ficticios para demostración</span></div>
+ <div class="sectionHead"><div><div class="eyebrow">CATÁLOGO</div><h2>Servicios disponibles</h2></div><span class="mut">Entrega rápida · Atención por WhatsApp</span></div>
  <div class="toolbar"><div class="search">⌕ <input id="searchInput" placeholder="Buscar Netflix, Disney+, Spotify..." autocomplete="off"></div><div class="filters" id="filters"><button class="filter active" data-filter="all">Todos</button><button class="filter" data-filter="video">Video</button><button class="filter" data-filter="music">Música</button></div></div>
  <div class="grid" id="productGrid"></div>
- <div class="notice"><b>Demo comercial:</b> esta pantalla representa lo que verá el cliente final del negocio. No es el panel administrativo y no realiza cobros reales ni entrega credenciales de plataformas.</div>
 </div></section>
 </main>
 
-<footer class="footer"><div class="wrap">Demostración comercial de YummyPro Streaming · <a href="https://web.yummypro.online/#streaming">Crear mi negocio Streaming</a></div></footer>
+<footer class="footer"><div class="wrap">YummyPlay · Powered by YummyPro · v1.1.1</div></footer>
 
 <div class="modal" id="buyModal" aria-hidden="true"><div class="modalBox">
- <div class="modalHead"><div><div class="eyebrow">COMPRA DEMO</div><h2 style="margin:5px 0">Completa tu pedido</h2></div><button class="close" id="closeModal" aria-label="Cerrar">✕</button></div>
+ <div class="modalHead"><div><div class="eyebrow">TU PEDIDO</div><h2 style="margin:5px 0">Completa tu pedido</h2></div><button class="close" id="closeModal" aria-label="Cerrar">✕</button></div>
  <div id="purchaseForm">
   <div class="orderCard"><b id="modalProduct">Producto</b><div class="mut" id="modalDuration"></div><div class="price" id="modalPrice" style="margin-top:8px"></div></div>
   <div class="formGrid">
@@ -57,12 +61,29 @@ button,input,select{font:inherit}a{text-decoration:none;color:inherit}.wrap{widt
    <div class="field"><label>WhatsApp</label><input id="buyerPhone" placeholder="+56 9..."></div>
    <div class="field"><label>Forma de pago</label><select id="paymentMethod"><option>Transferencia</option><option>Mercado Pago</option><option>Efectivo</option></select></div>
   </div>
-  <button class="demoAction" id="finishDemo">Finalizar pedido demo</button>
-  <p class="mut" style="font-size:12px;text-align:center;margin-bottom:0">No se realizará ningún cobro real.</p>
+  <button class="demoAction" id="finishDemo">Finalizar pedido</button>
  </div>
- <div class="success" id="successState"><div class="successIcon">✓</div><h2>Pedido recibido</h2><p class="mut">En una tienda real, el negocio recibiría el pedido y continuaría con el cobro y la entrega del acceso.</p><button class="demoAction" id="newOrder">Ver más productos</button></div>
+ <div class="success" id="successState"><div class="successIcon">✓</div><h2>Pedido recibido</h2><p class="mut">Te enviaremos la confirmación y los siguientes pasos por WhatsApp.</p><button class="demoAction" id="newOrder">Ver más productos</button></div>
 </div></div>
-<div class="toast" id="toast">Carrito demo actualizado</div>
+
+<div class="modal" id="loginModal" aria-hidden="true"><div class="modalBox">
+ <div class="modalHead"><div><div class="eyebrow">CLIENTES</div><h2 style="margin:5px 0">Iniciar sesión</h2></div><button class="close" data-close="loginModal" aria-label="Cerrar">✕</button></div>
+ <div class="formGrid" style="margin-top:16px">
+  <div class="field"><label>Correo o teléfono</label><input placeholder="tu@email.com"></div>
+  <div class="field"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
+ </div>
+ <button class="demoAction" id="loginSubmit">Ingresar</button>
+</div></div>
+
+<div class="modal" id="accountsModal" aria-hidden="true"><div class="modalBox">
+ <div class="modalHead"><div><div class="eyebrow">MI CUENTA</div><h2 style="margin:5px 0">Mis cuentas</h2></div><button class="close" data-close="accountsModal" aria-label="Cerrar">✕</button></div>
+ <div class="heroList" style="margin-top:16px">
+  <div class="mini"><div class="miniIcon">📺</div><div><b>Netflix Premium</b><div class="mut">Activo hasta 18/10/2026</div></div><span class="pill ok">Activo</span></div>
+  <div class="mini"><div class="miniIcon">▶️</div><div><b>Prime Video</b><div class="mut">Renueva en 7 días</div></div><span class="pill warn">7 días</span></div>
+ </div>
+</div></div>
+
+<div class="toast" id="toast">Carrito actualizado</div>
 
 <script>
 const PRODUCTS=[
@@ -78,7 +99,7 @@ const money=n=>new Intl.NumberFormat('es-CL',{style:'currency',currency:'CLP',ma
 function render(){
  const q=(document.getElementById('searchInput').value||'').trim().toLowerCase();
  const rows=PRODUCTS.filter(p=>(currentFilter==='all'||p.category===currentFilter)&&(!q||p.name.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q)));
- document.getElementById('productGrid').innerHTML=rows.map(p=>`<article class="product"><div class="productTop"><div class="productIcon">${p.icon}</div><span class="pill">${p.category==='music'?'Música':'Streaming'}</span></div><h3>${p.name}</h3><div class="productDesc">${p.desc}<div class="stock">● ${p.stock} cupos disponibles</div></div><div class="priceRow"><div class="price"><small>Precio demo</small>${money(p.price)}</div><button class="buy" data-buy="${p.id}">Comprar</button></div></article>`).join('')||'<div class="mut">No encontramos productos con ese filtro.</div>';
+ document.getElementById('productGrid').innerHTML=rows.map(p=>`<article class="product"><div class="productTop"><div class="productIcon">${p.icon}</div><span class="pill">${p.category==='music'?'Música':'Streaming'}</span></div><h3>${p.name}</h3><div class="productDesc">${p.desc}<div class="stock">● ${p.stock} cupos disponibles</div></div><div class="priceRow"><div class="price"><small>Precio</small>${money(p.price)}</div><button class="buy" data-buy="${p.id}">Comprar</button></div></article>`).join('')||'<div class="mut">No encontramos productos con ese filtro.</div>';
 }
 function openBuy(id){
  selected=PRODUCTS.find(p=>p.id===Number(id));if(!selected)return;
@@ -102,7 +123,20 @@ document.getElementById('finishDemo').onclick=()=>{
  document.getElementById('purchaseForm').style.display='none';document.getElementById('successState').classList.add('show');
 };
 document.getElementById('newOrder').onclick=()=>{closeBuy();window.scrollTo({top:document.querySelector('.toolbar').offsetTop-90,behavior:'smooth'})};
-document.getElementById('cartBtn').onclick=()=>showToast(cart?('Tienes '+cart+' pedido'+(cart===1?'':'s')+' en esta simulación'):'Tu carrito demo está vacío');
+document.getElementById('cartBtn').onclick=()=>showToast(cart?('Tienes '+cart+' pedido'+(cart===1?'':'s')+' en tu carrito'):'Tu carrito está vacío');
+function openSimpleModal(id){const m=document.getElementById(id);m.classList.add('open');m.setAttribute('aria-hidden','false')}
+function closeSimpleModal(id){const m=document.getElementById(id);m.classList.remove('open');m.setAttribute('aria-hidden','true')}
+document.getElementById('loginBtn').onclick=()=>openSimpleModal('loginModal');
+document.getElementById('accountsBtn').onclick=()=>openSimpleModal('accountsModal');
+document.getElementById('whatsappBtn').onclick=()=>showToast('WhatsApp del negocio');
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>closeSimpleModal(b.dataset.close));
+['loginModal','accountsModal'].forEach(id=>document.getElementById(id).addEventListener('click',e=>{if(e.target===e.currentTarget)closeSimpleModal(id)}));
+document.getElementById('loginSubmit').onclick=()=>{closeSimpleModal('loginModal');showToast('Sesión de cliente')};
+const savedTheme=localStorage.getItem('yummyplay-theme')||'dark';
+document.documentElement.dataset.theme=savedTheme;
+function syncThemeIcon(){document.getElementById('themeBtn').textContent=document.documentElement.dataset.theme==='light'?'🌙':'☀️'}
+syncThemeIcon();
+document.getElementById('themeBtn').onclick=()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('yummyplay-theme',next);syncThemeIcon()};
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),1800)}
 render();
 </script>
