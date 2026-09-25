@@ -1,4 +1,4 @@
-// Validación final YummyPro Streaming v1.2.0
+// Validación final YummyPro Streaming v1.2.1
 import {existsSync, readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
 
@@ -36,7 +36,7 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo],[
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.0','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=1200','/panel/streaming-admin-tools.js?v=1200','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.1','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=1200','/panel/streaming-admin-tools.js?v=1200','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 const reminderScriptCount=(panel.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[]).length;
 if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
@@ -73,7 +73,7 @@ for (const marker of ['entrega, activación y centro de acciones v0.6.0','delive
 
 for (const marker of ['recordatorios persistentes v0.8.0','streaming_reminder_logs','streamingLoadReminderLogs','streamingReminderOpenedToday','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Gestionado hoy','historial queda sincronizado entre dispositivos']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
 for (const forbidden of ['localStorage','Enviado hoy']) if (reminders.includes(forbidden)) throw new Error(`panel/streaming-reminders.js conserva estado local o etiqueta engañosa: ${forbidden}`);
-for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext','streaming-control.js?v=1000','Streaming · Versión v1.2.0']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
+for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext','streaming-control.js?v=1000','Streaming · Versión v1.2.1']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
 
 for (const marker of ['centro de control v1.0.0','Centro de control','Exportar CSV','Respaldo JSON','streamingControlSafeSnapshot','streamingControlResults','streamingControlExportBackup','streamingControlExportCsv','no incluyen contraseñas']) if (!control.includes(marker)) throw new Error(`panel/streaming-control.js: falta ${marker}`);
 for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (control.includes(forbidden)) throw new Error(`panel/streaming-control.js contiene un campo sensible prohibido: ${forbidden}`);
