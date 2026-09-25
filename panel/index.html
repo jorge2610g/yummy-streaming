@@ -3268,7 +3268,7 @@ function applyRoleAccess(){
   setNavTabLabel("qr","QR / Enlace","QR / Enlace");
  }
  syncSubscriptionBannerForActiveTab();
- document.getElementById("viewMenuLink")?.style.setProperty("display",currentRole==="restaurant"&&!isStreamingBusiness()?"":"none",currentRole==="restaurant"&&!isStreamingBusiness()?"":"important");
+ document.getElementById("viewMenuLink")?.style.setProperty("display",currentRole==="restaurant"?"":"none",currentRole==="restaurant"?"":"important");
 }
 function clearAdminPreviewSessionHash(){
  const raw=String(location.hash||"").replace(/^#/,"");if(!raw)return;
@@ -3710,7 +3710,7 @@ function syncRestaurantHeader(r){
  if(!r)return;
  const name=String(r.name||("Negocio #"+currentRestaurant)).trim(),type=String(r.business_type||"restaurant"),retail=["supermarket","minimarket"].includes(type);
  const slug=String(r.slug||currentRestaurant),menuLink=document.getElementById("viewMenuLink");
- if(menuLink){if(type==="streaming"){menuLink.style.setProperty("display","none","important")}else{menuLink.href="https://menu.yummypro.online/?r="+encodeURIComponent(slug);menuLink.title=retail?"Ver tienda online":"Ver menú";menuLink.style.removeProperty("display")}}
+ if(menuLink){const button=menuLink.querySelector("button"),label=button?.querySelector(".action-label");if(type==="streaming"){menuLink.href="/catalogo/?business="+encodeURIComponent(currentRestaurant);menuLink.title="Previsualizar catálogo";if(button){button.title="Previsualizar catálogo";button.setAttribute("aria-label","Previsualizar catálogo")}if(label)label.textContent="Ver catálogo";menuLink.style.removeProperty("display")}else{menuLink.href="https://menu.yummypro.online/?r="+encodeURIComponent(slug);menuLink.title=retail?"Ver tienda online":"Ver menú";if(button){button.title=menuLink.title;button.setAttribute("aria-label",menuLink.title)}if(label)label.textContent=retail?"Ver tienda":"Ver menú";menuLink.style.removeProperty("display")}}
  const who=document.getElementById("who"),sessionEmail=String(who?.dataset.email||who?.textContent||"").trim();if(who&&!who.dataset.email)who.dataset.email=sessionEmail;
  const panelTitle=document.getElementById("panelMainTitle");if(panelTitle)panelTitle.textContent=PANEL_BRAND_NAME;
  document.title=PANEL_BRAND_NAME;
