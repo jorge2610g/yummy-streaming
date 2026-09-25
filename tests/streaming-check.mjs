@@ -35,8 +35,8 @@ const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager
 for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
 for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.5.0')) throw new Error('Demo Streaming v0.5.0 incompleta');
-for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v1.0.0')) throw new Error('Demo Streaming v1.0.0 incompleta');
+for (const marker of ['data-section="dashboard"','data-section="subscriptions"','data-section="customers"','data-section="accounts"','data-section="platforms"','data-section="renewals"','Ingresar a mi panel','https://streaming.yummypro.online/panel/','Crear cuenta · 30 días gratis']) if (!demo.includes(marker)) throw new Error(`Demo Streaming navegable: falta ${marker}`);
 for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
@@ -50,4 +50,4 @@ for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguient
 for (const marker of ['centro de control v1.0.0','Centro de control','Exportar CSV','Respaldo JSON','streamingControlSafeSnapshot','streamingControlResults','streamingControlExportBackup','streamingControlExportCsv','no incluyen contraseñas']) if (!control.includes(marker)) throw new Error(`panel/streaming-control.js: falta ${marker}`);
 for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (control.includes(forbidden)) throw new Error(`panel/streaming-control.js contiene un campo sensible prohibido: ${forbidden}`);
 
-console.log('Panel Streaming v1.0.0 validado con centro de control, agenda diaria, recordatorios persistentes y demo aislada');
+console.log('Panel Streaming v1.0.0 validado con centro de control, agenda diaria, recordatorios persistentes y demo navegable aislada');
