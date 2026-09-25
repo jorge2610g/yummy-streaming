@@ -1,0 +1,15 @@
+exclude:
+  - .github
+  - .gitignore
+  - docs
+  - tests
+  - scripts
+  - supabase
+  - node_modules
+  - DOCUMENTACION.md
+  - DOCUMENTACION_TECNICA.md
+  - STREAMING_BASE.md
+  - README.md
+  - package.json
+  - package-lock.json
+  - playwright.config.js
