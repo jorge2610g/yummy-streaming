@@ -1,0 +1,79 @@
+name: Parchear rama Streaming v0.9.0
+on:
+  push:
+    paths:
+      - '.github/workflows/streaming-v090-patch-test-branch.yml'
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: test/streaming-v0.9-agenda
+          fetch-depth: 0
+      - name: Conectar agenda y pruebas
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+
+          p=Path('panel/index.html')
+          s=p.read_text()
+          s=s.replace('Streaming · Versión v0.8.0','Streaming · Versión v0.9.0')
+          s=s.replace('<script src="/panel/streaming-agenda.js?v=0900"></script>','')
+          marker='<script src="/panel/streaming-reminders.js?v=0800"></script>'
+          if marker not in s:
+              raise SystemExit('No se encontró el cargador de recordatorios v0.8.0')
+          s=s.replace(marker,marker+'\n<script src="/panel/streaming-agenda.js?v=0900"></script>',1)
+          p.write_text(s)
+
+          t=Path('tests/streaming-check.mjs')
+          x=t.read_text()
+          x=x.replace('// Validación final YummyPro Streaming v0.8.0','// Validación final YummyPro Streaming v0.9.0')
+          x=x.replace("const reminders = readFileSync('panel/streaming-reminders.js','utf8');","const reminders = readFileSync('panel/streaming-reminders.js','utf8');\nconst agenda = readFileSync('panel/streaming-agenda.js','utf8');")
+          x=x.replace("'Streaming · Versión v0.8.0'","'Streaming · Versión v0.9.0'")
+          x=x.replace("'/panel/streaming-reminders.js?v=0800'","'/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'")
+          anchor="if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);"
+          extra="\nconst agendaScriptCount=(panel.match(/\\/panel\\/streaming-agenda\\.js\\?v=0900/g)||[]).length;\nif(agendaScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-agenda.js exactamente una vez; encontró ${agendaScriptCount}`);"
+          if 'agendaScriptCount' not in x:
+              x=x.replace(anchor,anchor+extra)
+          agenda_checks="\nfor (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);\n"
+          if "panel/streaming-agenda.js: falta" not in x:
+              needle="for (const forbidden of ['localStorage','Enviado hoy']) if (reminders.includes(forbidden)) throw new Error(`panel/streaming-reminders.js conserva estado local o etiqueta engañosa: ${forbidden}`);"
+              x=x.replace(needle,needle+agenda_checks)
+          x=x.replace('Panel Streaming v0.8.0 validado con recordatorios persistentes, carga única y demo aislada','Panel Streaming v0.9.0 validado con agenda diaria, recordatorios persistentes y demo aislada')
+          t.write_text(x)
+
+          q=Path('tests/streaming.spec.js')
+          y=q.read_text()
+          if "agenda diaria Streaming v0.9.0" not in y:
+              y += "\n\ntest('agenda diaria Streaming v0.9.0 esta disponible', async ({ request }) => {\n  const response = await request.get('/panel/streaming-agenda.js?v=0900');\n  expect(response.ok()).toBeTruthy();\n  const body = await response.text();\n  expect(body).toContain('agenda diaria v0.9.0');\n  expect(body).toContain('Agenda de hoy');\n  expect(body).toContain('Gestionar siguiente');\n  expect(body).toContain('streamingAgendaPending');\n});\n\ntest('panel carga agenda una sola vez', async ({ request }) => {\n  const response = await request.get('/panel/');\n  expect(response.ok()).toBeTruthy();\n  const body = await response.text();\n  expect(body).toContain('Streaming · Versión v0.9.0');\n  const matches=body.match(/\\/panel\\/streaming-agenda\\.js\\?v=0900/g)||[];\n  expect(matches).toHaveLength(1);\n});\n"
+          q.write_text(y)
+
+          pkg=Path('package.json')
+          d=json.loads(pkg.read_text())
+          d['version']='0.9.0'
+          check=d.get('scripts',{}).get('check','')
+          if 'node --check panel/streaming-agenda.js' not in check:
+              check=check.replace('node --check panel/streaming-reminders.js', 'node --check panel/streaming-reminders.js && node --check panel/streaming-agenda.js')
+              d['scripts']['check']=check
+          pkg.write_text(json.dumps(d,separators=(',',':'))+'\n')
+
+          wf=Path('.github/workflows/streaming-v090-branch-patch.yml')
+          if wf.exists(): wf.unlink()
+          PY
+      - name: Verificación rápida
+        run: npm run check
+      - name: Guardar cambios solo en la rama de prueba
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sin cambios pendientes"
+          else
+            git commit -m "feat(streaming): conectar agenda diaria v0.9.0"
+            git push origin HEAD:test/streaming-v0.9-agenda
+          fi
