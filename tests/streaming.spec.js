@@ -1,11 +1,11 @@
-// Validación E2E final YummyPro Streaming v1.1.3
+// Validación E2E final YummyPro Streaming v1.1.4
 const { test, expect } = require('@playwright/test');
 
 test('tienda Streaming muestra la experiencia de compra del cliente sin etiquetas demo', async ({ page }) => {
   await page.goto('/demo/');
   await expect(page).toHaveTitle(/YummyPlay · Streaming/);
   await expect(page.getByText('STREAMING · ENTRETENIMIENTO')).toBeVisible();
-  await expect(page.getByText('Powered by YummyPro · v1.1.3')).toBeVisible();
+  await expect(page.getByText('Powered by YummyPro · v1.1.4')).toBeVisible();
   await expect(page.getByText(/TIENDA DEMO|Demo comercial|DEMOSTRACIÓN DEL NEGOCIO/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: /Tus plataformas favoritas/ })).toBeVisible();
   await expect(page.getByText('Servicios disponibles')).toBeVisible();
@@ -94,7 +94,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.1.3');
+  expect(body).toContain('Streaming · Versión v1.1.4');
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +114,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.1.3');
+  expect(body).toContain('Streaming · Versión v1.1.4');
   const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -143,4 +143,22 @@ test('vista administrativa valida negocio y tiene timeout de arranque', async ({
   expect(body).toContain('La verificación del negocio');
   expect(body).toContain('ya no existe');
   expect(body).toContain('maybeSingle()');
+});
+
+
+test('catálogo real Streaming y preview están publicados', async ({ request }) => {
+  const catalog = await request.get('/catalogo/?business=14');
+  expect(catalog.ok()).toBeTruthy();
+  const catalogBody = await catalog.text();
+  expect(catalogBody).toContain('streaming_public_catalog');
+  expect(catalogBody).toContain('CATÁLOGO DE STREAMING');
+  expect(catalogBody).toContain('Powered by YummyPro · v1.1.4');
+
+  const module = await request.get('/panel/streaming.js?v=1140');
+  expect(module.ok()).toBeTruthy();
+  const moduleBody = await module.text();
+  expect(moduleBody).toContain('Previsualizar catálogo');
+  expect(moduleBody).toContain('streamingPreviewCatalog');
+  expect(moduleBody).toContain('streamingPlatformPrice');
+  expect(moduleBody).toContain('sale_price');
 });
