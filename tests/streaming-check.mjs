@@ -1,4 +1,4 @@
-// Validación final YummyPro Streaming v0.7.0
+// Validación final YummyPro Streaming v0.8.0
 import {existsSync, readFileSync} from 'node:fs';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
@@ -19,11 +19,12 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo]])
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v0.7.0','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=0400','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0700'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v0.8.0','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=0400','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
+const reminderScriptCount=(panel.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[]).length;
+if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
 
 for (const marker of ['núcleo operativo v0.4.0','Suscripciones de clientes','Directorio de clientes','Cuentas y cupos','Plataformas','Renovaciones','streamingOpenSubscription','streamingOpenCustomer','streamingOpenAccount','streamingOpenPlatform','streaming_renew_subscription','YummyPro no guarda contraseñas','Sin cupos · asignación actual','Próx. 3 días','te escribo para recordarte que tu suscripción','WhatsApp confirmación','tu renovación de','Control de cobros v0.4.0','streamingOpenPayment','payment_status','Pendientes de cobro']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
-
 for (const marker of ['selectedId=Number(selected)||null','return isSelected||(a.active&&free>0)']) if (!streaming.includes(marker)) throw new Error(`Filtro de cupos incompleto: falta ${marker}`);
 
 const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager:/s)?.[1] || '';
@@ -38,6 +39,7 @@ if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming inco
 
 for (const marker of ['entrega, activación y centro de acciones v0.6.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación','streamingActionCenter','Centro de acciones','Cobros pendientes','Entregas pendientes','Vencen en 3 días','Suscripciones vencidas',"streamingActionFilter('payment_pending')","streamingActionFilter('delivery_pending')"]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
 
-for (const marker of ['recordatorios operativos v0.7.0','streamingReminderTasks','streamingReminderMessage','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Cobros','Entregas','Próximos','Vencidas','La cola se calcula sola','localStorage']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
+for (const marker of ['recordatorios persistentes v0.8.0','streaming_reminder_logs','streamingLoadReminderLogs','streamingReminderOpenedToday','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Gestionado hoy','historial queda sincronizado entre dispositivos']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
+for (const forbidden of ['localStorage','Enviado hoy']) if (reminders.includes(forbidden)) throw new Error(`panel/streaming-reminders.js conserva estado local o etiqueta engañosa: ${forbidden}`);
 
-console.log('Panel Streaming v0.7.0 validado con centro de acciones y recordatorios; demo aislada del panel real');
+console.log('Panel Streaming v0.8.0 validado con recordatorios persistentes, carga única y demo aislada');
