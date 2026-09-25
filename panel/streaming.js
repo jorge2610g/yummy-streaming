@@ -1,4 +1,4 @@
-/* YummyPro Streaming · núcleo operativo v0.3.1 */
+/* YummyPro Streaming · núcleo operativo v0.4.0 */
 let streamingPlatforms=[];
 let streamingCustomers=[];
 let streamingAccounts=[];
@@ -27,7 +27,7 @@ function streamingSubscription(id){return streamingSubscriptions.find(x=>Number(
 
 function installStreamingUi(){
  if(document.getElementById("streaming_subscriptions"))return;
- const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0300";document.head.appendChild(css);
+ const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0400";document.head.appendChild(css);
  const tabs=document.querySelector("#sideMenu .tabs");
  if(tabs){
   const management=[...tabs.querySelectorAll(".nav-group-label")].find(x=>x.textContent.trim()==="GESTIÓN");
@@ -143,3 +143,47 @@ function renderStreamingDashboard(){
  document.querySelectorAll(".system-status-list small").forEach((b,i)=>b.textContent=["Datos separados por negocio","Capacidad controlada automáticamente","Historial y alertas disponibles"][i]||b.textContent);
 }
 async function refreshStreamingDashboard(){try{await streamingFetchAll();renderStreamingDashboard()}catch(e){console.error(e);streamingToast(e.message||"No se pudo cargar el resumen de Streaming")}}
+
+
+/* Control de cobros v0.4.0 */
+function streamingPaymentStatus(row){return row?.payment_status==='paid'?'paid':'pending'}
+function streamingPaymentLabel(row){return streamingPaymentStatus(row)==='paid'?'Pagada':'Pendiente de cobro'}
+function streamingPaymentClass(row){return streamingPaymentStatus(row)==='paid'?'streaming-badge good':'streaming-badge warning'}
+function installStreamingPaymentUi(){
+ const filters=document.querySelector('#streaming_subscriptions .streaming-filters');
+ if(filters&&!filters.querySelector('[data-streaming-filter="payment_pending"]')){
+  const pending=document.createElement('button');pending.className='ghost';pending.dataset.streamingFilter='payment_pending';pending.textContent='Por cobrar';pending.onclick=()=>setStreamingSubscriptionView('payment_pending',pending);
+  const paid=document.createElement('button');paid.className='ghost';paid.dataset.streamingFilter='payment_paid';paid.textContent='Pagadas';paid.onclick=()=>setStreamingSubscriptionView('payment_paid',paid);
+  filters.append(pending,paid);
+ }
+ const count=document.getElementById('streamingFreeSlotsCount');
+ const label=count?.parentElement?.querySelector('span');
+ if(label)label.textContent='Pendientes de cobro';
+}
+
+renderStreamingSubscriptions=function(){
+ const root=document.getElementById('streamingSubscriptionList');if(!root)return;
+ installStreamingPaymentUi();
+ const q=String(streamingSubscriptionSearch||document.getElementById('streamingSubscriptionSearch')?.value||'').trim().toLowerCase();
+ const active=streamingSubscriptions.filter(s=>streamingDerivedStatus(s)==='active'),expiring=active.filter(s=>{const d=streamingDaysLeft(s.expires_at);return d!=null&&d>=0&&d<=7}),expired=streamingSubscriptions.filter(s=>streamingDerivedStatus(s)==='expired'),pendingPayments=streamingSubscriptions.filter(s=>streamingPaymentStatus(s)==='pending'&&streamingDerivedStatus(s)!=='cancelled');
+ const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=String(v)};set('streamingActiveCount',active.length);set('streamingExpiringCount',expiring.length);set('streamingExpiredCount',expired.length);set('streamingFreeSlotsCount',pendingPayments.length);
+ const pendingLabel=document.getElementById('streamingFreeSlotsCount')?.parentElement?.querySelector('span');if(pendingLabel)pendingLabel.textContent='Pendientes de cobro';
+ let rows=streamingSubscriptions.filter(s=>{const st=streamingDerivedStatus(s),d=streamingDaysLeft(s.expires_at),pay=streamingPaymentStatus(s);if(streamingSubscriptionView==='active'&&st!=='active')return false;if(streamingSubscriptionView==='today'&&!(st==='active'&&d===0))return false;if(streamingSubscriptionView==='urgent'&&!(st==='active'&&d!=null&&d>=0&&d<=3))return false;if(streamingSubscriptionView==='expiring'&&!(st==='active'&&d!=null&&d>=0&&d<=7))return false;if(streamingSubscriptionView==='expired'&&st!=='expired')return false;if(streamingSubscriptionView==='payment_pending'&&pay!=='pending')return false;if(streamingSubscriptionView==='payment_paid'&&pay!=='paid')return false;const c=streamingCustomer(s.customer_id),p=streamingPlatform(s.platform_id),a=streamingAccount(s.account_id);return !q||[c?.full_name,c?.phone,p?.name,a?.label,s.profile_label,s.payment_method,pay].some(v=>String(v||'').toLowerCase().includes(q))});
+ rows.sort((a,b)=>new Date(a.expires_at)-new Date(b.expires_at));
+ root.innerHTML=rows.map(s=>{const c=streamingCustomer(s.customer_id)||{},p=streamingPlatform(s.platform_id)||{},a=streamingAccount(s.account_id),days=streamingDaysLeft(s.expires_at),paid=streamingPaymentStatus(s)==='paid';return `<article class="streaming-row"><div class="streaming-row-main"><div class="streaming-row-title"><b>${streamingEsc(c.full_name||'Cliente')}</b><span class="${streamingStatusClass(s)}">${streamingEsc(streamingStatusLabel(s))}</span><span class="${streamingPaymentClass(s)}">${streamingPaymentLabel(s)}</span></div><div class="streaming-row-meta"><span>▶ ${streamingEsc(p.name||'Plataforma')}</span>${a?`<span>▣ ${streamingEsc(a.label)}</span>`:''}${s.profile_label?`<span>Perfil: ${streamingEsc(s.profile_label)}</span>`:''}<span>${paid?`Cobrado: ${streamingMoney(s.paid_amount||s.price,s.currency_code)}${s.payment_method?` · ${streamingEsc(s.payment_method)}`:''}`:`Por cobrar: ${streamingMoney(s.price,s.currency_code)}`}</span></div><div class="streaming-dates"><span>Inicio <b>${streamingDate(s.starts_at)}</b></span><span>Vence <b>${streamingDate(s.expires_at)}</b></span>${days!=null?`<span>${days<0?`${Math.abs(days)} días vencida`:days===0?'Vence hoy':`${days} días restantes`}</span>`:''}${paid&&s.paid_at?`<span>Pagada <b>${streamingDate(s.paid_at,true)}</b></span>`:''}</div></div><div class="streaming-row-actions"><button class="ghost" type="button" onclick="streamingOpenWhatsApp(${s.id})">WhatsApp</button><button class="ghost" type="button" onclick="streamingOpenPayment(${s.id})">Cobro</button><button class="ghost" type="button" onclick="streamingOpenSubscription(${s.id})">Editar</button><button class="primary" type="button" onclick="streamingOpenRenewal(${s.id})">Renovar</button></div></article>`}).join('')||'<div class="streaming-empty">No hay suscripciones que coincidan con este filtro.</div>';
+}
+
+function streamingOpenPayment(id){
+ if(!streamingWritable())return;const s=streamingSubscription(id);if(!s)return;
+ const c=streamingCustomer(s.customer_id),p=streamingPlatform(s.platform_id),paid=streamingPaymentStatus(s)==='paid';
+ streamingShowModal('Registrar cobro',`<input id="streamingPaymentSubId" type="hidden" value="${s.id}"><div class="streaming-renew-summary"><b>${streamingEsc(c?.full_name||'Cliente')}</b><span>${streamingEsc(p?.name||'Plataforma')}</span><span>Precio: ${streamingMoney(s.price,s.currency_code)}</span></div><label>Estado de pago<select id="streamingPaymentStatus"><option value="pending" ${paid?'':'selected'}>Pendiente</option><option value="paid" ${paid?'selected':''}>Pagada</option></select></label><div class="two"><label>Monto cobrado<input id="streamingPaymentAmount" type="number" min="0" step="1" value="${Number(paid?s.paid_amount:s.price||0)}"></label><label>Forma de pago<input id="streamingPaymentMethod" value="${streamingEsc(s.payment_method||'')}" placeholder="Efectivo, transferencia..."></label></div>${s.paid_at?`<p class="mut">Último cobro: ${streamingDate(s.paid_at,true)}</p>`:''}`,saveStreamingPayment)
+}
+async function saveStreamingPayment(){
+ const id=Number(document.getElementById('streamingPaymentSubId')?.value),status=document.getElementById('streamingPaymentStatus')?.value==='paid'?'paid':'pending',amount=Number(document.getElementById('streamingPaymentAmount')?.value||0),method=document.getElementById('streamingPaymentMethod')?.value.trim()||'',s=streamingSubscription(id);if(!id||!s)return streamingToast('Suscripción no encontrada');
+ const row={payment_status:status,paid_amount:status==='paid'?Math.max(0,amount):0,payment_method:status==='paid'?method:'',paid_at:status==='paid'?(s.paid_at||new Date().toISOString()):null,updated_at:new Date().toISOString()};
+ const {error}=await sb.from('streaming_subscriptions').update(row).eq('id',id).eq('restaurant_id',currentRestaurant);if(error)return streamingToast(error.message);streamingCloseModal();await streamingFetchAll();renderStreamingSubscriptions();renderStreamingDashboard();streamingToast(status==='paid'?'Cobro registrado':'Cobro marcado como pendiente')
+}
+
+const streamingRenderDashboardV031=renderStreamingDashboard;
+renderStreamingDashboard=function(){streamingRenderDashboardV031();const pending=streamingSubscriptions.filter(s=>streamingPaymentStatus(s)==='pending'&&streamingDerivedStatus(s)!=='cancelled').length;streamingSetMetric('statAverage','Por cobrar',pending,'Suscripciones pendientes de pago')}
+installStreamingPaymentUi();
