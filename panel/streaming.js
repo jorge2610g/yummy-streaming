@@ -19,7 +19,7 @@ function streamingDaysLeft(value){const t=new Date(value).getTime();if(!Number.i
 function streamingDerivedStatus(row){if(row.status==="cancelled")return "cancelled";if(row.status==="paused")return "paused";return new Date(row.expires_at).getTime()<=Date.now()?"expired":"active"}
 function streamingStatusLabel(row){const st=streamingDerivedStatus(row),days=streamingDaysLeft(row.expires_at);if(st==="expired")return "Vencida";if(st==="cancelled")return "Cancelada";if(st==="paused")return "Pausada";if(days!=null&&days<=7)return `Vence en ${Math.max(0,days)} día${days===1?"":"s"}`;return "Activa"}
 function streamingStatusClass(row){const st=streamingDerivedStatus(row),days=streamingDaysLeft(row.expires_at);return st==="expired"||st==="cancelled"?"streaming-badge danger":st==="paused"?"streaming-badge muted":days!=null&&days<=7?"streaming-badge warning":"streaming-badge good"}
-function streamingWritable(){try{if(currentBusinessIsDemo()){streamingToast("La demostración es de solo lectura. Crea tu cuenta para guardar cambios.");return false}}catch(_){}return true}
+function streamingWritable(){try{if(adminPreviewMode)return true;if(currentBusinessIsDemo()){streamingToast("La demostración es de solo lectura. Crea tu cuenta para guardar cambios.");return false}}catch(_){}return true}
 function streamingPlatform(id){return streamingPlatforms.find(x=>Number(x.id)===Number(id))}
 function streamingCustomer(id){return streamingCustomers.find(x=>Number(x.id)===Number(id))}
 function streamingAccount(id){return streamingAccounts.find(x=>Number(x.id)===Number(id))}
