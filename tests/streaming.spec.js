@@ -5,7 +5,7 @@ test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
   await expect(page).toHaveTitle(/Demo · YummyPro Streaming/);
   await expect(page.getByText('Panel Streaming')).toBeVisible();
   await expect(page.getByText('DEMOSTRACIÓN · SOLO LECTURA')).toBeVisible();
-  await expect(page.getByText('Versión demo · v0.2.1')).toBeVisible();
+  await expect(page.getByText('Versión demo · v0.3.0')).toBeVisible();
   await expect(page.getByRole('button', { name: /Suscripciones/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Clientes/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Cuentas \/ Cupos/ })).toBeVisible();
