@@ -1,4 +1,4 @@
-// Validación E2E final YummyPro Streaming v1.2.0
+// Validación E2E final YummyPro Streaming v1.2.1
 const { test, expect } = require('@playwright/test');
 
 test('tienda Streaming muestra la experiencia de compra del cliente sin etiquetas demo', async ({ page }) => {
@@ -94,7 +94,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.0');
+  expect(body).toContain('Streaming · Versión v1.2.1');
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +114,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.0');
+  expect(body).toContain('Streaming · Versión v1.2.1');
   const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -173,7 +173,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const panelResponse = await request.get('/panel/');
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
-  expect(panel).toContain('Streaming · Versión v1.2.0');
+  expect(panel).toContain('Streaming · Versión v1.2.1');
   expect(panel).toContain('/panel/streaming.js?v=1200');
   expect(panel).toContain('/panel/streaming-admin-tools.js?v=1200');
 
@@ -209,4 +209,13 @@ test('catálogo Streaming tiene PWA cliente propia', async ({ request }) => {
   const manifest = await response.json();
   expect(manifest.start_url).toBe('/catalogo/?source=pwa');
   expect(manifest.scope).toBe('/catalogo/');
+});
+
+
+test('panel Streaming acepta ticket administrativo aislado', async ({ request }) => {
+  const response = await request.get('/panel/');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('admin_token_hash');
+  expect(body).toContain('verifyOtp({token_hash:payload.token_hash,type:"email"})');
 });
