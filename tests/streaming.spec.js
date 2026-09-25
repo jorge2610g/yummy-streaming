@@ -1,4 +1,4 @@
-// Validación E2E final YummyPro Streaming v0.9.0
+// Validación E2E final YummyPro Streaming v1.0.0
 const { test, expect } = require('@playwright/test');
 
 test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
@@ -68,6 +68,7 @@ test('agenda diaria Streaming v0.9.0 esta disponible', async ({ request }) => {
   expect(body).toContain('Agenda de hoy');
   expect(body).toContain('Gestionar siguiente');
   expect(body).toContain('streamingAgendaPending');
+  expect(body).toContain('streaming-control.js?v=1000');
 });
 
 test('panel carga agenda una sola vez', async ({ request }) => {
@@ -77,4 +78,18 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   expect(body).toContain('Streaming · Versión v0.9.0');
   const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
+});
+
+test('centro de control Streaming v1.0.0 esta disponible y no exporta secretos', async ({ request }) => {
+  const response = await request.get('/panel/streaming-control.js?v=1000');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('centro de control v1.0.0');
+  expect(body).toContain('Centro de control');
+  expect(body).toContain('Exportar CSV');
+  expect(body).toContain('Respaldo JSON');
+  expect(body).toContain('streamingControlResults');
+  expect(body).toContain('streamingControlSafeSnapshot');
+  expect(body).not.toContain('access_token');
+  expect(body).not.toContain('client_secret');
 });
