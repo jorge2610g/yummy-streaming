@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090b12">
+<title>Catálogo Streaming</title>
+<style>
+:root{--bg:#080a10;--card:#111522;--soft:#171c2b;--line:#252c3d;--txt:#f8fafc;--mut:#a6afc0;--a:#8b5cf6;--a2:#c084fc;--ok:#34d399}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,sans-serif;background:radial-gradient(circle at 80% 0,#8b5cf620,transparent 30%),var(--bg);color:var(--txt)}button,input{font:inherit}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}.top{position:sticky;top:0;z-index:30;background:#080a10e8;backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.nav{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-size:23px;font-weight:950}.brand span{color:var(--a2)}.actions{display:flex;gap:8px}.btn{border:1px solid var(--line);background:var(--card);color:var(--txt);border-radius:12px;padding:10px 13px;font-weight:850;cursor:pointer;text-decoration:none}.hero{padding:54px 0 30px}.eyebrow{font-size:11px;letter-spacing:.14em;font-weight:950;color:var(--a2)}h1{font-size:clamp(36px,6vw,60px);line-height:1;margin:10px 0 14px;letter-spacing:-2.5px}.lead{color:var(--mut);font-size:17px;line-height:1.55}.toolbar{display:flex;gap:10px;align-items:center;margin:10px 0 20px}.search{flex:1;display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:14px;background:#0f1420;padding:11px 13px}.search input{border:0;outline:0;background:transparent;color:#fff;width:100%}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{border:1px solid var(--line);border-radius:20px;padding:18px;background:linear-gradient(145deg,#121725,#0e121c);display:flex;flex-direction:column;min-height:250px}.icon{width:52px;height:52px;border-radius:15px;background:#ffffff0b;display:grid;place-items:center;font-size:25px}.card h3{font-size:21px;margin:14px 0 5px}.mut{color:var(--mut)}.stock{display:inline-flex;margin-top:8px;font-size:12px;font-weight:900;color:var(--ok)}.priceRow{margin-top:auto;padding-top:18px;display:flex;justify-content:space-between;gap:10px;align-items:end}.price{font-size:25px;font-weight:950}.price small{display:block;color:var(--mut);font-size:11px;margin-bottom:3px}.buy{border:0;background:var(--a);color:#fff;border-radius:12px;padding:11px 14px;font-weight:950;cursor:pointer}.empty{grid-column:1/-1;padding:40px;text-align:center;border:1px dashed var(--line);border-radius:18px;color:var(--mut)}footer{padding:35px 0;text-align:center;color:var(--mut);font-size:12px}.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;background:#171c2b;border:1px solid var(--line);padding:11px 14px;border-radius:12px;font-weight:800;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.grid{grid-template-columns:1fr}.hero{padding-top:38px}.actions .btn:first-child{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap nav"><div class="brand" id="brandName">Streaming<span>+</span></div><div class="actions"><a class="btn" id="whatsappLink" target="_blank" rel="noopener" style="display:none">WhatsApp</a><button class="btn" onclick="history.length>1?history.back():window.close()">Volver</button></div></div></header>
+<main>
+<section class="hero"><div class="wrap"><div class="eyebrow">CATÁLOGO</div><h1 id="heroTitle">Cargando catálogo…</h1><p class="lead" id="heroLead">Estamos preparando los servicios disponibles.</p></div></section>
+<section><div class="wrap"><div class="toolbar"><div class="search">⌕ <input id="search" placeholder="Buscar plataforma…" autocomplete="off"></div></div><div class="grid" id="grid"><div class="empty">Cargando productos…</div></div></div></section>
+</main>
+<footer><div class="wrap">Powered by YummyPro · v1.1.2</div></footer>
+<div class="toast" id="toast"></div>
+<script>
+const SB_URL='https://gulctljitzlwokqydigx.supabase.co';
+const SB_KEY='sb_publishable__moppTxObowifx6rJbW_tw_3GiCkqhG';
+let catalog=null;
+function iconFor(name){const n=String(name||'').toLowerCase();if(n.includes('netflix'))return '📺';if(n.includes('disney'))return '✨';if(n.includes('prime'))return '▶️';if(n.includes('spotify'))return '🎵';if(n.includes('youtube'))return '▶';if(n.includes('max'))return '🎞️';return '🎬'}
+function money(value,currency,locale){if(value===null||value===undefined||value==='')return 'Consultar';try{return new Intl.NumberFormat(locale||'es-CL',{style:'currency',currency:currency||'CLP',maximumFractionDigits:0}).format(Number(value))}catch(_){return String(value)}}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),1800)}
+function render(){
+ const q=(document.getElementById('search').value||'').trim().toLowerCase(),b=catalog?.business||{},items=(catalog?.items||[]).filter(x=>!q||String(x.name||'').toLowerCase().includes(q));
+ document.getElementById('grid').innerHTML=items.map(p=>'<article class="card"><div class="icon">'+iconFor(p.name)+'</div><h3>'+escapeHtml(p.name)+'</h3><div class="mut">'+Number(p.duration_days||30)+' días</div><span class="stock">● '+Number(p.available_slots||0)+' cupos disponibles</span><div class="priceRow"><div class="price"><small>Precio</small>'+escapeHtml(money(p.price,b.currency_code,b.locale))+'</div><button class="buy" data-buy="'+Number(p.id)+'">Comprar</button></div></article>').join('')||'<div class="empty">No hay servicios disponibles con esta búsqueda.</div>';
+}
+function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadCatalog(){
+ const ref=new URLSearchParams(location.search).get('r')||'';
+ if(!ref){document.getElementById('heroTitle').textContent='Catálogo no disponible';document.getElementById('heroLead').textContent='Falta identificar el negocio.';document.getElementById('grid').innerHTML='<div class="empty">Abre este catálogo desde el panel del negocio.</div>';return}
+ try{
+  const res=await fetch(SB_URL+'/rest/v1/rpc/streaming_public_catalog',{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY},body:JSON.stringify({p_ref:ref})});
+  if(!res.ok)throw new Error('No se pudo cargar el catálogo');
+  const data=await res.json();if(!data?.ok)throw new Error('Catálogo no encontrado');
+  catalog=data;const b=data.business||{};
+  document.title=(b.name||'Streaming')+' · Catálogo';
+  document.getElementById('brandName').innerHTML=escapeHtml(b.name||'Streaming')+'<span>+</span>';
+  document.getElementById('heroTitle').textContent='Tus plataformas favoritas';
+  document.getElementById('heroLead').textContent='Elige el servicio que necesitas y revisa la disponibilidad.';
+  if(b.whatsapp){const digits=String(b.whatsapp).replace(/\D/g,'');const link=document.getElementById('whatsappLink');link.href='https://wa.me/'+digits;link.style.display='inline-flex'}
+  render();
+ }catch(e){document.getElementById('heroTitle').textContent='Catálogo no disponible';document.getElementById('heroLead').textContent='No pudimos cargar este negocio.';document.getElementById('grid').innerHTML='<div class="empty">'+escapeHtml(e.message||'Intenta nuevamente.')+'</div>'}
+}
+document.getElementById('search').addEventListener('input',render);
+document.getElementById('grid').addEventListener('click',e=>{const btn=e.target.closest('[data-buy]');if(!btn)return;const item=(catalog?.items||[]).find(x=>Number(x.id)===Number(btn.dataset.buy));if(!item)return;const phone=String(catalog?.business?.whatsapp||'').replace(/\D/g,'');if(phone){window.open('https://wa.me/'+phone+'?text='+encodeURIComponent('Hola, quiero comprar '+item.name),'_blank')}else showToast('Consulta este servicio con el negocio')});
+loadCatalog();
+</script>
+</body>
+</html>
