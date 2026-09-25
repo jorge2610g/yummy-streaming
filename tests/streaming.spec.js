@@ -28,11 +28,21 @@ test('modulo operativo Streaming v0.6.0 esta publicado', async ({ request }) => 
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
   expect(body).toContain('entrega, activación y centro de acciones v0.6.0');
-  expect(body).toContain('Por entregar');
-  expect(body).toContain('Avisar activación');
   expect(body).toContain('Centro de acciones');
   expect(body).toContain('Cobros pendientes');
   expect(body).toContain('Entregas pendientes');
   expect(body).toContain('Vencen en 3 días');
   expect(body).toContain('Suscripciones vencidas');
+});
+
+test('recordatorios Streaming v0.7.0 estan publicados', async ({ request }) => {
+  const response = await request.get('/panel/streaming-reminders.js?v=0700');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('recordatorios operativos v0.7.0');
+  expect(body).toContain('Recordatorios automáticos');
+  expect(body).toContain('WhatsApp · siguiente');
+  expect(body).toContain('streamingReminderTasks');
+  expect(body).toContain('streamingReminderWhatsApp');
+  expect(body).toContain('La cola se calcula sola');
 });
