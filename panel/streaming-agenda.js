@@ -62,7 +62,7 @@ function renderStreamingAgenda(){
  document.querySelectorAll('[data-streaming-agenda-mode]').forEach(x=>x.classList.toggle('active',x.dataset.streamingAgendaMode===streamingAgendaMode));
 }
 function installStreamingControlV100(){
- const footer=document.querySelector('.admin-version');if(footer)footer.textContent='Streaming · Versión v1.2.5';
+ const footer=document.querySelector('.admin-version');if(footer)footer.textContent='Streaming · Versión v1.2.6';
  if(document.getElementById('streaming-control-script-v1000'))return;
  const script=document.createElement('script');script.id='streaming-control-script-v1000';script.src='/panel/streaming-control.js?v=1000';document.body.appendChild(script);
 }
