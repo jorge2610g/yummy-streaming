@@ -27,7 +27,7 @@ function streamingSubscription(id){return streamingSubscriptions.find(x=>Number(
 
 function installStreamingUi(){
  if(document.getElementById("streaming_subscriptions"))return;
- const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0201";document.head.appendChild(css);
+ const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0300";document.head.appendChild(css);
  const tabs=document.querySelector("#sideMenu .tabs");
  if(tabs){
   const management=[...tabs.querySelectorAll(".nav-group-label")].find(x=>x.textContent.trim()==="GESTIÓN");
