@@ -152,7 +152,7 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   const catalogBody = await catalog.text();
   expect(catalogBody).toContain('streaming_public_catalog');
   expect(catalogBody).toContain('CATÁLOGO DE STREAMING');
-  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.1');
+  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.2');
   expect(catalogBody).toContain('streaming_create_order');
   expect(catalogBody).toContain('create-streaming-payment');
   expect(catalogBody).toContain('Mis pedidos');
@@ -197,7 +197,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const catalog = await catalogResponse.text();
   expect(catalog).toContain('streaming_public_catalog');
   expect(catalog).toContain('CATÁLOGO DE STREAMING');
-  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.1');
+  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.2');
   expect(catalog).toContain('streaming_create_order');
   expect(catalog).toContain('create-streaming-payment');
   expect(catalog).toContain('Mis pedidos');
@@ -219,4 +219,15 @@ test('panel Streaming acepta ticket administrativo aislado', async ({ request })
   const body = await response.text();
   expect(body).toContain('admin_token_hash');
   expect(body).toContain('verifyOtp({token_hash:payload.token_hash,type:"email"})');
+});
+
+
+test('catálogo Streaming soporta sesión admin automática aislada', async ({ request }) => {
+  const response=await request.get('/catalogo/?business=14');
+  expect(response.ok()).toBeTruthy();
+  const body=await response.text();
+  expect(body).toContain('yummypro_streaming_client_auth_v1');
+  expect(body).toContain('activate_admin_client_preview');
+  expect(body).toContain('admin_client_token_hash');
+  expect(body).toContain('Admin prueba');
 });
