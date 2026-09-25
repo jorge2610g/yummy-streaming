@@ -4,7 +4,7 @@ import {Script} from 'node:vm';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
 const rootIndex = readFileSync('index.html','utf8');
-if (!rootIndex.includes("location.replace('/demo/')") || !rootIndex.includes('noindex,nofollow')) throw new Error('index.html raíz debe redirigir únicamente a la tienda demo pública');
+if (!rootIndex.includes('new URL("demo/",location.href)') || !rootIndex.includes('noindex,nofollow')) throw new Error('index.html raíz debe redirigir únicamente a la tienda demo pública con ruta relativa');
 if (/location\.replace\('\/panel\/'\)|href="\/panel\/"|Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/editor/i.test(rootIndex)) throw new Error('index.html raíz expone el panel real, documentación o contenido heredado');
 
 const panel = readFileSync('panel/index.html','utf8');
