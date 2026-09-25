@@ -1,0 +1,31 @@
+name: Alinear cache CSS Streaming v0.3.0 una vez
+on:
+  push:
+    paths:
+      - '.github/workflows/streaming-css-cache-v030-once.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ajustar cache CSS
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('panel/streaming.js')
+          s=p.read_text()
+          old='css.href="/panel/streaming.css?v=0201"'
+          new='css.href="/panel/streaming.css?v=0300"'
+          if old not in s:
+              raise SystemExit('Referencia CSS esperada no encontrada')
+          p.write_text(s.replace(old,new))
+          PY
+      - name: Commit
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add panel/streaming.js
+          git commit -m "fix(streaming): alinear cache CSS v0.3.0"
+          git push
