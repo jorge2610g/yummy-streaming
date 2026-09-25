@@ -23,11 +23,16 @@ test('manifest identifica la PWA Streaming', async ({ request }) => {
   expect(manifest.scope).toBe('/panel/');
 });
 
-test('modulo de entrega Streaming v0.5.0 esta publicado', async ({ request }) => {
-  const response = await request.get('/panel/streaming-delivery.js?v=0500');
+test('modulo operativo Streaming v0.6.0 esta publicado', async ({ request }) => {
+  const response = await request.get('/panel/streaming-delivery.js?v=0600');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('entrega y activación v0.5.0');
+  expect(body).toContain('entrega, activación y centro de acciones v0.6.0');
   expect(body).toContain('Por entregar');
   expect(body).toContain('Avisar activación');
+  expect(body).toContain('Centro de acciones');
+  expect(body).toContain('Cobros pendientes');
+  expect(body).toContain('Entregas pendientes');
+  expect(body).toContain('Vencen en 3 días');
+  expect(body).toContain('Suscripciones vencidas');
 });
