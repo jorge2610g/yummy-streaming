@@ -35,14 +35,27 @@ test('modulo operativo Streaming v0.6.0 esta publicado', async ({ request }) => 
   expect(body).toContain('Suscripciones vencidas');
 });
 
-test('recordatorios Streaming v0.7.0 estan publicados', async ({ request }) => {
-  const response = await request.get('/panel/streaming-reminders.js?v=0700');
+test('recordatorios Streaming v0.8.0 estan publicados y persistentes', async ({ request }) => {
+  const response = await request.get('/panel/streaming-reminders.js?v=0800');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('recordatorios operativos v0.7.0');
+  expect(body).toContain('recordatorios persistentes v0.8.0');
   expect(body).toContain('Recordatorios automáticos');
   expect(body).toContain('WhatsApp · siguiente');
   expect(body).toContain('streamingReminderTasks');
   expect(body).toContain('streamingReminderWhatsApp');
-  expect(body).toContain('La cola se calcula sola');
+  expect(body).toContain('streaming_reminder_logs');
+  expect(body).toContain('streamingLoadReminderLogs');
+  expect(body).toContain('Gestionado hoy');
+  expect(body).not.toContain('localStorage');
+});
+
+
+test('panel carga recordatorios una sola vez', async ({ request }) => {
+  const response = await request.get('/panel/');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('Streaming · Versión v0.8.0');
+  const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
+  expect(matches).toHaveLength(1);
 });
