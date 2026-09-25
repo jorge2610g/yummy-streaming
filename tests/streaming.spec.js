@@ -152,7 +152,8 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   const catalogBody = await catalog.text();
   expect(catalogBody).toContain('streaming_public_catalog');
   expect(catalogBody).toContain('CATÁLOGO DE STREAMING');
-  expect(catalogBody).toContain('Powered by YummyPro · v1.1.5');
+  expect(catalogBody).toContain('Powered by YummyPro · v1.1.6');
+  expect(catalogBody).not.toContain(":'#'");
 
   const module = await request.get('/panel/streaming.js?v=1140');
   expect(module.ok()).toBeTruthy();
@@ -191,5 +192,6 @@ test('panel publica catálogo global y herramientas administrativas v1.1.5', asy
   const catalog = await catalogResponse.text();
   expect(catalog).toContain('streaming_public_catalog');
   expect(catalog).toContain('CATÁLOGO DE STREAMING');
-  expect(catalog).toContain('Powered by YummyPro · v1.1.5');
+  expect(catalog).toContain('Powered by YummyPro · v1.1.6');
+  expect(catalog).not.toContain(":'#'");
 });
