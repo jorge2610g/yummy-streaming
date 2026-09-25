@@ -60,3 +60,23 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
+
+
+test('agenda diaria Streaming v0.9.0 esta disponible', async ({ request }) => {
+  const response = await request.get('/panel/streaming-agenda.js?v=0900');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('agenda diaria v0.9.0');
+  expect(body).toContain('Agenda de hoy');
+  expect(body).toContain('Gestionar siguiente');
+  expect(body).toContain('streamingAgendaPending');
+});
+
+test('panel carga agenda una sola vez', async ({ request }) => {
+  const response = await request.get('/panel/');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('Streaming · Versión v0.9.0');
+  const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
+  expect(matches).toHaveLength(1);
+});
