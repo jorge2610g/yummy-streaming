@@ -44,6 +44,11 @@ for (const marker of [
   'Sin cupos · asignación actual'
 ]) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
 
+for (const marker of [
+  'selectedId=Number(selected)||null',
+  'return isSelected||(a.active&&free>0)'
+]) if (!streaming.includes(marker)) throw new Error(`Filtro de cupos incompleto: falta ${marker}`);
+
 const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager:/s)?.[1] || '';
 for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) {
   if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
