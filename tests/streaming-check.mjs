@@ -22,7 +22,7 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo],[
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v0.9.0','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=0400','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.1.2','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=0400','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 const reminderScriptCount=(panel.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[]).length;
 if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
