@@ -1,4 +1,4 @@
-// Validación final YummyPro Streaming v0.6.0
+// Validación final YummyPro Streaming v0.7.0
 import {existsSync, readFileSync} from 'node:fs';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
@@ -9,6 +9,7 @@ if (/location\.replace\('\/panel\/'\)|href="\/panel\/"|Landing comercial|Planes 
 const panel = readFileSync('panel/index.html','utf8');
 const streaming = readFileSync('panel/streaming.js','utf8');
 const delivery = readFileSync('panel/streaming-delivery.js','utf8');
+const reminders = readFileSync('panel/streaming-reminders.js','utf8');
 const demo = readFileSync('panel/demo.html','utf8');
 const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const cname = readFileSync('CNAME','utf8').trim();
@@ -18,84 +19,25 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo]])
 }
 
 for (const marker of [
-  'YummyPro Streaming',
-  'isStreamingBusiness()',
-  'streaming:{',
-  'streaming_subscriptions',
-  'streaming_customers',
-  'streaming_accounts',
-  'streaming_platforms',
-  'streaming_renewals',
-  'QR / Enlace',
-  'Streaming · Versión v0.6.0',
-  'create_my_trial_restaurant_v3',
-  'manifest.webmanifest',
-  '/panel/streaming.js?v=0400',
-  '/panel/streaming-delivery.js?v=0600'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v0.7.0','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=0400','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0700'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 
-for (const marker of [
-  'núcleo operativo v0.4.0',
-  'Suscripciones de clientes',
-  'Directorio de clientes',
-  'Cuentas y cupos',
-  'Plataformas',
-  'Renovaciones',
-  'streamingOpenSubscription',
-  'streamingOpenCustomer',
-  'streamingOpenAccount',
-  'streamingOpenPlatform',
-  'streaming_renew_subscription',
-  'YummyPro no guarda contraseñas',
-  'Sin cupos · asignación actual',
-  'Próx. 3 días',
-  'te escribo para recordarte que tu suscripción',
-  'WhatsApp confirmación',
-  'tu renovación de',
-  'Control de cobros v0.4.0',
-  'streamingOpenPayment',
-  'payment_status',
-  'Pendientes de cobro'
-]) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
+for (const marker of ['núcleo operativo v0.4.0','Suscripciones de clientes','Directorio de clientes','Cuentas y cupos','Plataformas','Renovaciones','streamingOpenSubscription','streamingOpenCustomer','streamingOpenAccount','streamingOpenPlatform','streaming_renew_subscription','YummyPro no guarda contraseñas','Sin cupos · asignación actual','Próx. 3 días','te escribo para recordarte que tu suscripción','WhatsApp confirmación','tu renovación de','Control de cobros v0.4.0','streamingOpenPayment','payment_status','Pendientes de cobro']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
 
-for (const marker of [
-  'selectedId=Number(selected)||null',
-  'return isSelected||(a.active&&free>0)'
-]) if (!streaming.includes(marker)) throw new Error(`Filtro de cupos incompleto: falta ${marker}`);
+for (const marker of ['selectedId=Number(selected)||null','return isSelected||(a.active&&free>0)']) if (!streaming.includes(marker)) throw new Error(`Filtro de cupos incompleto: falta ${marker}`);
 
 const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager:/s)?.[1] || '';
-for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) {
-  if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
-}
-for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) {
-  if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
-}
+for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
+for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 
 if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.5.0')) throw new Error('Demo Streaming v0.5.0 incompleta');
-for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
-  if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
-}
-for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) {
-  if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
-}
+for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
+for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-for (const marker of [
-  'entrega, activación y centro de acciones v0.6.0',
-  'delivery_status',
-  'delivered_at',
-  'streamingOpenDelivery',
-  'Por entregar',
-  'Avisar activación',
-  'streamingActionCenter',
-  'Centro de acciones',
-  'Cobros pendientes',
-  'Entregas pendientes',
-  'Vencen en 3 días',
-  'Suscripciones vencidas',
-  "streamingActionFilter('payment_pending')",
-  "streamingActionFilter('delivery_pending')"
-]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
+for (const marker of ['entrega, activación y centro de acciones v0.6.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación','streamingActionCenter','Centro de acciones','Cobros pendientes','Entregas pendientes','Vencen en 3 días','Suscripciones vencidas',"streamingActionFilter('payment_pending')","streamingActionFilter('delivery_pending')"]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
 
-console.log('Panel Streaming v0.6.0 validado con centro de acciones; raíz y demo públicas aisladas del panel real');
+for (const marker of ['recordatorios operativos v0.7.0','streamingReminderTasks','streamingReminderMessage','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Cobros','Entregas','Próximos','Vencidas','La cola se calcula sola','localStorage']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
+
+console.log('Panel Streaming v0.7.0 validado con centro de acciones y recordatorios; demo aislada del panel real');
