@@ -2985,11 +2985,9 @@ async function enter(user){
         adminPreviewMode=true;adminPreviewTab=new URLSearchParams(location.search).get("tab")||"dashboard";currentRestaurant=previewId;currentRole="restaurant";document.body.classList.remove("waiter-mobile-shell");document.body.classList.add("admin-preview");
         document.getElementById("login").classList.add("hidden");document.getElementById("who").textContent="Vista administrador · Negocio #"+previewId;
         const backBtn=document.getElementById("adminPreviewBackBtn");if(backBtn)backBtn.style.removeProperty("display");const logoutBtn=document.getElementById("panelLogoutBtn");if(logoutBtn){logoutBtn.hidden=true;logoutBtn.style.setProperty("display","none","important");logoutBtn.setAttribute("aria-hidden","true")}
-        // El superadministrador usa el panel real del negocio, pero sin filtros de plan ni de rol.
+        // La vista administrativa no debe bloquear la apertura por cargas secundarias.
+        // Primero mostramos el panel del negocio y luego actualizamos sus datos en segundo plano.
         subscriptionModuleAccess=null;
-        const initialLoad=loadRestaurants();
-        const loadGuard=new Promise((_,reject)=>setTimeout(()=>reject(new Error("La carga del negocio tardó demasiado.")),12000));
-        await Promise.race([initialLoad,loadGuard]);
         applyRoleAccess();
         const allowed=effectiveTabs(),tab=allowed.includes(adminPreviewTab)?adminPreviewTab:(allowed.includes("dashboard")?"dashboard":allowed[0]);
         document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelector('.tab[data-tab="'+tab+'"]')?.classList.add("active");document.getElementById(tab)?.classList.add("active");
