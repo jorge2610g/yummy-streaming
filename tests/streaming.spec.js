@@ -1,5 +1,26 @@
-// Validación E2E final YummyPro Streaming v1.0.0
+// Validación E2E final YummyPro Streaming v1.1.0
 const { test, expect } = require('@playwright/test');
+
+test('tienda demo Streaming muestra la experiencia de compra del cliente', async ({ page }) => {
+  await page.goto('/demo/');
+  await expect(page).toHaveTitle(/YummyPlay Demo · Tienda Streaming/);
+  await expect(page.getByText('DEMOSTRACIÓN DEL NEGOCIO · VISTA DEL CLIENTE')).toBeVisible();
+  await expect(page.getByText('TIENDA DEMO · v1.1.0')).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Elige tu plataforma/ })).toBeVisible();
+  await expect(page.getByText('Servicios disponibles')).toBeVisible();
+  await expect(page.getByText('Netflix Premium', { exact: true }).first()).toBeVisible();
+  await page.getByRole('button', { name: 'Comprar' }).first().click();
+  await expect(page.getByText('Completa tu pedido')).toBeVisible();
+  await page.locator('#buyerName').fill('Cliente Demo');
+  await page.locator('#buyerPhone').fill('+56 9 1111 2222');
+  await page.getByRole('button', { name: 'Finalizar pedido demo' }).click();
+  await expect(page.getByRole('heading', { name: 'Pedido recibido' })).toBeVisible();
+});
+
+test('raíz Streaming redirige a la tienda demo comercial', async ({ page }) => {
+  await page.goto('/');
+  await expect(page).toHaveURL(/\/demo\/$/);
+});
 
 test('demo Streaming carga como vista navegable de solo lectura', async ({ page }) => {
   await page.goto('/panel/demo.html');
