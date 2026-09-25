@@ -2993,7 +2993,7 @@ async function enter(user){
         document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));document.querySelector('.tab[data-tab="'+tab+'"]')?.classList.add("active");document.getElementById(tab)?.classList.add("active");
         document.getElementById("app").classList.remove("hidden");document.body.classList.remove("auth-loading");document.body.classList.add("auth-ready");msg.textContent="";
         setTimeout(async()=>{try{
-          await Promise.allSettled([loadSubscriptionPlans(),refreshAll()]);
+          await Promise.allSettled([loadRestaurants(),loadSubscriptionPlans(),refreshAll()]);
           applyRoleAccess();
           if(tab==="orders")await loadOrders();else if(tab==="products")await loadProducts();else if(tab==="categories")await loadCategories();else if(tab==="inventory")await loadInventory();else if(tab==="table_qr")await loadRestaurantTables();else if(tab==="retail_orders")await loadRetailOnlineOrders();else if(tab==="retail_pos")await loadRetailPos();else if(tab==="retail_products")await loadRetailProducts();else if(tab==="retail_suppliers")await loadRetailSuppliers();else if(tab==="retail_purchases")await loadRetailPurchases();else if(tab==="plans")await loadSubscriptionPlans();else if(tab==="settings")await loadSettings();else if(tab==="dashboard")await refreshRestaurantDashboard();
         }catch(e){console.error("Carga secundaria de vista administrador",e);toast("La vista abrió, pero una sección secundaria no pudo actualizarse.")}},0);
