@@ -1,4 +1,4 @@
-// Validación final YummyPro Streaming v1.1.1
+// Validación final YummyPro Streaming v1.1.2
 import {existsSync, readFileSync} from 'node:fs';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
@@ -36,7 +36,7 @@ const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager
 for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
 for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 
-if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('Powered by YummyPro · v1.1.1')) throw new Error('Tienda Streaming v1.1.1 incompleta');
+if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('Powered by YummyPro · v1.1.2')) throw new Error('Tienda Streaming v1.1.2 incompleta');
 for (const marker of ['Servicios disponibles','Netflix Premium','Disney+ Premium','Prime Video','Spotify Premium','Comprar','Finalizar pedido','Iniciar sesión','Mis cuentas','whatsappBtn','themeBtn']) if (!storeDemo.includes(marker)) throw new Error(`Tienda Streaming: falta ${marker}`);
 for (const forbidden of ['Panel Streaming','DEMOSTRACIÓN · SOLO LECTURA','DEMOSTRACIÓN DEL NEGOCIO','TIENDA DEMO','Demo comercial','Precio demo','Finalizar pedido demo','No se realizará ningún cobro real.','streamingOpenSubscription','streamingOpenPayment','supabase-js','SB_URL']) if (storeDemo.includes(forbidden)) throw new Error(`Tienda Streaming expone texto demo, panel o integración interna: ${forbidden}`);
 
@@ -55,4 +55,6 @@ for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguient
 for (const marker of ['centro de control v1.0.0','Centro de control','Exportar CSV','Respaldo JSON','streamingControlSafeSnapshot','streamingControlResults','streamingControlExportBackup','streamingControlExportCsv','no incluyen contraseñas']) if (!control.includes(marker)) throw new Error(`panel/streaming-control.js: falta ${marker}`);
 for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (control.includes(forbidden)) throw new Error(`panel/streaming-control.js contiene un campo sensible prohibido: ${forbidden}`);
 
-console.log('Streaming v1.1.1 validado con tienda cliente limpia, panel operativo y demo administrativa aislada');
+console.log('Streaming v1.1.2 validado con tienda cliente limpia, panel operativo y demo administrativa aislada');
+
+for(const marker of ['clearAdminPreviewSessionHash','adminPreviewTimed','La verificación del negocio','El negocio #','ya no existe','maybeSingle()'])if(!panel.includes(marker))throw new Error('panel/index.html: falta hotfix de vista administrativa '+marker);
