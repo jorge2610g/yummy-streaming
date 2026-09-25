@@ -22,14 +22,14 @@ for (const marker of [
   'streaming_platforms',
   'streaming_renewals',
   'QR / Enlace',
-  'Streaming · Versión v0.2.1',
+  'Streaming · Versión v0.3.0',
   'create_my_trial_restaurant_v3',
   'manifest.webmanifest',
-  '/panel/streaming.js?v=0201'
+  '/panel/streaming.js?v=0300'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 
 for (const marker of [
-  'núcleo operativo v0.2.1',
+  'núcleo operativo v0.3.0',
   'Suscripciones de clientes',
   'Directorio de clientes',
   'Cuentas y cupos',
@@ -41,7 +41,9 @@ for (const marker of [
   'streamingOpenPlatform',
   'streaming_renew_subscription',
   'YummyPro no guarda contraseñas',
-  'Sin cupos · asignación actual'
+  'Sin cupos · asignación actual',
+  'Próx. 3 días',
+  'te escribo para recordarte que tu suscripción'
 ]) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
 
 for (const marker of [
@@ -57,11 +59,11 @@ for (const forbidden of ['orders','products','categories','pos','kitchen','cash'
   if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 }
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.2.1')) throw new Error('Demo Streaming v0.2.1 incompleta');
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.3.0')) throw new Error('Demo Streaming v0.2.1 incompleta');
 for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
   if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
 }
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-console.log('Panel Streaming v0.2.1 validado sin landing propia y con filtro de cupos');
+console.log('Panel Streaming v0.3.0 validado con seguimiento de vencimientos');
