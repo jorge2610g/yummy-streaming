@@ -1,6 +1,9 @@
 import {existsSync, readFileSync} from 'node:fs';
 
-if (existsSync('index.html')) throw new Error('Streaming no debe contener una landing propia en index.html');
+if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija al panel');
+const rootIndex = readFileSync('index.html','utf8');
+if (!rootIndex.includes("location.replace('/panel/')") || !rootIndex.includes('noindex,nofollow')) throw new Error('index.html raíz debe ser solo una redirección segura al panel');
+if (/Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/editor/i.test(rootIndex)) throw new Error('index.html raíz expone documentación o contenido heredado');
 
 const panel = readFileSync('panel/index.html','utf8');
 const streaming = readFileSync('panel/streaming.js','utf8');
@@ -61,11 +64,11 @@ for (const forbidden of ['orders','products','categories','pos','kitchen','cash'
   if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 }
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.3.1')) throw new Error('Demo Streaming v0.3.0 incompleta');
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.3.1')) throw new Error('Demo Streaming v0.3.1 incompleta');
 for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
   if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
 }
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-console.log('Panel Streaming v0.3.1 validado con confirmación de renovación por WhatsApp');
+console.log('Panel Streaming v0.3.1 validado con redirección raíz segura y confirmación de renovación por WhatsApp');
