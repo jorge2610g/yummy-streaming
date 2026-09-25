@@ -1,4 +1,4 @@
-name: Calidad del panel restaurante
+name: Calidad del panel Streaming
 on: [push, pull_request, workflow_dispatch]
 permissions: {contents: read}
 jobs:
@@ -12,9 +12,6 @@ jobs:
       - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm test
-        env:
-          RESTAURANT_TEST_EMAIL: ${{ secrets.RESTAURANT_TEST_EMAIL }}
-          RESTAURANT_TEST_PASSWORD: ${{ secrets.RESTAURANT_TEST_PASSWORD }}
       - if: failure()
         uses: actions/upload-artifact@v4
-        with: {name: restaurante-test-report, path: playwright-report, if-no-files-found: ignore}
+        with: {name: streaming-test-report, path: playwright-report, if-no-files-found: ignore}
