@@ -1,4 +1,4 @@
-/* YummyPro Streaming · núcleo operativo v0.2.0 */
+/* YummyPro Streaming · núcleo operativo v0.2.1 */
 let streamingPlatforms=[];
 let streamingCustomers=[];
 let streamingAccounts=[];
@@ -27,7 +27,7 @@ function streamingSubscription(id){return streamingSubscriptions.find(x=>Number(
 
 function installStreamingUi(){
  if(document.getElementById("streaming_subscriptions"))return;
- const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0200";document.head.appendChild(css);
+ const css=document.createElement("link");css.rel="stylesheet";css.href="/panel/streaming.css?v=0201";document.head.appendChild(css);
  const tabs=document.querySelector("#sideMenu .tabs");
  if(tabs){
   const management=[...tabs.querySelectorAll(".nav-group-label")].find(x=>x.textContent.trim()==="GESTIÓN");
@@ -111,7 +111,7 @@ async function saveStreamingPlatform(){const id=Number(document.getElementById("
 
 function streamingPlatformOptions(selected){return streamingPlatforms.filter(p=>p.active||Number(p.id)===Number(selected)).map(p=>`<option value="${p.id}" ${Number(p.id)===Number(selected)?"selected":""}>${streamingEsc(p.name)}</option>`).join("")}
 function streamingCustomerOptions(selected){return streamingCustomers.filter(c=>c.active||Number(c.id)===Number(selected)).map(c=>`<option value="${c.id}" ${Number(c.id)===Number(selected)?"selected":""}>${streamingEsc(c.full_name)}${c.phone?` · ${streamingEsc(c.phone)}`:""}</option>`).join("")}
-function streamingAccountOptions(platformId,selected){return `<option value="">Sin cuenta asignada</option>`+streamingAccounts.filter(a=>(a.active||Number(a.id)===Number(selected))&&(!platformId||Number(a.platform_id)===Number(platformId))).map(a=>{const free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id));return `<option value="${a.id}" ${Number(a.id)===Number(selected)?"selected":""}>${streamingEsc(a.label)} · ${free}/${a.max_slots} libres</option>`}).join("")}
+function streamingAccountOptions(platformId,selected){const selectedId=Number(selected)||null;return `<option value="">Sin cuenta asignada</option>`+streamingAccounts.filter(a=>{if(platformId&&Number(a.platform_id)!==Number(platformId))return false;const isSelected=selectedId!=null&&Number(a.id)===selectedId,free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id));return isSelected||(a.active&&free>0)}).map(a=>{const free=Math.max(0,Number(a.max_slots||1)-streamingAccountUsed(a.id)),isSelected=selectedId!=null&&Number(a.id)===selectedId,availability=free>0?`${free}/${a.max_slots} libres`:isSelected?"Sin cupos · asignación actual":"Sin cupos";return `<option value="${a.id}" ${isSelected?"selected":""}>${streamingEsc(a.label)} · ${availability}</option>`}).join("")}
 function streamingSyncAccountOptions(selected=null){const platformId=Number(document.getElementById("streamingSubPlatform")?.value)||null,sel=document.getElementById("streamingSubAccount");if(sel)sel.innerHTML=streamingAccountOptions(platformId,selected);const p=streamingPlatform(platformId),days=document.getElementById("streamingSubDays");if(days&&p&&!days.dataset.touched)days.value=p.default_duration_days||30}
 
 function streamingOpenAccount(id=null){if(!streamingWritable())return;if(!streamingPlatforms.length)return streamingToast("Primero crea una plataforma");const a=id?streamingAccount(id):null;streamingShowModal(a?"Editar cuenta / cupos":"Nueva cuenta / cupos",`<input id="streamingAccountId" type="hidden" value="${a?.id||""}"><label>Plataforma<select id="streamingAccountPlatform">${streamingPlatformOptions(a?.platform_id)}</select></label><label>Nombre interno de la cuenta<input id="streamingAccountLabel" value="${streamingEsc(a?.label||"")}" placeholder="Netflix Familiar 1"></label><label>Identificador / correo de acceso<input id="streamingAccountLogin" value="${streamingEsc(a?.login_identifier||"")}" placeholder="cuenta@email.com"><small class="mut">Por seguridad no guardamos contraseñas de servicios de streaming.</small></label><label>Cupos / perfiles disponibles<input id="streamingAccountSlots" type="number" min="1" max="100" value="${a?.max_slots||1}"></label><label>Notas<textarea id="streamingAccountNotes">${streamingEsc(a?.notes||"")}</textarea></label><label class="streaming-check"><input id="streamingAccountActive" type="checkbox" ${a?.active===false?"":"checked"}> Cuenta activa</label>`,saveStreamingAccount)}
