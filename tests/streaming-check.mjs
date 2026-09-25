@@ -1,4 +1,4 @@
-// Validación final YummyPro Streaming v0.9.0
+// Validación final YummyPro Streaming v1.0.0
 import {existsSync, readFileSync} from 'node:fs';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
@@ -11,6 +11,7 @@ const streaming = readFileSync('panel/streaming.js','utf8');
 const delivery = readFileSync('panel/streaming-delivery.js','utf8');
 const reminders = readFileSync('panel/streaming-reminders.js','utf8');
 const agenda = readFileSync('panel/streaming-agenda.js','utf8');
+const control = readFileSync('panel/streaming-control.js','utf8');
 const demo = readFileSync('panel/demo.html','utf8');
 const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const cname = readFileSync('CNAME','utf8').trim();
@@ -44,7 +45,9 @@ for (const marker of ['entrega, activación y centro de acciones v0.6.0','delive
 
 for (const marker of ['recordatorios persistentes v0.8.0','streaming_reminder_logs','streamingLoadReminderLogs','streamingReminderOpenedToday','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Gestionado hoy','historial queda sincronizado entre dispositivos']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
 for (const forbidden of ['localStorage','Enviado hoy']) if (reminders.includes(forbidden)) throw new Error(`panel/streaming-reminders.js conserva estado local o etiqueta engañosa: ${forbidden}`);
-for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
+for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext','streaming-control.js?v=1000','Streaming · Versión v1.0.0']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
 
+for (const marker of ['centro de control v1.0.0','Centro de control','Exportar CSV','Respaldo JSON','streamingControlSafeSnapshot','streamingControlResults','streamingControlExportBackup','streamingControlExportCsv','no incluyen contraseñas']) if (!control.includes(marker)) throw new Error(`panel/streaming-control.js: falta ${marker}`);
+for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (control.includes(forbidden)) throw new Error(`panel/streaming-control.js contiene un campo sensible prohibido: ${forbidden}`);
 
-console.log('Panel Streaming v0.9.0 validado con agenda diaria, recordatorios persistentes y demo aislada');
+console.log('Panel Streaming v1.0.0 validado con centro de control, agenda diaria, recordatorios persistentes y demo aislada');
