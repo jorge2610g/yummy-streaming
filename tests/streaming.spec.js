@@ -1,3 +1,4 @@
+// Validación E2E final YummyPro Streaming v0.8.0
 const { test, expect } = require('@playwright/test');
 
 test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
