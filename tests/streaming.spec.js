@@ -14,7 +14,7 @@ test('demo Streaming carga como vista navegable de solo lectura', async ({ page 
 
   await page.getByRole('button', { name: /Clientes/ }).click();
   await expect(page.getByRole('heading', { name: 'Clientes' })).toBeVisible();
-  await expect(page.getByText('DIRECTORIO')).toBeVisible();
+  await expect(page.getByText('DIRECTORIO', { exact: true })).toBeVisible();
 
   await page.getByRole('button', { name: /Cuentas \/ Cupos/ }).click();
   await expect(page.getByRole('heading', { name: 'Cuentas / Cupos' })).toBeVisible();
