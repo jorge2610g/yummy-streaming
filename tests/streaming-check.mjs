@@ -1,9 +1,9 @@
 import {existsSync, readFileSync} from 'node:fs';
 
-if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija al panel');
+if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
 const rootIndex = readFileSync('index.html','utf8');
-if (!rootIndex.includes("location.replace('/panel/')") || !rootIndex.includes('noindex,nofollow')) throw new Error('index.html raíz debe ser solo una redirección segura al panel');
-if (/Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/editor/i.test(rootIndex)) throw new Error('index.html raíz expone documentación o contenido heredado');
+if (!rootIndex.includes("location.replace('/panel/demo.html')") || !rootIndex.includes('noindex,nofollow')) throw new Error('index.html raíz debe redirigir únicamente a la demo pública');
+if (/location\.replace\('\/panel\/'\)|href="\/panel\/"|Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/editor/i.test(rootIndex)) throw new Error('index.html raíz expone el panel real, documentación o contenido heredado');
 
 const panel = readFileSync('panel/index.html','utf8');
 const streaming = readFileSync('panel/streaming.js','utf8');
@@ -74,9 +74,12 @@ if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión 
 for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
   if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
 }
+for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) {
+  if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
+}
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
 for (const marker of ['entrega y activación v0.5.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación']) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
 
-console.log('Panel Streaming v0.5.0 validado con cobros, entrega/activación y WhatsApp');
+console.log('Panel Streaming v0.5.0 validado; raíz y demo públicas aisladas del panel real');
