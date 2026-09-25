@@ -11,7 +11,7 @@ test('tienda Streaming muestra la experiencia de compra del cliente sin etiqueta
   await expect(page.getByText('Servicios disponibles')).toBeVisible();
   await expect(page.getByText('Netflix Premium', { exact: true }).first()).toBeVisible();
   await page.getByRole('button', { name: 'Comprar' }).first().click();
-  await expect(page.getByText('Completa tu pedido')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Completa tu pedido', exact: true })).toBeVisible();
   await page.locator('#buyerName').fill('Cliente Demo');
   await page.locator('#buyerPhone').fill('+56 9 1111 2222');
   await page.getByRole('button', { name: 'Finalizar pedido' }).click();
