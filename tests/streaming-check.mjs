@@ -3,6 +3,7 @@ import {existsSync, readFileSync} from 'node:fs';
 if (existsSync('index.html')) throw new Error('Streaming no debe contener una landing propia en index.html');
 
 const panel = readFileSync('panel/index.html','utf8');
+const streaming = readFileSync('panel/streaming.js','utf8');
 const demo = readFileSync('panel/demo.html','utf8');
 const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const cname = readFileSync('CNAME','utf8').trim();
@@ -15,22 +16,46 @@ for (const marker of [
   'YummyPro Streaming',
   'isStreamingBusiness()',
   'streaming:{',
-  'Ventas / Entregas',
-  'Suscripciones',
-  'Plataformas',
+  'streaming_subscriptions',
+  'streaming_customers',
+  'streaming_accounts',
+  'streaming_platforms',
+  'streaming_renewals',
   'QR / Enlace',
-  'Streaming · Versión v0.1.1',
+  'Streaming · Versión v0.2.0',
   'create_my_trial_restaurant_v3',
-  'manifest.webmanifest'
+  'manifest.webmanifest',
+  '/panel/streaming.js?v=0200'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 
+for (const marker of [
+  'núcleo operativo v0.2.0',
+  'Suscripciones de clientes',
+  'Directorio de clientes',
+  'Cuentas y cupos',
+  'Plataformas',
+  'Renovaciones',
+  'streamingOpenSubscription',
+  'streamingOpenCustomer',
+  'streamingOpenAccount',
+  'streamingOpenPlatform',
+  'streaming_renew_subscription',
+  'YummyPro no guarda contraseñas'
+]) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
+
 const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager:/s)?.[1] || '';
-for (const forbidden of ['pos','kitchen','cash','table_qr','appointments','services','professionals']) {
+for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) {
+  if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
+}
+for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) {
   if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 }
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.1.1')) throw new Error('Demo Streaming incompleta');
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.2.0')) throw new Error('Demo Streaming v0.2.0 incompleta');
+for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
+  if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
+}
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-console.log('Panel Streaming v0.1.1 validado sin landing propia');
+console.log('Panel Streaming v0.2.0 validado sin landing propia');
