@@ -1,3 +1,4 @@
+// Validación final YummyPro Streaming v0.6.0
 import {existsSync, readFileSync} from 'node:fs';
 
 if (!existsSync('index.html')) throw new Error('Streaming debe tener una portada raíz mínima que redirija a la demo');
