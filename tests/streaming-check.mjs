@@ -7,6 +7,7 @@ if (/Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/edito
 
 const panel = readFileSync('panel/index.html','utf8');
 const streaming = readFileSync('panel/streaming.js','utf8');
+const delivery = readFileSync('panel/streaming-delivery.js','utf8');
 const demo = readFileSync('panel/demo.html','utf8');
 const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const cname = readFileSync('CNAME','utf8').trim();
@@ -25,10 +26,11 @@ for (const marker of [
   'streaming_platforms',
   'streaming_renewals',
   'QR / Enlace',
-  'Streaming · Versión v0.4.0',
+  'Streaming · Versión v0.5.0',
   'create_my_trial_restaurant_v3',
   'manifest.webmanifest',
-  '/panel/streaming.js?v=0400'
+  '/panel/streaming.js?v=0400',
+  '/panel/streaming-delivery.js?v=0500'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 
 for (const marker of [
@@ -68,11 +70,13 @@ for (const forbidden of ['orders','products','categories','pos','kitchen','cash'
   if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 }
 
-if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.4.0')) throw new Error('Demo Streaming v0.3.1 incompleta');
+if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v0.5.0')) throw new Error('Demo Streaming v0.5.0 incompleta');
 for (const marker of ['Suscripciones','Clientes','Cuentas / Cupos','Plataformas','Renovaciones']) {
   if (!demo.includes(marker)) throw new Error(`Demo Streaming: falta ${marker}`);
 }
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
-console.log('Panel Streaming v0.4.0 validado con redirección raíz segura y confirmación de renovación por WhatsApp');
+for (const marker of ['entrega y activación v0.5.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación']) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
+
+console.log('Panel Streaming v0.5.0 validado con cobros, entrega/activación y WhatsApp');
