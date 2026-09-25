@@ -6,11 +6,11 @@ test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
   await expect(page.getByText('Panel Streaming')).toBeVisible();
   await expect(page.getByText('DEMOSTRACIÓN · SOLO LECTURA')).toBeVisible();
   await expect(page.getByText('Versión demo · v0.2.0')).toBeVisible();
-  await expect(page.getByText('Suscripciones', { exact: true })).toBeVisible();
-  await expect(page.getByText('Clientes', { exact: true })).toBeVisible();
-  await expect(page.getByText('Cuentas / Cupos', { exact: true })).toBeVisible();
-  await expect(page.getByText('Plataformas', { exact: true })).toBeVisible();
-  await expect(page.getByText('Renovaciones', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Suscripciones/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Clientes/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Cuentas \/ Cupos/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Plataformas/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Renovaciones/ })).toBeVisible();
   await expect(page.getByRole('link', { name: /Crear cuenta · 30 días gratis/i })).toHaveAttribute('href', /web\.yummypro\.online\/#streaming/);
 });
 
