@@ -1,17 +1,34 @@
 // Validación E2E final YummyPro Streaming v1.0.0
 const { test, expect } = require('@playwright/test');
 
-test('demo Streaming carga como vista de solo lectura', async ({ page }) => {
+test('demo Streaming carga como vista navegable de solo lectura', async ({ page }) => {
   await page.goto('/panel/demo.html');
   await expect(page).toHaveTitle(/Demo · YummyPro Streaming/);
-  await expect(page.getByText('Panel Streaming')).toBeVisible();
+  await expect(page.getByText('Panel Streaming', { exact: true })).toBeVisible();
   await expect(page.getByText('DEMOSTRACIÓN · SOLO LECTURA')).toBeVisible();
-  await expect(page.getByText('Versión demo · v0.5.0')).toBeVisible();
-  await expect(page.getByRole('button', { name: /Suscripciones/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Clientes/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Cuentas \/ Cupos/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Plataformas/ })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Renovaciones/ })).toBeVisible();
+  await expect(page.getByText('Versión demo · v1.0.0')).toBeVisible();
+
+  await page.getByRole('button', { name: /Suscripciones/ }).click();
+  await expect(page.getByRole('heading', { name: 'Suscripciones' })).toBeVisible();
+  await expect(page.getByText('Control de accesos activos')).toBeVisible();
+
+  await page.getByRole('button', { name: /Clientes/ }).click();
+  await expect(page.getByRole('heading', { name: 'Clientes' })).toBeVisible();
+  await expect(page.getByText('DIRECTORIO')).toBeVisible();
+
+  await page.getByRole('button', { name: /Cuentas \/ Cupos/ }).click();
+  await expect(page.getByRole('heading', { name: 'Cuentas / Cupos' })).toBeVisible();
+  await expect(page.getByText('Cuentas activas')).toBeVisible();
+
+  await page.getByRole('button', { name: /Plataformas/ }).click();
+  await expect(page.getByRole('heading', { name: 'Plataformas' })).toBeVisible();
+  await expect(page.getByText('CATÁLOGO')).toBeVisible();
+
+  await page.getByRole('button', { name: /Renovaciones/ }).click();
+  await expect(page.getByRole('heading', { name: 'Renovaciones' })).toBeVisible();
+  await expect(page.getByText('HISTORIAL RECIENTE')).toBeVisible();
+
+  await expect(page.getByRole('link', { name: /Ingresar a mi panel/i })).toHaveAttribute('href', 'https://streaming.yummypro.online/panel/');
   await expect(page.getByRole('link', { name: /Crear cuenta · 30 días gratis/i })).toHaveAttribute('href', /web\.yummypro\.online\/#streaming/);
 });
 
