@@ -94,7 +94,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.9');
+  expect(body).toContain('Streaming · Versión v1.2.10');
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +114,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.9');
+  expect(body).toContain('Streaming · Versión v1.2.10');
   const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -152,7 +152,7 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   const catalogBody = await catalog.text();
   expect(catalogBody).toContain('streaming_public_catalog');
   expect(catalogBody).toContain('CATÁLOGO DE STREAMING');
-  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.3');
+  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.4');
   expect(catalogBody).toContain('streaming_create_order');
   expect(catalogBody).toContain('create-streaming-payment');
   expect(catalogBody).toContain('Mis pedidos');
@@ -174,7 +174,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const panelResponse = await request.get('/panel/');
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
-  expect(panel).toContain('Streaming · Versión v1.2.9');
+  expect(panel).toContain('Streaming · Versión v1.2.10');
   expect(panel).toContain('/panel/streaming.js?v=1200');
   expect(panel).toContain('/panel/streaming-admin-tools.js?v=1200');
 
@@ -197,7 +197,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const catalog = await catalogResponse.text();
   expect(catalog).toContain('streaming_public_catalog');
   expect(catalog).toContain('CATÁLOGO DE STREAMING');
-  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.3');
+  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.4');
   expect(catalog).toContain('streaming_create_order');
   expect(catalog).toContain('create-streaming-payment');
   expect(catalog).toContain('Mis pedidos');
