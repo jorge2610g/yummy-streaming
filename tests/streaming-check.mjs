@@ -66,7 +66,7 @@ for (const marker of ['data-section="dashboard"','data-section="subscriptions"',
 for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (catalogManifest.start_url !== './?source=pwa' || catalogManifest.scope !== './') throw new Error('Manifest PWA catálogo Streaming incorrecto');
-if (!catalogSw.includes('yummypro-streaming-catalog-v133')) throw new Error('Service worker catálogo Streaming v1.3.0 incorrecto');
+if (!catalogSw.includes('yummypro-streaming-catalog-v134-white-label')) throw new Error('Service worker catálogo Streaming v1.3.0 incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
 for (const marker of ['entrega, activación y centro de acciones v0.6.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación','streamingActionCenter','Centro de acciones','Cobros pendientes','Entregas pendientes','Vencen en 3 días','Suscripciones vencidas',"streamingActionFilter('payment_pending')","streamingActionFilter('delivery_pending')"]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
