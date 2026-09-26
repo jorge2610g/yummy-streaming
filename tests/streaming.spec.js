@@ -160,7 +160,7 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   expect(catalogBody).toContain('Esta es una cuenta demo');
   expect(catalogBody).toContain('effective_demo');
 
-  const module = await request.get('./streaming.js?v=1201');
+  const module = await request.get('/panel/streaming.js?v=1201');
   expect(module.ok()).toBeTruthy();
   const moduleBody = await module.text();
   expect(moduleBody).toContain('Previsualizar catálogo');
@@ -178,7 +178,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   expect(panel).toContain('./streaming.js?v=1201');
   expect(panel).toContain('./streaming-admin-tools.js?v=1200');
 
-  const toolsResponse = await request.get('./streaming-admin-tools.js?v=1200');
+  const toolsResponse = await request.get('/panel/streaming-admin-tools.js?v=1200');
   expect(toolsResponse.ok()).toBeTruthy();
   const adminTools = await toolsResponse.text();
   expect(adminTools).toContain('YUMMY_STREAMING_CATALOG_BASE');
@@ -187,7 +187,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   expect(adminTools).toContain('saveStreamingAdminPlanEditor');
   expect(adminTools).toContain('is_default_trial');
 
-  const coreResponse = await request.get('./streaming.js?v=1201');
+  const coreResponse = await request.get('/panel/streaming.js?v=1201');
   expect(coreResponse.ok()).toBeTruthy();
   const core = await coreResponse.text();
   expect(core).toContain('if(adminPreviewMode)return true');
