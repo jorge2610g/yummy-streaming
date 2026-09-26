@@ -87,3 +87,6 @@ for(const marker of ['openMenuFromPanel','create-admin-preview-login','admin_cli
 // Seguridad de vista administrativa: sesión aislada por pestaña y ticket de un solo uso.
 for(const marker of ['ADMIN_PREVIEW_REQUESTED','storage:window.sessionStorage','signOut({scope:"local"})'])if(!panel.includes(marker))throw new Error('panel/index.html: falta aislamiento de sesión administrativa '+marker);
 for(const forbidden of ['else if(payload?.access_token&&payload?.refresh_token)','if(currentBusinessIsDemo())return [...raw]'])if(panel.includes(forbidden))throw new Error('panel/index.html: conserva bypass o handoff administrativo inseguro '+forbidden);
+
+for(const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/catalogo','YUMMY_CLIENT_BASE','YUMMY_ADMIN_BASE'])if(!panel.includes(marker))throw new Error('panel/index.html: falta enrutamiento de Pruebas '+marker);
+const catalog=readFileSync('catalogo/index.html','utf8');for(const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"'])if(!catalog.includes(marker))throw new Error('catalogo/index.html: ruta GitHub Pages incorrecta '+marker);
