@@ -94,7 +94,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.10');
+  expect(body).toContain('Streaming · Versión v1.2.12');
   const matches=body.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +114,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.10');
+  expect(body).toContain('Streaming · Versión v1.2.12');
   const matches=body.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -160,7 +160,7 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   expect(catalogBody).toContain('Esta es una cuenta demo');
   expect(catalogBody).toContain('effective_demo');
 
-  const module = await request.get('/panel/streaming.js?v=1140');
+  const module = await request.get('/panel/streaming.js?v=1201');
   expect(module.ok()).toBeTruthy();
   const moduleBody = await module.text();
   expect(moduleBody).toContain('Previsualizar catálogo');
@@ -174,8 +174,8 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const panelResponse = await request.get('/panel/');
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
-  expect(panel).toContain('Streaming · Versión v1.2.10');
-  expect(panel).toContain('/panel/streaming.js?v=1200');
+  expect(panel).toContain('Streaming · Versión v1.2.12');
+  expect(panel).toContain('/panel/streaming.js?v=1201');
   expect(panel).toContain('/panel/streaming-admin-tools.js?v=1200');
 
   const toolsResponse = await request.get('/panel/streaming-admin-tools.js?v=1200');
@@ -187,7 +187,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   expect(adminTools).toContain('saveStreamingAdminPlanEditor');
   expect(adminTools).toContain('is_default_trial');
 
-  const coreResponse = await request.get('/panel/streaming.js?v=1200');
+  const coreResponse = await request.get('/panel/streaming.js?v=1201');
   expect(coreResponse.ok()).toBeTruthy();
   const core = await coreResponse.text();
   expect(core).toContain('if(adminPreviewMode)return true');
