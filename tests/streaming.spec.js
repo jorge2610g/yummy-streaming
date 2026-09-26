@@ -175,7 +175,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
   expect(panel).toContain('Streaming · Versión v1.2.12');
-  expect(panel).toContain('./streaming.js?v=1201');
+  expect(panel).toContain('./streaming.js?v=1202');
   expect(panel).toContain('./streaming-admin-tools.js?v=1200');
 
   const toolsResponse = await request.get('/panel/streaming-admin-tools.js?v=1200');
