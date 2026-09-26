@@ -98,3 +98,6 @@ const streamingCatalog=readFileSync('catalogo/index.html','utf8');for(const mark
 
 for(const marker of ['test-rubro-selector-streaming-v1','TEST_RUBRO_SWITCHER','mountTestRubroSelector','yummy-cliente-pruebas/?r=','yummy-streaming-pruebas/catalogo/?business=','🍽️ Restaurante','🛒 Retail','💼 Profesionales','🎬 Streaming'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta selector de rubros exclusivo de Pruebas '+marker);
 if(!streamingCatalog.includes('location.pathname.startsWith("/yummy-streaming-pruebas/")'))throw new Error('catalogo/index.html: el selector de rubros debe limitarse a Streaming Pruebas');
+
+
+for(const marker of ['TEST_RUBRO_TARGETS_KEY','yummypro_test_rubro_targets_v1','readTestRubroTargets','saveTestRubroTargets','targets.streaming={'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta persistencia del selector de rubros '+marker);
