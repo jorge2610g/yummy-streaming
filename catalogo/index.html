@@ -62,17 +62,34 @@ function testRubroUrl(key,row){
  if(key==="streaming")return "https://jorge2610g.github.io/yummy-streaming-pruebas/catalogo/?business="+encodeURIComponent(row.id);
  return "https://jorge2610g.github.io/yummy-cliente-pruebas/?r="+encodeURIComponent(row.slug||row.id);
 }
+const TEST_RUBRO_TARGETS_KEY="yummypro_test_rubro_targets_v1";
+function readTestRubroTargets(){try{const parsed=JSON.parse(localStorage.getItem(TEST_RUBRO_TARGETS_KEY)||"{}");return parsed&&typeof parsed==="object"?parsed:{}}catch(_){return {}}}
+function saveTestRubroTargets(targets){
+ try{
+  const clean={};
+  for(const key of ["restaurant","retail","professional","streaming"]){
+   const row=targets?.[key];
+   if(row?.id)clean[key]={id:row.id,slug:row.slug||null,name:row.name||"",business_type:row.business_type||key};
+  }
+  localStorage.setItem(TEST_RUBRO_TARGETS_KEY,JSON.stringify(clean));
+ }catch(_){}
+}
 async function mountTestRubroSelector(){
  if(!TEST_RUBRO_SWITCHER||document.getElementById("test-rubro-switcher"))return;
- let rows=[];
+ let targets=readTestRubroTargets(),rows=[];
  try{
-  const {data,error}=await db.from("restaurants").select("id,slug,name,business_type,is_demo").eq("active",true).in("subscription_status",["trial","active"]).gt("subscription_expires_at",new Date().toISOString()).order("is_demo",{ascending:false}).order("id",{ascending:true});
+  const {data,error}=await db.from("restaurants").select("id,slug,name,business_type,is_demo").eq("active",true).order("is_demo",{ascending:false}).order("id",{ascending:true});
   if(error)throw error;rows=data||[];
  }catch(e){console.warn("Selector de rubros de Pruebas",e)}
- const targets={};
  for(const row of rows){const key=testRubroKey(row.business_type);if(!targets[key])targets[key]=row}
- const currentStreaming=rows.find(row=>Number(row.id)===Number(businessId)&&testRubroKey(row.business_type)==="streaming");
- if(currentStreaming)targets.streaming=currentStreaming;
+ const currentBusiness=catalog?.business||{};
+ targets.streaming={
+  id:Number(currentBusiness.id||currentBusiness.restaurant_id||businessId)||businessId,
+  slug:currentBusiness.slug||targets.streaming?.slug||null,
+  name:currentBusiness.name||targets.streaming?.name||"Streaming",
+  business_type:"streaming"
+ };
+ saveTestRubroTargets(targets);
  const labels={restaurant:"🍽️ Restaurante",retail:"🛒 Retail",professional:"💼 Profesionales",streaming:"🎬 Streaming"};
  const bar=document.createElement("div");bar.id="test-rubro-switcher";
  bar.innerHTML='<span class="trs-badge">Pruebas</span><span class="trs-label">Cambiar rubro</span><select id="test-rubro-select" aria-label="Cambiar rubro de prueba"></select>';
@@ -80,7 +97,13 @@ async function mountTestRubroSelector(){
  for(const key of ["restaurant","retail","professional","streaming"]){
   const option=document.createElement("option");option.value=key;option.textContent=labels[key]+(targets[key]?"":" · sin demo");option.disabled=!targets[key];option.selected=key==="streaming";select.appendChild(option);
  }
- select.addEventListener("change",()=>{const row=targets[select.value];if(!row){select.value="streaming";return}location.href=testRubroUrl(select.value,row)});
+ select.value="streaming";
+ select.addEventListener("change",()=>{
+  const key=select.value,row=targets[key];
+  if(!row){select.value="streaming";return}
+  saveTestRubroTargets(targets);
+  location.href=testRubroUrl(key,row)
+ });
  document.body.prepend(bar);
 }
 const CART_KEY="yummypro_streaming_cart_"+businessId;
