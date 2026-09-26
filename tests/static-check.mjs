@@ -94,3 +94,7 @@ const catalog=readFileSync('catalogo/index.html','utf8');for(const marker of ['.
 for(const marker of ['id="swhiteLabel"','white_label_enabled','Marca blanca','PLUS'])if(!panel.includes(marker))throw new Error('panel/index.html: falta Marca blanca '+marker);
 
 const streamingCatalog=readFileSync('catalogo/index.html','utf8');for(const marker of ['platformFooter','white_label_enabled','data-white-label','demoBrandText'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta Marca blanca '+marker);
+
+
+for(const marker of ['test-rubro-selector-streaming-v1','TEST_RUBRO_SWITCHER','mountTestRubroSelector','yummy-cliente-pruebas/?r=','yummy-streaming-pruebas/catalogo/?business=','🍽️ Restaurante','🛒 Retail','💼 Profesionales','🎬 Streaming'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta selector de rubros exclusivo de Pruebas '+marker);
+if(!streamingCatalog.includes('location.pathname.startsWith("/yummy-streaming-pruebas/")'))throw new Error('catalogo/index.html: el selector de rubros debe limitarse a Streaming Pruebas');
