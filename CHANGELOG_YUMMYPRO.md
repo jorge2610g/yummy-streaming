@@ -1,5 +1,14 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-25/26 — 1.2.9 — Pruebas
+
+- Se corrigió el botón Ver catálogo en Pruebas para abrir /yummy-streaming-pruebas/catalogo y no una ruta raíz inexistente.
+- El QR público de Streaming ahora apunta al catálogo del ambiente correcto.
+- Los enlaces auxiliares a Cliente y Admin también respetan Pruebas/Producción.
+- Se corrigieron manifest y service worker del catálogo para funcionar bajo el subdirectorio de GitHub Pages.
+- Se copiaron a Staging las plataformas demo de Producción sin copiar cuentas ni credenciales.
+- Producción no fue modificada.
+
 ## 2026-09-25/26 — 1.2.8 — Pruebas
 
 - Se formalizó el flujo **Pruebas → Release → Producción**.
