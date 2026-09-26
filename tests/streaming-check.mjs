@@ -57,8 +57,8 @@ if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('
 for (const marker of ['Servicios disponibles','Netflix Premium','Disney+ Premium','Prime Video','Spotify Premium','Comprar','Finalizar pedido','Iniciar sesión','Mis cuentas','whatsappBtn','themeBtn']) if (!storeDemo.includes(marker)) throw new Error(`Tienda Streaming: falta ${marker}`);
 for (const forbidden of ['Panel Streaming','DEMOSTRACIÓN · SOLO LECTURA','DEMOSTRACIÓN DEL NEGOCIO','TIENDA DEMO','Demo comercial','Precio demo','Finalizar pedido demo','No se realizará ningún cobro real.','streamingOpenSubscription','streamingOpenPayment','supabase-js','SB_URL']) if (storeDemo.includes(forbidden)) throw new Error(`Tienda Streaming expone texto demo, panel o integración interna: ${forbidden}`);
 
-for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · Streaming tienda v1.3.2']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
-for (const marker of ['Carrito','Iniciar sesión','Mis pedidos','Mis accesos','create-streaming-payment','streaming_create_order','Seguimiento del pedido','Recordatorios de renovación','Esta es una cuenta demo','effective_demo','/catalogo/manifest.webmanifest','/catalogo/sw.js']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta flujo cliente ${marker}`);
+for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · Streaming tienda v1.3.3']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
+for (const marker of ['Carrito','Iniciar sesión','Mis pedidos','Mis accesos','create-streaming-payment','streaming_create_order','Seguimiento del pedido','Recordatorios de renovación','Esta es una cuenta demo','effective_demo','./manifest.webmanifest','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta flujo cliente ${marker}`);
 for (const marker of ['streamingPreviewCatalog','Previsualizar catálogo','streamingPlatformPrice','sale_price']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta vista previa de catálogo ${marker}`);
 
 if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión demo · v1.0.0')) throw new Error('Demo Streaming v1.0.0 incompleta');
@@ -66,7 +66,7 @@ for (const marker of ['data-section="dashboard"','data-section="subscriptions"',
 for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
 if (catalogManifest.start_url !== '/catalogo/?source=pwa' || catalogManifest.scope !== '/catalogo/') throw new Error('Manifest PWA catálogo Streaming incorrecto');
-if (!catalogSw.includes('yummypro-streaming-catalog-v132')) throw new Error('Service worker catálogo Streaming v1.3.0 incorrecto');
+if (!catalogSw.includes('yummypro-streaming-catalog-v133')) throw new Error('Service worker catálogo Streaming v1.3.0 incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
 for (const marker of ['entrega, activación y centro de acciones v0.6.0','delivery_status','delivered_at','streamingOpenDelivery','Por entregar','Avisar activación','streamingActionCenter','Centro de acciones','Cobros pendientes','Entregas pendientes','Vencen en 3 días','Suscripciones vencidas',"streamingActionFilter('payment_pending')","streamingActionFilter('delivery_pending')"]) if (!delivery.includes(marker)) throw new Error(`panel/streaming-delivery.js: falta ${marker}`);
@@ -89,4 +89,4 @@ for(const marker of ['new URL("demo/",location.href)','href="./demo/"'])if(!root
 if(root.includes('url=/demo/'))throw new Error('index.html: redirect absoluto /demo/ rompe GitHub Pages');
 
 for (const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/catalogo','YUMMY_CLIENT_BASE','YUMMY_ADMIN_BASE']) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ruta de Pruebas ${marker}`);
-const catalog=readFileSync('catalogo/index.html','utf8');for (const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ruta GitHub Pages ${marker}`);
+for (const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ruta GitHub Pages ${marker}`);
