@@ -17,7 +17,7 @@
  function catalogUrl(){
   try{
    if(!currentRestaurant)return "";
-   return "/catalogo/?business="+encodeURIComponent(currentRestaurant);
+   return (typeof YUMMY_STREAMING_CATALOG_BASE!=="undefined"?YUMMY_STREAMING_CATALOG_BASE:"/catalogo")+"/?business="+encodeURIComponent(currentRestaurant);
   }catch(_){return ""}
  }
  function syncCatalogHeader(){
