@@ -31,7 +31,7 @@ dialog{width:min(600px,calc(100% - 20px));max-height:90dvh;border:1px solid var(
 <section class="hero"><div class="wrap"><div class="eyebrow">CATÁLOGO DE STREAMING</div><h1 id="businessName">Streaming</h1><p class="lead">Elige tus plataformas, agrégalas al carrito, paga online y sigue la activación desde tu cuenta.</p><div class="trust"><span>🔒 Pago online</span><span>👤 Cuenta cliente</span><span>📦 Seguimiento</span><span>🔔 Recordatorios</span></div><div class="notice" id="paymentNotice" hidden></div></div></section>
 <section><div class="wrap"><div class="toolbar"><div class="search">⌕ <input id="searchInput" type="search" placeholder="Buscar plataforma..." autocomplete="off"></div></div><div class="grid" id="catalogGrid"><div class="loading">Cargando catálogo…</div></div></div></section>
 </main>
-<footer class="footer" id="platformFooter"><div class="wrap">Powered by YummyPro · Streaming tienda v1.3.4</div></footer>
+<footer class="footer" id="platformFooter"><div class="wrap">Powered by YummyPro · Streaming tienda v1.3.5</div></footer>
 
 <dialog id="accountDialog"><div class="modal"><div class="modalHead"><h2>Mi cuenta</h2><button class="close" data-close="accountDialog">✕</button></div><div id="accountGuest"><div class="tabs"><button id="loginTab" class="active">Iniciar sesión</button><button id="registerTab">Crear cuenta</button></div><form id="loginForm" class="form"><input id="loginEmail" type="email" placeholder="Correo electrónico" required><input id="loginPassword" type="password" placeholder="Contraseña" minlength="6" required><button type="submit">Entrar</button></form><form id="registerForm" class="form" hidden><input id="registerName" placeholder="Nombre y apellido" required><input id="registerPhone" type="tel" placeholder="WhatsApp / teléfono" required><input id="registerEmail" type="email" placeholder="Correo electrónico" required><input id="registerPassword" type="password" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required><button type="submit">Crear cuenta</button></form><p class="msg" id="accountMsg"></p></div><div id="accountAuth" hidden><div class="accountSummary"><b id="accountUser">Cliente</b><div class="mut" style="margin-top:5px">Tu cuenta guarda tus compras y el seguimiento.</div><button class="btn" id="pushBtn">🔔 Activar notificaciones</button><button class="btn" id="logoutBtn">Cerrar sesión</button></div></div></div></dialog>
 
@@ -58,21 +58,31 @@ function testRubroKey(type){
  if(value==="streaming")return "streaming";
  return "restaurant";
 }
-function testRubroUrl(key,row){
- if(key==="streaming")return "https://jorge2610g.github.io/yummy-streaming-pruebas/catalogo/?business="+encodeURIComponent(row.id);
- return "https://jorge2610g.github.io/yummy-cliente-pruebas/?r="+encodeURIComponent(row.slug||row.id);
+const TEST_RUBRO_TARGETS_KEY="yummypro_test_rubro_targets_v2";
+function cleanTestRubroTargets(targets){
+ const clean={};
+ for(const key of ["restaurant","retail","professional","streaming"]){
+  const row=targets?.[key];
+  if(row?.id)clean[key]={id:row.id,slug:row.slug||null,name:row.name||"",business_type:row.business_type||key};
+ }
+ return clean;
 }
-const TEST_RUBRO_TARGETS_KEY="yummypro_test_rubro_targets_v1";
-function readTestRubroTargets(){try{const parsed=JSON.parse(localStorage.getItem(TEST_RUBRO_TARGETS_KEY)||"{}");return parsed&&typeof parsed==="object"?parsed:{}}catch(_){return {}}}
-function saveTestRubroTargets(targets){
- try{
-  const clean={};
-  for(const key of ["restaurant","retail","professional","streaming"]){
-   const row=targets?.[key];
-   if(row?.id)clean[key]={id:row.id,slug:row.slug||null,name:row.name||"",business_type:row.business_type||key};
-  }
-  localStorage.setItem(TEST_RUBRO_TARGETS_KEY,JSON.stringify(clean));
- }catch(_){}
+function readTestRubroTargets(){
+ let merged={};
+ try{const parsed=JSON.parse(localStorage.getItem(TEST_RUBRO_TARGETS_KEY)||"{}");if(parsed&&typeof parsed==="object")merged={...merged,...parsed}}catch(_){}
+ try{const raw=new URLSearchParams(location.search).get("test_nav"),parsed=raw?JSON.parse(raw):null;if(parsed&&typeof parsed==="object")merged={...merged,...parsed}}catch(_){}
+ return cleanTestRubroTargets(merged);
+}
+function saveTestRubroTargets(targets){try{localStorage.setItem(TEST_RUBRO_TARGETS_KEY,JSON.stringify(cleanTestRubroTargets(targets)))}catch(_){}}
+function testRubroUrl(key,row,targets){
+ const url=new URL(key==="streaming"
+  ?"https://jorge2610g.github.io/yummy-streaming-pruebas/catalogo/"
+  :"https://jorge2610g.github.io/yummy-cliente-pruebas/");
+ if(key==="streaming")url.searchParams.set("business",String(row.id));
+ else url.searchParams.set("r",String(row.slug||row.id));
+ const clean=cleanTestRubroTargets(targets);
+ if(Object.keys(clean).length)url.searchParams.set("test_nav",JSON.stringify(clean));
+ return url.toString();
 }
 async function mountTestRubroSelector(){
  if(!TEST_RUBRO_SWITCHER||document.getElementById("test-rubro-switcher"))return;
@@ -90,6 +100,11 @@ async function mountTestRubroSelector(){
   business_type:"streaming"
  };
  saveTestRubroTargets(targets);
+ try{
+  const currentUrl=new URL(location.href);
+  currentUrl.searchParams.set("test_nav",JSON.stringify(cleanTestRubroTargets(targets)));
+  history.replaceState(history.state,document.title,currentUrl.toString());
+ }catch(_){}
  const labels={restaurant:"🍽️ Restaurante",retail:"🛒 Retail",professional:"💼 Profesionales",streaming:"🎬 Streaming"};
  const bar=document.createElement("div");bar.id="test-rubro-switcher";
  bar.innerHTML='<span class="trs-badge">Pruebas</span><span class="trs-label">Cambiar rubro</span><select id="test-rubro-select" aria-label="Cambiar rubro de prueba"></select>';
@@ -102,7 +117,7 @@ async function mountTestRubroSelector(){
   const key=select.value,row=targets[key];
   if(!row){select.value="streaming";return}
   saveTestRubroTargets(targets);
-  location.href=testRubroUrl(key,row)
+  location.href=testRubroUrl(key,row,targets)
  });
  document.body.prepend(bar);
 }
