@@ -16,6 +16,14 @@
 dialog{width:min(600px,calc(100% - 20px));max-height:90dvh;border:1px solid var(--line);border-radius:22px;background:var(--card);color:var(--txt);padding:0;box-shadow:0 30px 80px #0008}dialog::backdrop{background:#000b;backdrop-filter:blur(4px)}.modal{padding:20px}.modalHead{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.modalHead h2{margin:0}.close{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:50%;width:40px;height:40px}.tabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:14px}.tabs button{border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:11px;padding:10px;font-weight:850}.tabs button.active{background:var(--a);border-color:var(--a)}.form{display:grid;gap:10px}.form input{width:100%;border:1px solid var(--line);background:#0c1019;color:var(--txt);padding:12px 13px;border-radius:12px}.form button{border:0;background:var(--a);color:#fff;padding:12px;border-radius:12px;font-weight:900}.msg{min-height:20px;color:var(--mut);font-size:13px}.msg.bad{color:#fda4af}.cartLine{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.cartLine b{display:block}.qty{display:flex;align-items:center;gap:8px}.qty button{width:34px;height:34px;border:1px solid var(--line);background:var(--soft);color:var(--txt);border-radius:9px}.total{display:flex;justify-content:space-between;align-items:center;padding:16px 0;font-size:20px;font-weight:950}.checkoutBox{padding:14px;border:1px solid var(--line);background:#0d111b;border-radius:15px;margin-top:12px}.checkoutBox input{width:100%;margin-top:8px;border:1px solid var(--line);background:var(--card);color:var(--txt);padding:11px 12px;border-radius:10px}.payBtn{width:100%;border:0;background:#009ee3;color:#fff;border-radius:12px;padding:13px;font-weight:950;margin-top:12px}.payBtn:disabled{opacity:.5}.orderCard{padding:14px;border:1px solid var(--line);border-radius:15px;background:#0d111b;margin:10px 0;cursor:pointer}.orderTop{display:flex;justify-content:space-between;gap:10px}.orderCode{font-weight:950}.orderMeta{color:var(--mut);font-size:13px;margin-top:5px}.status{font-size:11px;font-weight:900;padding:6px 9px;border-radius:999px;background:#ffffff0b;height:max-content}.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:16px 0}.step{padding:10px 7px;border:1px solid var(--line);border-radius:12px;text-align:center;font-size:11px;color:var(--mut)}.step.done{background:#34d39915;border-color:#34d39966;color:#a7f3d0}.step.current{background:#8b5cf625;border-color:#8b5cf6;color:#ddd6fe}.reminder{padding:13px;border:1px solid #fbbf2455;background:#fbbf2410;border-radius:13px;margin-top:10px;color:#fde68a}.accountSummary{padding:13px;border:1px solid var(--line);border-radius:13px;background:#0d111b}.accountSummary button{margin-top:10px}.demoBox{padding:16px;border:1px solid #8b5cf655;background:#8b5cf612;border-radius:16px;line-height:1.55}.demoBox b{display:block;margin-bottom:6px}.accessCard{padding:14px;border:1px solid var(--line);border-radius:15px;background:#0d111b;margin:10px 0}.accessCard .big{font-size:18px;font-weight:950}.toast{position:fixed;left:50%;bottom:18px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#fff;color:#111;padding:11px 15px;border-radius:999px;font-weight:850;z-index:99;transition:.2s}.toast.show{opacity:1;transform:translate(-50%,0)}
 @media(max-width:880px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:640px){.wrap{width:min(100% - 20px,1120px)}.grid{grid-template-columns:1fr}.hero{padding-top:34px}.product{min-height:0}.nav{align-items:flex-start;padding:10px 0}.actions{justify-content:flex-end}.btn{padding:9px 10px;font-size:12px}.steps{grid-template-columns:1fr 1fr}}
 </style>
+
+<style id="test-rubro-selector-streaming-v1">
+#test-rubro-switcher{position:sticky;top:0;z-index:9998;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 12px;background:#111;color:#fff;border-bottom:1px solid #333;font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+#test-rubro-switcher .trs-label{font-size:12px;font-weight:800;white-space:nowrap}
+#test-rubro-switcher select{min-width:180px;max-width:260px;height:38px;border:1px solid #444;border-radius:10px;background:#1b1b1b;color:#fff;padding:0 34px 0 12px;font-weight:750;font-size:14px}
+#test-rubro-switcher .trs-badge{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:#ffc21a;color:#171717}
+@media(max-width:520px){#test-rubro-switcher{justify-content:space-between;gap:7px;padding:8px}.trs-label{display:none!important}#test-rubro-switcher select{min-width:0;flex:1;max-width:none}}
+</style>
 </head>
 <body>
 <header class="top"><div class="wrap nav"><div class="brand" id="brand"><span class="logoFallback">Y</span><span>Streaming</span></div><div class="actions"><button class="btn" id="accountBtn">👤 Iniciar sesión</button><button class="btn" id="ordersBtn" hidden>🧾 Mis pedidos</button><button class="btn" id="accessBtn" hidden>📺 Mis accesos</button><button class="btn" id="pwaBtn" hidden>📲 Instalar</button><button class="btn primary" id="cartBtn">🛒 Carrito <span class="count" id="cartCount">0</span></button></div></div></header>
@@ -42,6 +50,39 @@ const SB_KEY=YUMMY_IS_PRODUCTION?"sb_publishable__moppTxObowifx6rJbW_tw_3GiCkqhG
 const WEB_PUSH_PUBLIC_KEY="BEhtHznJex6P3ANNL3SZzgiyXTrilvU-On1qpSwdx0MqmPhrpikxI1sCAbXUFFfkVczLAHdyDFQQS9_Wm5mahpw";
 const db=supabase.createClient(SB_URL,SB_KEY,{auth:{storageKey:"yummypro_streaming_client_auth_v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const params=new URLSearchParams(location.search);let businessId=Number(params.get("business")||localStorage.getItem("yummypro_streaming_last_business")||0);if(businessId&&!params.get("business"))history.replaceState({},document.title,location.pathname+"?business="+businessId+(params.get("source")?"&source="+encodeURIComponent(params.get("source")):""));
+const TEST_RUBRO_SWITCHER=location.hostname==="jorge2610g.github.io"&&location.pathname.startsWith("/yummy-streaming-pruebas/");
+function testRubroKey(type){
+ const value=String(type||"restaurant").toLowerCase();
+ if(["supermarket","minimarket","retail"].includes(value))return "retail";
+ if(value==="professional")return "professional";
+ if(value==="streaming")return "streaming";
+ return "restaurant";
+}
+function testRubroUrl(key,row){
+ if(key==="streaming")return "https://jorge2610g.github.io/yummy-streaming-pruebas/catalogo/?business="+encodeURIComponent(row.id);
+ return "https://jorge2610g.github.io/yummy-cliente-pruebas/?r="+encodeURIComponent(row.slug||row.id);
+}
+async function mountTestRubroSelector(){
+ if(!TEST_RUBRO_SWITCHER||document.getElementById("test-rubro-switcher"))return;
+ let rows=[];
+ try{
+  const {data,error}=await db.from("restaurants").select("id,slug,name,business_type,is_demo").eq("active",true).in("subscription_status",["trial","active"]).gt("subscription_expires_at",new Date().toISOString()).order("is_demo",{ascending:false}).order("id",{ascending:true});
+  if(error)throw error;rows=data||[];
+ }catch(e){console.warn("Selector de rubros de Pruebas",e)}
+ const targets={};
+ for(const row of rows){const key=testRubroKey(row.business_type);if(!targets[key])targets[key]=row}
+ const currentStreaming=rows.find(row=>Number(row.id)===Number(businessId)&&testRubroKey(row.business_type)==="streaming");
+ if(currentStreaming)targets.streaming=currentStreaming;
+ const labels={restaurant:"🍽️ Restaurante",retail:"🛒 Retail",professional:"💼 Profesionales",streaming:"🎬 Streaming"};
+ const bar=document.createElement("div");bar.id="test-rubro-switcher";
+ bar.innerHTML='<span class="trs-badge">Pruebas</span><span class="trs-label">Cambiar rubro</span><select id="test-rubro-select" aria-label="Cambiar rubro de prueba"></select>';
+ const select=bar.querySelector("select");
+ for(const key of ["restaurant","retail","professional","streaming"]){
+  const option=document.createElement("option");option.value=key;option.textContent=labels[key]+(targets[key]?"":" · sin demo");option.disabled=!targets[key];option.selected=key==="streaming";select.appendChild(option);
+ }
+ select.addEventListener("change",()=>{const row=targets[select.value];if(!row){select.value="streaming";return}location.href=testRubroUrl(select.value,row)});
+ document.body.prepend(bar);
+}
 const CART_KEY="yummypro_streaming_cart_"+businessId;
 let catalog={business:null,products:[]},cart={},currentUser=null,customerProfile=null,pendingCheckout=false,ordersChannel=null,pwaPrompt=null,adminClientPreview=false,adminClientPreviewBooting=false;
 const isDemo=()=>!!catalog.business?.effective_demo;
@@ -148,7 +189,7 @@ $("ordersList").addEventListener("click",e=>{const demo=e.target.closest("[data-
 $("orderDetail").addEventListener("click",e=>{const b=e.target.closest("[data-repay]");if(b)continuePayment(Number(b.dataset.repay))});
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>$(b.dataset.close).close());
 db.auth.onAuthStateChange(()=>setTimeout(()=>{if(!adminClientPreviewBooting)syncAuth()},0));window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();pwaPrompt=e;refreshPwaButton()});window.addEventListener("appinstalled",()=>{pwaPrompt=null;refreshPwaButton()});if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js",{scope:"./"}).then(r=>r.update().catch(()=>{})).catch(e=>console.warn("PWA Streaming",e));
-loadCatalog();
+loadCatalog().then(()=>mountTestRubroSelector()).catch(e=>console.error("Catálogo Streaming",e));
 </script>
 </body>
 </html>
