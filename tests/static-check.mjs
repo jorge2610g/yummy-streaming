@@ -104,3 +104,5 @@ for(const marker of ['TEST_RUBRO_TARGETS_KEY','yummypro_test_rubro_targets_v2','
 
 
 for(const marker of ['yummypro_test_rubro_targets_v2','cleanTestRubroTargets','test_nav','testRubroUrl(key,row,targets)'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta contexto persistente entre rubros '+marker);
+
+for(const marker of ['#loginBtn::before','#accountsBtn::before','.navActions{gap:4px;min-width:0}'])if(!storeDemo.includes(marker))throw new Error('Tienda demo Streaming: falta fix responsive móvil '+marker);
