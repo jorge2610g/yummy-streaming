@@ -100,4 +100,7 @@ for(const marker of ['test-rubro-selector-streaming-v1','TEST_RUBRO_SWITCHER','m
 if(!streamingCatalog.includes('location.pathname.startsWith("/yummy-streaming-pruebas/")'))throw new Error('catalogo/index.html: el selector de rubros debe limitarse a Streaming Pruebas');
 
 
-for(const marker of ['TEST_RUBRO_TARGETS_KEY','yummypro_test_rubro_targets_v1','readTestRubroTargets','saveTestRubroTargets','targets.streaming={'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta persistencia del selector de rubros '+marker);
+for(const marker of ['TEST_RUBRO_TARGETS_KEY','yummypro_test_rubro_targets_v2','readTestRubroTargets','saveTestRubroTargets','targets.streaming={'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta persistencia del selector de rubros '+marker);
+
+
+for(const marker of ['yummypro_test_rubro_targets_v2','cleanTestRubroTargets','test_nav','testRubroUrl(key,row,targets)'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta contexto persistente entre rubros '+marker);
