@@ -1,5 +1,13 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-26 — 1.2.10 — Pruebas
+
+- Se añadió el switch **Marca blanca / White Label** dentro de Marca/Apariencia.
+- Al activarlo, la web pública oculta referencias visibles a YummyPro y conserva únicamente nombre, logo y colores del negocio.
+- La opción queda marcada como **PLUS** para poder ofrecerla como adicional comercial.
+- La configuración se guarda por negocio en `white_label_enabled`.
+- Producción no fue modificada.
+
 ## 2026-09-25/26 — 1.2.9 — Pruebas
 
 - Se corrigió el botón Ver catálogo en Pruebas para abrir /yummy-streaming-pruebas/catalogo y no una ruta raíz inexistente.
