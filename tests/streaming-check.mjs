@@ -53,7 +53,7 @@ const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager
 for (const required of ['streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals']) if (!streamingMap.includes(`"${required}"`)) throw new Error(`Navegación Streaming no incluye ${required}`);
 for (const forbidden of ['orders','products','categories','pos','kitchen','cash','table_qr','appointments','services','professionals']) if (streamingMap.includes(`"${forbidden}"`)) throw new Error(`Navegación Streaming aún expone ${forbidden}`);
 
-if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('Powered by YummyPro · v1.1.5')) throw new Error('Tienda demo Streaming v1.1.5 incompleta');
+if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('Powered by YummyPro · v1.1.6')) throw new Error('Tienda demo Streaming v1.1.6 incompleta');
 for (const marker of ['Servicios disponibles','Netflix Premium','Disney+ Premium','Prime Video','Spotify Premium','Comprar','Finalizar pedido','Iniciar sesión','Mis cuentas','whatsappBtn','themeBtn']) if (!storeDemo.includes(marker)) throw new Error(`Tienda Streaming: falta ${marker}`);
 for (const forbidden of ['Panel Streaming','DEMOSTRACIÓN · SOLO LECTURA','DEMOSTRACIÓN DEL NEGOCIO','TIENDA DEMO','Demo comercial','Precio demo','Finalizar pedido demo','No se realizará ningún cobro real.','streamingOpenSubscription','streamingOpenPayment','supabase-js','SB_URL']) if (storeDemo.includes(forbidden)) throw new Error(`Tienda Streaming expone texto demo, panel o integración interna: ${forbidden}`);
 
@@ -92,3 +92,5 @@ for (const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/ca
 for (const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ruta GitHub Pages ${marker}`);
 
 for(const marker of ['id="swhiteLabel"','white_label_enabled','Marca blanca','PLUS'])if(!panel.includes(marker))throw new Error('panel/index.html: falta Marca blanca '+marker);
+
+for(const marker of ['#loginBtn::before','#accountsBtn::before','.navActions{gap:4px;min-width:0}'])if(!storeDemo.includes(marker))throw new Error('Tienda demo Streaming: falta fix responsive móvil '+marker);
