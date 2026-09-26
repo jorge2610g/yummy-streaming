@@ -36,8 +36,9 @@ dialog{width:min(600px,calc(100% - 20px));max-height:90dvh;border:1px solid var(
 <div class="toast" id="toast"></div>
 
 <script>
-const SB_URL="https://wodqqheeesrelsbacmgx.supabase.co";
-const SB_KEY="sb_publishable_yiuYVYAAwVLtzlTdEM1kUg_s1Z7BiyE";
+const YUMMY_IS_PRODUCTION=location.hostname==="streaming.yummypro.online";
+const SB_URL=YUMMY_IS_PRODUCTION?"https://gulctljitzlwokqydigx.supabase.co":"https://wodqqheeesrelsbacmgx.supabase.co";
+const SB_KEY=YUMMY_IS_PRODUCTION?"sb_publishable__moppTxObowifx6rJbW_tw_3GiCkqhG":"sb_publishable_yiuYVYAAwVLtzlTdEM1kUg_s1Z7BiyE";
 const WEB_PUSH_PUBLIC_KEY="BEhtHznJex6P3ANNL3SZzgiyXTrilvU-On1qpSwdx0MqmPhrpikxI1sCAbXUFFfkVczLAHdyDFQQS9_Wm5mahpw";
 const db=supabase.createClient(SB_URL,SB_KEY,{auth:{storageKey:"yummypro_streaming_client_auth_v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const params=new URLSearchParams(location.search);let businessId=Number(params.get("business")||localStorage.getItem("yummypro_streaming_last_business")||0);if(businessId&&!params.get("business"))history.replaceState({},document.title,location.pathname+"?business="+businessId+(params.get("source")?"&source="+encodeURIComponent(params.get("source")):""));
