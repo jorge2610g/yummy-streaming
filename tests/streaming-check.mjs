@@ -46,7 +46,7 @@ if(agendaScriptCount!==1) throw new Error(`panel/index.html debe cargar streamin
 for (const marker of ['núcleo operativo v0.4.0','Suscripciones de clientes','Directorio de clientes','Cuentas y cupos','Plataformas','Renovaciones','streamingOpenSubscription','streamingOpenCustomer','streamingOpenAccount','streamingOpenPlatform','streaming_renew_subscription','YummyPro no guarda contraseñas','Sin cupos · asignación actual','Próx. 3 días','te escribo para recordarte que tu suscripción','WhatsApp confirmación','tu renovación de','Control de cobros v0.4.0','streamingOpenPayment','payment_status','Pendientes de cobro']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
 for (const marker of ['selectedId=Number(selected)||null','return isSelected||(a.active&&free>0)']) if (!streaming.includes(marker)) throw new Error(`Filtro de cupos incompleto: falta ${marker}`);
 if (!streaming.includes('if(adminPreviewMode)return true')) throw new Error('panel/streaming.js debe permitir escritura al superadministrador en negocios demo');
-for (const marker of ['herramientas de administración v1.2.0','/catalogo/?business=','Ver catálogo','openStreamingAdminPlanEditor','saveStreamingAdminPlanEditor','subscription_plans','is_default_trial','annual_bonus_months']) if (!adminTools.includes(marker)) throw new Error(`streaming-admin-tools.js: falta ${marker}`);
+for (const marker of ['herramientas de administración v1.2.0','YUMMY_STREAMING_CATALOG_BASE','Ver catálogo','openStreamingAdminPlanEditor','saveStreamingAdminPlanEditor','subscription_plans','is_default_trial','annual_bonus_months']) if (!adminTools.includes(marker)) throw new Error(`streaming-admin-tools.js: falta ${marker}`);
 for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (adminTools.includes(forbidden)) throw new Error(`streaming-admin-tools.js contiene secreto/campo sensible prohibido: ${forbidden}`);
 
 const streamingMap = panel.match(/streaming:\{\s*restaurant:\[(.*?)\],\s*manager:/s)?.[1] || '';
@@ -65,7 +65,7 @@ if (!demo.includes('DEMOSTRACIÓN · SOLO LECTURA') || !demo.includes('Versión 
 for (const marker of ['data-section="dashboard"','data-section="subscriptions"','data-section="customers"','data-section="accounts"','data-section="platforms"','data-section="renewals"','Ingresar a mi panel','https://streaming.yummypro.online/panel/','Crear cuenta · 30 días gratis']) if (!demo.includes(marker)) throw new Error(`Demo Streaming navegable: falta ${marker}`);
 for (const forbidden of ['supabase-js','SB_URL','streamingOpenSubscription','streamingOpenPayment','href="/panel/"',"location.replace('/panel/')"]) if (demo.includes(forbidden)) throw new Error(`Demo Streaming no está aislada del panel real: ${forbidden}`);
 if (manifest.name !== 'YummyPro Streaming' || manifest.start_url !== '/panel/' || manifest.scope !== '/panel/') throw new Error('Manifest PWA Streaming incorrecto');
-if (catalogManifest.start_url !== '/catalogo/?source=pwa' || catalogManifest.scope !== '/catalogo/') throw new Error('Manifest PWA catálogo Streaming incorrecto');
+if (catalogManifest.start_url !== './?source=pwa' || catalogManifest.scope !== './') throw new Error('Manifest PWA catálogo Streaming incorrecto');
 if (!catalogSw.includes('yummypro-streaming-catalog-v133')) throw new Error('Service worker catálogo Streaming v1.3.0 incorrecto');
 if (cname !== 'streaming.yummypro.online') throw new Error('CNAME Streaming incorrecto');
 
