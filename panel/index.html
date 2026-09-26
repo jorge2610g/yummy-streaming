@@ -6293,6 +6293,7 @@ function printRestaurantTableQr(id){
 
 function businessPublicPageInfo(r){
  const type=String(r?.business_type||"restaurant").toLowerCase();
+ if(type==="streaming")return {label:"catálogo online",url:YUMMY_STREAMING_CATALOG_BASE+"/?business="+encodeURIComponent(r?.id||"")};
  const label=type==="professional"?"página de reservas":(["supermarket","minimarket"].includes(type)?"tienda online":"menú online");
  return {label,url:YUMMY_CLIENT_BASE+"/?r="+encodeURIComponent(r?.slug||r?.id||"")};
 }
