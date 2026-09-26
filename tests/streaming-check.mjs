@@ -36,11 +36,11 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo],[
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.12','create_my_trial_restaurant_v3','manifest.webmanifest','/panel/streaming.js?v=1201','/panel/streaming-admin-tools.js?v=1200','/panel/streaming-delivery.js?v=0600','/panel/streaming-reminders.js?v=0800','/panel/streaming-agenda.js?v=0900'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.12','create_my_trial_restaurant_v3','manifest.webmanifest','./streaming.js?v=1201','./streaming-admin-tools.js?v=1200','./streaming-delivery.js?v=0600','./streaming-reminders.js?v=0800','./streaming-agenda.js?v=0900'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
-const reminderScriptCount=(panel.match(/\/panel\/streaming-reminders\.js\?v=0800/g)||[]).length;
+const reminderScriptCount=(panel.match(/\.\/streaming-reminders\.js\?v=0800/g)||[]).length;
 if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
-const agendaScriptCount=(panel.match(/\/panel\/streaming-agenda\.js\?v=0900/g)||[]).length;
+const agendaScriptCount=(panel.match(/\.\/streaming-agenda\.js\?v=0900/g)||[]).length;
 if(agendaScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-agenda.js exactamente una vez; encontró ${agendaScriptCount}`);
 
 for (const marker of ['núcleo operativo v0.4.1','Suscripciones de clientes','Directorio de clientes','Cuentas y cupos','Plataformas','Renovaciones','streamingOpenSubscription','streamingOpenCustomer','streamingOpenAccount','streamingOpenPlatform','streaming_renew_subscription','YummyPro no guarda contraseñas','Sin cupos · asignación actual','Próx. 3 días','te escribo para recordarte que tu suscripción','WhatsApp confirmación','tu renovación de','Control de cobros v0.4.0','streamingOpenPayment','payment_status','Pendientes de cobro']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta ${marker}`);
