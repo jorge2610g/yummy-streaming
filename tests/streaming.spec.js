@@ -5,7 +5,7 @@ test('tienda Streaming muestra la experiencia de compra del cliente sin etiqueta
   await page.goto('/demo/');
   await expect(page).toHaveTitle(/YummyPlay · Streaming/);
   await expect(page.getByText('STREAMING · ENTRETENIMIENTO')).toBeVisible();
-  await expect(page.getByText('Powered by YummyPro · v1.1.5')).toBeVisible();
+  await expect(page.getByText('Powered by YummyPro · v1.1.6')).toBeVisible();
   await expect(page.getByText(/TIENDA DEMO|Demo comercial|DEMOSTRACIÓN DEL NEGOCIO/i)).toHaveCount(0);
   await expect(page.getByRole('heading', { name: /Tus plataformas favoritas/ })).toBeVisible();
   await expect(page.getByText('Servicios disponibles')).toBeVisible();
