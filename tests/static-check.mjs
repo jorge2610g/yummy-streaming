@@ -90,3 +90,7 @@ for(const forbidden of ['else if(payload?.access_token&&payload?.refresh_token)'
 
 for(const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/catalogo','YUMMY_CLIENT_BASE','YUMMY_ADMIN_BASE'])if(!panel.includes(marker))throw new Error('panel/index.html: falta enrutamiento de Pruebas '+marker);
 const catalog=readFileSync('catalogo/index.html','utf8');for(const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"'])if(!catalog.includes(marker))throw new Error('catalogo/index.html: ruta GitHub Pages incorrecta '+marker);
+
+for(const marker of ['id="swhiteLabel"','white_label_enabled','Marca blanca','PLUS'])if(!panel.includes(marker))throw new Error('panel/index.html: falta Marca blanca '+marker);
+
+const streamingCatalog=readFileSync('catalogo/index.html','utf8');for(const marker of ['platformFooter','white_label_enabled','data-white-label','demoBrandText'])if(!streamingCatalog.includes(marker))throw new Error('catalogo/index.html: falta Marca blanca '+marker);
