@@ -1,5 +1,13 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-27 — 1.2.14 — Pruebas
+
+- Streaming deja de mostrar Delivery en Configuración; los campos heredados quedan ocultos para mantener compatibilidad sin exponerlos al negocio.
+- Se ajustaron textos de Marca para hablar del negocio/catálogo digital y no de restaurante.
+- El catálogo público incorpora selector real de modo claro/oscuro con persistencia y respeto por la preferencia del sistema.
+- La barra superior del catálogo unifica controles y el tema claro adapta tarjetas, formularios y modales.
+- Producción no fue modificada.
+
 ## 2026-09-26 — 1.2.13 — Pruebas
 
 - Se corrigió el modo claro/oscuro del panel Streaming.
