@@ -94,7 +94,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.13');
+  expect(body).toContain('Streaming · Versión v1.2.14');
   const matches=body.match(/\.\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +114,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.13');
+  expect(body).toContain('Streaming · Versión v1.2.14');
   const matches=body.match(/\.\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -152,7 +152,7 @@ test('catálogo real Streaming y preview están publicados', async ({ request })
   const catalogBody = await catalog.text();
   expect(catalogBody).toContain('streaming_public_catalog');
   expect(catalogBody).toContain('CATÁLOGO DE STREAMING');
-  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.5');
+  expect(catalogBody).toContain('Powered by YummyPro · Streaming tienda v1.3.6');
   expect(catalogBody).toContain('streaming_create_order');
   expect(catalogBody).toContain('create-streaming-payment');
   expect(catalogBody).toContain('Mis pedidos');
@@ -174,7 +174,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const panelResponse = await request.get('/panel/');
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
-  expect(panel).toContain('Streaming · Versión v1.2.13');
+  expect(panel).toContain('Streaming · Versión v1.2.14');
   expect(panel).toContain('./streaming.js?v=1202');
   expect(panel).toContain('./streaming-admin-tools.js?v=1200');
 
@@ -197,7 +197,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const catalog = await catalogResponse.text();
   expect(catalog).toContain('streaming_public_catalog');
   expect(catalog).toContain('CATÁLOGO DE STREAMING');
-  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.5');
+  expect(catalog).toContain('Powered by YummyPro · Streaming tienda v1.3.6');
   expect(catalog).toContain('streaming_create_order');
   expect(catalog).toContain('create-streaming-payment');
   expect(catalog).toContain('Mis pedidos');
@@ -240,4 +240,25 @@ test('tema Streaming define superficies para claro y oscuro sin fallback negro',
   expect(body).toContain('--soft:#0a192a');
   expect(body).toContain('html[data-theme="light"]{--bg:#f4f7fb');
   expect(body).toContain('--soft:#f8fafc');
+});
+
+
+test('catálogo Streaming permite alternar modo claro y oscuro', async ({ page }) => {
+  await page.goto('/catalogo/');
+  const theme = page.locator('#themeBtn');
+  await expect(theme).toBeVisible();
+  await theme.click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', /light|dark/);
+  const first = await page.locator('html').getAttribute('data-theme');
+  await theme.click();
+  const second = await page.locator('html').getAttribute('data-theme');
+  expect(second).not.toBe(first);
+});
+
+test('Streaming no muestra configuración Delivery', async ({ request }) => {
+  const response = await request.get('/panel/');
+  const body = await response.text();
+  expect(body).toContain('data-settings-tab="delivery"');
+  expect(body).toContain('data-settings-panel="delivery" hidden');
+  expect(body).toContain('data-settings-tab="delivery" onclick="showSettingsPanel(\'delivery\',this)" hidden');
 });
