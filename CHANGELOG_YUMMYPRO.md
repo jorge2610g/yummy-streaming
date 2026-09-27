@@ -11,6 +11,7 @@
 - La barra superior y el carrito comparten el mismo sistema visual y se añadió contraste automático para el color principal del negocio.
 - Catálogo público actualizado a v1.3.7.
 - Se versionaron las migraciones de Marca Blanca Pro y Streaming sin Delivery para poder promoverlas a Producción de forma controlada.
+- Streaming ahora respeta los módulos de su plan: Básico, Standard y Pro dejan de compartir automáticamente todos los accesos; la prueba de 30 días mantiene las funciones operativas para evaluación, pero no incluye Marca Blanca PLUS.
 - Producción no fue modificada.
 
 ## 2026-09-27 — 1.2.14 — Pruebas
