@@ -231,3 +231,13 @@ test('catálogo Streaming soporta sesión admin automática aislada', async ({ r
   expect(body).toContain('admin_client_token_hash');
   expect(body).toContain('Admin prueba');
 });
+
+
+test('tema Streaming define superficies para claro y oscuro sin fallback negro', async ({ request }) => {
+  const response = await request.get('/panel/');
+  expect(response.ok()).toBeTruthy();
+  const body = await response.text();
+  expect(body).toContain('--soft:#0a192a');
+  expect(body).toContain('html[data-theme="light"]{--bg:#f4f7fb');
+  expect(body).toContain('--soft:#f8fafc');
+});
