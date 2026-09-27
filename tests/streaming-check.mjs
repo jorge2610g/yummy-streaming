@@ -21,6 +21,9 @@ const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const catalogManifest = JSON.parse(readFileSync('catalogo/manifest.webmanifest','utf8'));
 const catalogSw = readFileSync('catalogo/sw.js','utf8');
 const cname = readFileSync('CNAME','utf8').trim();
+const whiteLabelMigration = readFileSync('supabase/migrations/20260927013000_streaming_white_label_pro.sql','utf8');
+const noDeliveryMigration = readFileSync('supabase/migrations/20260927013100_streaming_no_delivery.sql','utf8');
+const planModulesMigration = readFileSync('supabase/migrations/20260927013200_streaming_plan_modules.sql','utf8');
 
 const panelInlineScripts=[...panel.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!/\bsrc\s*=/i.test(m[1]||'')&&!/application\/ld\+json/i.test(m[1]||''));
@@ -92,6 +95,11 @@ for (const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/ca
 for (const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ruta GitHub Pages ${marker}`);
 
 for(const marker of ['id="swhiteLabel"','white_label_enabled','Marca blanca','PLUS'])if(!panel.includes(marker))throw new Error('panel/index.html: falta Marca blanca '+marker);
+if(panel.includes('if(businessKey==="streaming")return [...raw]'))throw new Error('Streaming todavía ignora los módulos de suscripción');
+if(!panel.includes('if(businessKey==="streaming")return raw.filter(x=>x==="plans"||set.has(x))'))throw new Error('Streaming no aplica módulos del plan en la navegación');
+for(const marker of ["white_label","enforce_white_label_plan_capability","restaurant_subscription_module_enabled"])if(!whiteLabelMigration.includes(marker))throw new Error('Migración Marca Blanca PRO incompleta: '+marker);
+for(const marker of ["enforce_streaming_no_delivery","delivery_enabled=false"])if(!noDeliveryMigration.includes(marker))throw new Error('Migración Streaming sin Delivery incompleta: '+marker);
+for(const marker of ["streaming_subscriptions","streaming_accounts","streaming_renewals","v_type='streaming'"])if(!planModulesMigration.includes(marker))throw new Error('Migración de módulos Streaming incompleta: '+marker);
 for(const marker of ['whiteLabelEntitlementHint','guardWhiteLabelToggle','subscriptionCapabilityEnabled("white_label")','openWhiteLabelProPlan','Marca Blanca PLUS requiere Plan Pro'])if(!panel.includes(marker))throw new Error('panel/index.html: falta protección PRO de Marca Blanca '+marker);
 for(const marker of ['id="mercadoPagoVisibilityOption"','mpOption.hidden=!c.mercadopago_enabled','delivery_enabled:false'])if(!panel.includes(marker))throw new Error('panel/index.html: falta regla Streaming de pagos/delivery '+marker);
 for(const marker of ['id="platformFooter" hidden','dataset.brandReady="true"','brandContrast'])if(!catalog.includes(marker))throw new Error('catalogo/index.html: falta anti-destello/contraste de Marca Blanca '+marker);
