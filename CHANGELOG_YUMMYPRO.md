@@ -1,5 +1,18 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-27 — 1.2.15 — Pruebas
+
+- Marca Blanca PLUS queda vinculada a la capacidad `white_label` del plan Streaming Pro, con bloqueo visual y validación de base de datos.
+- Una baja de plan, suspensión o vencimiento deja de exponer Marca Blanca en el catálogo público.
+- Streaming fuerza `delivery_enabled=false` y mantiene Delivery fuera de la configuración visible.
+- Mercado Pago se oculta del selector cuando el país no lo admite; en países compatibles conserva el flujo de credenciales y verificación.
+- El Dashboard Streaming usa accesos e iconos propios del nicho: Suscripciones, Clientes, Plataformas, Cuentas/Cupos y Renovaciones.
+- El catálogo inicia con el footer YummyPro oculto hasta conocer la configuración del negocio, evitando el destello de marca al cargar White Label.
+- La barra superior y el carrito comparten el mismo sistema visual y se añadió contraste automático para el color principal del negocio.
+- Catálogo público actualizado a v1.3.7.
+- Se versionaron las migraciones de Marca Blanca Pro y Streaming sin Delivery para poder promoverlas a Producción de forma controlada.
+- Producción no fue modificada.
+
 ## 2026-09-27 — 1.2.14 — Pruebas
 
 - Streaming deja de mostrar Delivery en Configuración; los campos heredados quedan ocultos para mantener compatibilidad sin exponerlos al negocio.
