@@ -1,5 +1,12 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-26 — 1.2.13 — Pruebas
+
+- Se corrigió el modo claro/oscuro del panel Streaming.
+- Las superficies auxiliares de Centro de control, Agenda, Centro de acciones y Recordatorios ya no caen al fondo negro por una variable de tema faltante.
+- Se añadió la variable `--soft` para ambos temas y una prueba de regresión para evitar que vuelva a ocurrir.
+- Producción no fue modificada.
+
 ## 2026-09-26 — 1.2.10 — Pruebas
 
 - Se añadió el switch **Marca blanca / White Label** dentro de Marca/Apariencia.
