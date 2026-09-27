@@ -2704,7 +2704,7 @@ body.retail-scanner-open{overflow:hidden!important}
     <button class="settings-tab" type="button" data-settings-tab="country" onclick="showSettingsPanel('country',this)"><span>3</span><b>País y moneda</b></button>
     <button class="settings-tab" type="button" data-settings-tab="payments" onclick="showSettingsPanel('payments',this)"><span>4</span><b>Métodos de pago</b></button>
     <button class="settings-tab" type="button" data-settings-tab="brand" onclick="showSettingsPanel('brand',this)"><span>5</span><b>Marca</b></button>
-    <button class="settings-tab" type="button" data-settings-tab="delivery" onclick="showSettingsPanel('delivery',this)"><span>6</span><b>Delivery</b></button>
+    <button class="settings-tab" type="button" data-settings-tab="delivery" onclick="showSettingsPanel('delivery',this)" hidden><span>6</span><b>Delivery</b></button>
     <button class="settings-tab" type="button" data-settings-tab="alternative" onclick="showSettingsPanel('alternative',this)"><span>7</span><b>Pagos alternativos</b></button>
     <button class="settings-tab" type="button" data-settings-tab="store" onclick="showSettingsPanel('store',this)"><span>8</span><b>Estado del local</b></button>
     <button class="settings-tab" type="button" data-settings-tab="mercadopago" onclick="showSettingsPanel('mercadopago',this)"><span>9</span><b>Mercado Pago</b></button>
@@ -2729,8 +2729,8 @@ body.retail-scanner-open{overflow:hidden!important}
         <div class="span4"><label>Apertura</label><input id="sopen" type="time"></div>
         <div class="span4"><label>Cierre</label><input id="sclose" type="time"></div>
         <div class="span4"><label>Tiempo retiro</label><input id="spickup"></div>
-        <div class="span8"><label>Tiempo delivery</label><input id="sdelivery"></div>
-        <div class="span12"><label>Nota delivery</label><input id="sdeliverynote"></div>
+        <div class="span8" hidden><label>Tiempo delivery</label><input id="sdelivery"></div>
+        <div class="span12" hidden><label>Nota delivery</label><input id="sdeliverynote"></div>
       </div>
     </div>
 
@@ -2748,19 +2748,19 @@ body.retail-scanner-open{overflow:hidden!important}
       <div class="grid">
         <div class="span4"><label class="item" style="display:flex;gap:10px;align-items:flex-start"><input id="sacceptCash" type="checkbox" style="width:auto;margin-top:3px" onchange="syncPaymentVisibilitySettings()"><span><b>💵 Efectivo</b><small class="mut" style="display:block;margin-top:4px">Muestra Efectivo como opción de pago al cliente.</small></span></label></div>
         <div class="span4"><label class="item" style="display:flex;gap:10px;align-items:flex-start"><input id="sacceptTransfer" type="checkbox" style="width:auto;margin-top:3px" onchange="syncPaymentVisibilitySettings()"><span><b>🏦 Transferencia bancaria</b><small class="mut" style="display:block;margin-top:4px">Muestra las transferencias bancarias que hayas configurado en Pagos alternativos.</small></span></label></div>
-        <div class="span4"><label class="item" style="display:flex;gap:10px;align-items:flex-start"><input id="sacceptMercadoPago" type="checkbox" style="width:auto;margin-top:3px" onchange="syncPaymentVisibilitySettings()"><span><b>💳 Mercado Pago</b><small id="sacceptMercadoPagoHint" class="mut" style="display:block;margin-top:4px">Aparece solo si el país y las credenciales del restaurante lo permiten.</small></span></label></div>
+        <div class="span4"><label class="item" style="display:flex;gap:10px;align-items:flex-start"><input id="sacceptMercadoPago" type="checkbox" style="width:auto;margin-top:3px" onchange="syncPaymentVisibilitySettings()"><span><b>💳 Mercado Pago</b><small id="sacceptMercadoPagoHint" class="mut" style="display:block;margin-top:4px">Aparece solo si el país y las credenciales del negocio lo permiten.</small></span></label></div>
       </div>
       <div id="paymentVisibilitySummary" class="item" style="margin-top:12px"></div>
       <button class="primary" type="button" style="margin-top:12px" onclick="savePaymentMethodVisibility()">Guardar métodos de pago</button>
     </div>
 
     <div class="card settings-panel" data-settings-panel="brand">
-      <div class="settings-panel-head" id="restaurantBrandSettings"><span class="settings-step">5</span><div><h2>Marca del restaurante</h2><p class="mut">Personaliza el menú público con tu logo y colores.</p></div></div>
+      <div class="settings-panel-head" id="restaurantBrandSettings"><span class="settings-step">5</span><div><h2>Marca del negocio</h2><p class="mut">Personaliza tu catálogo público con tu logo y colores.</p></div></div>
       <div class="grid">
         <div class="span4"><label>Color principal</label><input id="scolorPrimary" type="color" value="#ffc21a" style="height:48px;padding:4px"></div>
         <div class="span4"><label>Color secundario</label><input id="scolorSecondary" type="color" value="#1e1f24" style="height:48px;padding:4px"></div>
         <div class="span4"><label>Color del texto</label><input id="scolorText" type="color" value="#1e1f24" style="height:48px;padding:4px"></div>
-        <div class="span12"><label>Logo del restaurante</label><div class="uploadBox"><input id="slogo" type="hidden"><input id="slogoFile" type="file" accept="image/*" onchange="uploadSettingsLogo(this)"><button type="button" class="ghost" onclick="document.getElementById('slogoFile').click()">📷 Elegir logo</button><img id="slogoPreview" class="uploadPreview" hidden></div><p class="mut">Puedes subir JPG, PNG o WEBP de hasta 5 MB.</p></div>
+        <div class="span12"><label>Logo del negocio</label><div class="uploadBox"><input id="slogo" type="hidden"><input id="slogoFile" type="file" accept="image/*" onchange="uploadSettingsLogo(this)"><button type="button" class="ghost" onclick="document.getElementById('slogoFile').click()">📷 Elegir logo</button><img id="slogoPreview" class="uploadPreview" hidden></div><p class="mut">Puedes subir JPG, PNG o WEBP de hasta 5 MB.</p></div>
         <div class="span12">
           <label class="item" style="display:flex;gap:14px;align-items:flex-start;justify-content:space-between">
             <span style="min-width:0"><b>✨ Marca blanca <span style="font-size:11px;padding:3px 7px;border-radius:999px;background:#8b5cf622;color:#8b5cf6">PLUS</span></b><small class="mut" style="display:block;margin-top:5px;line-height:1.45">Oculta el nombre, logo y referencias visibles de YummyPro en la web pública. El cliente verá únicamente la identidad de tu negocio.</small></span>
@@ -2770,7 +2770,7 @@ body.retail-scanner-open{overflow:hidden!important}
       </div>
     </div>
 
-    <div class="card settings-panel" data-settings-panel="delivery">
+    <div class="card settings-panel" data-settings-panel="delivery" hidden>
       <div class="settings-panel-head"><span class="settings-step">6</span><div><h2>Delivery</h2><p class="mut">Configura precio fijo o rangos por distancia y ubicación GPS.</p></div></div>
       <div class="grid">
         <div class="span4"><label>Modalidad</label><select id="sdeliverymode"><option value="fixed">Precio fijo</option><option value="distance">Por distancia / GPS</option></select></div>
@@ -6705,7 +6705,7 @@ window.saveOrderDetail=async function(){const old=orders.find(x=>Number(x.id)===
     <div class="row" style="justify-content:flex-end;margin-top:12px"><button class="ghost" type="button" onclick="restaurantIssueDialog.close()">Cancelar</button><button class="primary" type="button" onclick="submitRestaurantIssueReport()">Enviar reporte</button></div>
   </div>
 </dialog>
-<footer class="admin-version">Streaming · Versión v1.2.13</footer></main></div><script>
+<footer class="admin-version">Streaming · Versión v1.2.14</footer></main></div><script>
 async function verifySubscriptionMercadoPago(){
  const box=document.getElementById("subscriptionMpStatus");
  if(!box)return;
