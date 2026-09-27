@@ -21,6 +21,9 @@ const manifest = JSON.parse(readFileSync('manifest.webmanifest','utf8'));
 const catalogManifest = JSON.parse(readFileSync('catalogo/manifest.webmanifest','utf8'));
 const catalogSw = readFileSync('catalogo/sw.js','utf8');
 const cname = readFileSync('CNAME','utf8').trim();
+const whiteLabelMigration = readFileSync('supabase/migrations/20260927013000_streaming_white_label_pro.sql','utf8');
+const noDeliveryMigration = readFileSync('supabase/migrations/20260927013100_streaming_no_delivery.sql','utf8');
+const planModulesMigration = readFileSync('supabase/migrations/20260927013200_streaming_plan_modules.sql','utf8');
 
 const panelInlineScripts=[...panel.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!/\bsrc\s*=/i.test(m[1]||'')&&!/application\/ld\+json/i.test(m[1]||''));
@@ -36,7 +39,7 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo],[
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.12','create_my_trial_restaurant_v3','manifest.webmanifest','./streaming.js?v=1202','./streaming-admin-tools.js?v=1200','./streaming-delivery.js?v=0600','./streaming-reminders.js?v=0800','./streaming-agenda.js?v=0900'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.15','create_my_trial_restaurant_v3','manifest.webmanifest','./streaming.js?v=1202','./streaming-admin-tools.js?v=1200','./streaming-delivery.js?v=0600','./streaming-reminders.js?v=0800','./streaming-agenda.js?v=0900'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 const reminderScriptCount=(panel.match(/\.\/streaming-reminders\.js\?v=0800/g)||[]).length;
 if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
@@ -57,7 +60,7 @@ if (!storeDemo.includes('STREAMING · ENTRETENIMIENTO') || !storeDemo.includes('
 for (const marker of ['Servicios disponibles','Netflix Premium','Disney+ Premium','Prime Video','Spotify Premium','Comprar','Finalizar pedido','Iniciar sesión','Mis cuentas','whatsappBtn','themeBtn']) if (!storeDemo.includes(marker)) throw new Error(`Tienda Streaming: falta ${marker}`);
 for (const forbidden of ['Panel Streaming','DEMOSTRACIÓN · SOLO LECTURA','DEMOSTRACIÓN DEL NEGOCIO','TIENDA DEMO','Demo comercial','Precio demo','Finalizar pedido demo','No se realizará ningún cobro real.','streamingOpenSubscription','streamingOpenPayment','supabase-js','SB_URL']) if (storeDemo.includes(forbidden)) throw new Error(`Tienda Streaming expone texto demo, panel o integración interna: ${forbidden}`);
 
-for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · Streaming tienda v1.3.5']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
+for (const marker of ['streaming_public_catalog','CATÁLOGO DE STREAMING','sale_price','free_slots','Powered by YummyPro · Streaming tienda v1.3.7']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ${marker}`);
 for (const marker of ['Carrito','Iniciar sesión','Mis pedidos','Mis accesos','create-streaming-payment','streaming_create_order','Seguimiento del pedido','Recordatorios de renovación','Esta es una cuenta demo','effective_demo','./manifest.webmanifest','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta flujo cliente ${marker}`);
 for (const marker of ['streamingPreviewCatalog','Previsualizar catálogo','streamingPlatformPrice','sale_price']) if (!streaming.includes(marker)) throw new Error(`panel/streaming.js: falta vista previa de catálogo ${marker}`);
 
@@ -73,7 +76,7 @@ for (const marker of ['entrega, activación y centro de acciones v0.6.0','delive
 
 for (const marker of ['recordatorios persistentes v0.8.0','streaming_reminder_logs','streamingLoadReminderLogs','streamingReminderOpenedToday','streamingReminderWhatsApp','streamingReminderOpenNext','Recordatorios automáticos','WhatsApp · siguiente','Gestionado hoy','historial queda sincronizado entre dispositivos']) if (!reminders.includes(marker)) throw new Error(`panel/streaming-reminders.js: falta ${marker}`);
 for (const forbidden of ['localStorage','Enviado hoy']) if (reminders.includes(forbidden)) throw new Error(`panel/streaming-reminders.js conserva estado local o etiqueta engañosa: ${forbidden}`);
-for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext','streaming-control.js?v=1000','Streaming · Versión v1.2.12']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
+for (const marker of ['agenda diaria v0.9.0','Agenda de hoy','Gestionar siguiente','Avance','streamingAgendaPending','streamingAgendaRefresh','streamingReminderOpenNext','streaming-control.js?v=1000','Streaming · Versión v1.2.15']) if (!agenda.includes(marker)) throw new Error(`panel/streaming-agenda.js: falta ${marker}`);
 
 for (const marker of ['centro de control v1.0.0','Centro de control','Exportar CSV','Respaldo JSON','streamingControlSafeSnapshot','streamingControlResults','streamingControlExportBackup','streamingControlExportCsv','no incluyen contraseñas']) if (!control.includes(marker)) throw new Error(`panel/streaming-control.js: falta ${marker}`);
 for (const forbidden of ['password','access_token','refresh_token','client_secret']) if (control.includes(forbidden)) throw new Error(`panel/streaming-control.js contiene un campo sensible prohibido: ${forbidden}`);
@@ -92,5 +95,13 @@ for (const marker of ['YUMMY_STREAMING_CATALOG_BASE','yummy-streaming-pruebas/ca
 for (const marker of ['./manifest.webmanifest','../icon-192.png','navigator.serviceWorker.register("./sw.js"']) if (!catalog.includes(marker)) throw new Error(`catalogo/index.html: falta ruta GitHub Pages ${marker}`);
 
 for(const marker of ['id="swhiteLabel"','white_label_enabled','Marca blanca','PLUS'])if(!panel.includes(marker))throw new Error('panel/index.html: falta Marca blanca '+marker);
+if(panel.includes('if(businessKey==="streaming")return [...raw]'))throw new Error('Streaming todavía ignora los módulos de suscripción');
+if(!panel.includes('if(businessKey==="streaming")return raw.filter(x=>x==="plans"||set.has(x))'))throw new Error('Streaming no aplica módulos del plan en la navegación');
+for(const marker of ["white_label","enforce_white_label_plan_capability","restaurant_subscription_module_enabled"])if(!whiteLabelMigration.includes(marker))throw new Error('Migración Marca Blanca PRO incompleta: '+marker);
+for(const marker of ["enforce_streaming_no_delivery","delivery_enabled=false"])if(!noDeliveryMigration.includes(marker))throw new Error('Migración Streaming sin Delivery incompleta: '+marker);
+for(const marker of ["streaming_subscriptions","streaming_accounts","streaming_renewals","v_type='streaming'"])if(!planModulesMigration.includes(marker))throw new Error('Migración de módulos Streaming incompleta: '+marker);
+for(const marker of ['whiteLabelEntitlementHint','guardWhiteLabelToggle','subscriptionCapabilityEnabled("white_label")','openWhiteLabelProPlan','Marca Blanca PLUS requiere Plan Pro'])if(!panel.includes(marker))throw new Error('panel/index.html: falta protección PRO de Marca Blanca '+marker);
+for(const marker of ['id="mercadoPagoVisibilityOption"','mpOption.hidden=!c.mercadopago_enabled','delivery_enabled:false'])if(!panel.includes(marker))throw new Error('panel/index.html: falta regla Streaming de pagos/delivery '+marker);
+for(const marker of ['id="platformFooter" hidden','dataset.brandReady="true"','brandContrast'])if(!catalog.includes(marker))throw new Error('catalogo/index.html: falta anti-destello/contraste de Marca Blanca '+marker);
 
 for(const marker of ['#loginBtn::before','#accountsBtn::before','.navActions{gap:4px;min-width:0}'])if(!storeDemo.includes(marker))throw new Error('Tienda demo Streaming: falta fix responsive móvil '+marker);
