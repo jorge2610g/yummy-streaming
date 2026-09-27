@@ -3268,11 +3268,12 @@ function effectiveTabs(){
  // Vista administrativa: mismo menú que el propietario del tipo de negocio seleccionado,
  // incluyendo Planes y Configuración, sin restricciones de suscripción.
  if(adminPreviewMode)return [...raw];
- // Solo la vista autenticada del superadministrador ignora restricciones de plan/rol.
- if(businessKey==="streaming")return [...raw];
+ // La cuenta del negocio respeta módulos del plan. Planes siempre queda accesible
+ // para permitir renovar/mejorar; QR en Streaming solo aparece si el plan lo incluye.
  if(currentRole!=="restaurant"&&currentRole!=="manager")return raw;
  if(subscriptionModuleAccess===null)return raw;
  const set=new Set(subscriptionModuleAccess);
+ if(businessKey==="streaming")return raw.filter(x=>x==="plans"||set.has(x));
  return raw.filter(x=>x==="plans"||x==="qr"||set.has(retailTabModule[x]||x));
 }
 function syncSubscriptionBannerForActiveTab(){
