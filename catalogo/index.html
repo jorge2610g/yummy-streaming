@@ -9,6 +9,9 @@
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="apple-touch-icon" href="../icon-192.png">
 <title>Streaming</title>
+<script id="streaming-catalog-theme-bootstrap-v136">
+(()=>{try{const saved=localStorage.getItem("yummypro_streaming_catalog_theme");const preferred=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=saved==="light"||saved==="dark"?saved:preferred}catch(_){document.documentElement.dataset.theme="dark"}})();
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--bg:#090b12;--card:#111522;--soft:#171c2b;--line:#262d3d;--txt:#f8fafc;--mut:#a6afc0;--a:#8b5cf6;--a2:#c084fc;--ok:#34d399;--warn:#fbbf24;--bad:#fb7185}
@@ -24,14 +27,46 @@ dialog{width:min(600px,calc(100% - 20px));max-height:90dvh;border:1px solid var(
 #test-rubro-switcher .trs-badge{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:999px;background:#ffc21a;color:#171717}
 @media(max-width:520px){#test-rubro-switcher{justify-content:space-between;gap:7px;padding:8px}.trs-label{display:none!important}#test-rubro-switcher select{min-width:0;flex:1;max-width:none}}
 </style>
+<style id="streaming-catalog-theme-v136">
+html[data-theme="light"]{
+  --bg:#f4f7fb;--card:#ffffff;--soft:#eef2f7;--line:#d7deea;--txt:#172033;--mut:#5f6f82;
+  color-scheme:light;
+}
+html[data-theme="dark"]{color-scheme:dark}
+html[data-theme="light"] body{background:radial-gradient(circle at 85% 0,#8b5cf612,transparent 30%),var(--bg)}
+html[data-theme="light"] .top{background:#fffffff0}
+html[data-theme="light"] .product{background:linear-gradient(145deg,#ffffff,#f7f9fc)}
+html[data-theme="light"] .icon,
+html[data-theme="light"] .pill,
+html[data-theme="light"] .status{background:#1720330a}
+html[data-theme="light"] .form input{background:#fff}
+html[data-theme="light"] .checkoutBox,
+html[data-theme="light"] .orderCard,
+html[data-theme="light"] .accountSummary,
+html[data-theme="light"] .accessCard{background:#f8fafc}
+html[data-theme="light"] .count{background:#172033;color:#fff}
+html[data-theme="light"] .notice{color:#92400e;background:#fbbf2418}
+html[data-theme="light"] .reminder{color:#92400e;background:#fbbf2418}
+html[data-theme="light"] .toast{background:#172033;color:#fff}
+.actions .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px}
+#themeBtn{min-width:42px}
+@media(max-width:640px){
+  .nav{align-items:stretch!important}
+  .brand{min-width:0}
+  .actions{width:100%;justify-content:flex-start!important;gap:6px}
+  .actions .btn{flex:0 0 auto}
+  #accountBtn{flex:1 1 138px}
+  #cartBtn{margin-left:auto}
+}
+</style>
 </head>
 <body>
-<header class="top"><div class="wrap nav"><div class="brand" id="brand"><span class="logoFallback">Y</span><span>Streaming</span></div><div class="actions"><button class="btn" id="accountBtn">👤 Iniciar sesión</button><button class="btn" id="ordersBtn" hidden>🧾 Mis pedidos</button><button class="btn" id="accessBtn" hidden>📺 Mis accesos</button><button class="btn" id="pwaBtn" hidden>📲 Instalar</button><button class="btn primary" id="cartBtn">🛒 Carrito <span class="count" id="cartCount">0</span></button></div></div></header>
+<header class="top"><div class="wrap nav"><div class="brand" id="brand"><span class="logoFallback">Y</span><span>Streaming</span></div><div class="actions"><button class="btn" id="accountBtn">👤 Iniciar sesión</button><button class="btn" id="ordersBtn" hidden>🧾 Mis pedidos</button><button class="btn" id="accessBtn" hidden>📺 Mis accesos</button><button class="btn" id="pwaBtn" hidden>📲 Instalar</button><button class="btn" id="themeBtn" type="button" onclick="toggleStreamingTheme()" aria-label="Cambiar modo de color" title="Cambiar modo">☀️ Claro</button><button class="btn primary" id="cartBtn">🛒 Carrito <span class="count" id="cartCount">0</span></button></div></div></header>
 <main>
 <section class="hero"><div class="wrap"><div class="eyebrow">CATÁLOGO DE STREAMING</div><h1 id="businessName">Streaming</h1><p class="lead">Elige tus plataformas, agrégalas al carrito, paga online y sigue la activación desde tu cuenta.</p><div class="trust"><span>🔒 Pago online</span><span>👤 Cuenta cliente</span><span>📦 Seguimiento</span><span>🔔 Recordatorios</span></div><div class="notice" id="paymentNotice" hidden></div></div></section>
 <section><div class="wrap"><div class="toolbar"><div class="search">⌕ <input id="searchInput" type="search" placeholder="Buscar plataforma..." autocomplete="off"></div></div><div class="grid" id="catalogGrid"><div class="loading">Cargando catálogo…</div></div></div></section>
 </main>
-<footer class="footer" id="platformFooter"><div class="wrap">Powered by YummyPro · Streaming tienda v1.3.5</div></footer>
+<footer class="footer" id="platformFooter"><div class="wrap">Powered by YummyPro · Streaming tienda v1.3.6</div></footer>
 
 <dialog id="accountDialog"><div class="modal"><div class="modalHead"><h2>Mi cuenta</h2><button class="close" data-close="accountDialog">✕</button></div><div id="accountGuest"><div class="tabs"><button id="loginTab" class="active">Iniciar sesión</button><button id="registerTab">Crear cuenta</button></div><form id="loginForm" class="form"><input id="loginEmail" type="email" placeholder="Correo electrónico" required><input id="loginPassword" type="password" placeholder="Contraseña" minlength="6" required><button type="submit">Entrar</button></form><form id="registerForm" class="form" hidden><input id="registerName" placeholder="Nombre y apellido" required><input id="registerPhone" type="tel" placeholder="WhatsApp / teléfono" required><input id="registerEmail" type="email" placeholder="Correo electrónico" required><input id="registerPassword" type="password" placeholder="Contraseña (mínimo 6 caracteres)" minlength="6" required><button type="submit">Crear cuenta</button></form><p class="msg" id="accountMsg"></p></div><div id="accountAuth" hidden><div class="accountSummary"><b id="accountUser">Cliente</b><div class="mut" style="margin-top:5px">Tu cuenta guarda tus compras y el seguimiento.</div><button class="btn" id="pushBtn">🔔 Activar notificaciones</button><button class="btn" id="logoutBtn">Cerrar sesión</button></div></div></div></dialog>
 
@@ -44,6 +79,30 @@ dialog{width:min(600px,calc(100% - 20px));max-height:90dvh;border:1px solid var(
 <div class="toast" id="toast"></div>
 
 <script>
+const STREAMING_THEME_KEY="yummypro_streaming_catalog_theme";
+function syncStreamingThemeButton(){
+  const theme=document.documentElement.dataset.theme==="light"?"light":"dark";
+  const btn=document.getElementById("themeBtn");
+  if(btn){
+    const next=theme==="dark"?"light":"dark";
+    btn.textContent=theme==="dark"?"☀️ Claro":"🌙 Oscuro";
+    btn.setAttribute("aria-label","Activar modo "+(next==="light"?"claro":"oscuro"));
+    btn.title="Activar modo "+(next==="light"?"claro":"oscuro");
+  }
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.content=theme==="light"?"#f4f7fb":"#090b12";
+}
+function applyStreamingTheme(theme){
+  const safe=theme==="light"?"light":"dark";
+  document.documentElement.dataset.theme=safe;
+  try{localStorage.setItem(STREAMING_THEME_KEY,safe)}catch(_){}
+  syncStreamingThemeButton();
+}
+function toggleStreamingTheme(){
+  applyStreamingTheme(document.documentElement.dataset.theme==="light"?"dark":"light");
+}
+syncStreamingThemeButton();
+
 const YUMMY_IS_PRODUCTION=location.hostname==="streaming.yummypro.online";
 const SB_URL=YUMMY_IS_PRODUCTION?"https://gulctljitzlwokqydigx.supabase.co":"https://wodqqheeesrelsbacmgx.supabase.co";
 const SB_KEY=YUMMY_IS_PRODUCTION?"sb_publishable__moppTxObowifx6rJbW_tw_3GiCkqhG":"sb_publishable_yiuYVYAAwVLtzlTdEM1kUg_s1Z7BiyE";
