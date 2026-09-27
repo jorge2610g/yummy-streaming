@@ -2763,8 +2763,8 @@ body.retail-scanner-open{overflow:hidden!important}
         <div class="span12"><label>Logo del negocio</label><div class="uploadBox"><input id="slogo" type="hidden"><input id="slogoFile" type="file" accept="image/*" onchange="uploadSettingsLogo(this)"><button type="button" class="ghost" onclick="document.getElementById('slogoFile').click()">📷 Elegir logo</button><img id="slogoPreview" class="uploadPreview" hidden></div><p class="mut">Puedes subir JPG, PNG o WEBP de hasta 5 MB.</p></div>
         <div class="span12">
           <label class="item" style="display:flex;gap:14px;align-items:flex-start;justify-content:space-between">
-            <span style="min-width:0"><b>✨ Marca blanca <span style="font-size:11px;padding:3px 7px;border-radius:999px;background:#8b5cf622;color:#8b5cf6">PLUS</span></b><small class="mut" style="display:block;margin-top:5px;line-height:1.45">Oculta el nombre, logo y referencias visibles de YummyPro en la web pública. El cliente verá únicamente la identidad de tu negocio.</small></span>
-            <span class="auto-print-toggle" style="flex:0 0 auto"><input id="swhiteLabel" type="checkbox"><span class="toggle-track"></span><span>Activar</span></span>
+            <span style="min-width:0"><b>✨ Marca blanca <span style="font-size:11px;padding:3px 7px;border-radius:999px;background:#8b5cf622;color:#8b5cf6">PLUS</span></b><small class="mut" style="display:block;margin-top:5px;line-height:1.45">Oculta el nombre, logo y referencias visibles de YummyPro en la web pública. El cliente verá únicamente la identidad de tu negocio.</small><small id="whiteLabelEntitlementHint" class="mut" style="display:block;margin-top:7px;font-weight:800">🔒 Disponible con Plan Pro.</small><button id="whiteLabelUpgradeBtn" class="ghost" type="button" style="margin-top:9px" onclick="openWhiteLabelProPlan()">Ver Plan Pro</button></span>
+            <span class="auto-print-toggle" style="flex:0 0 auto"><input id="swhiteLabel" type="checkbox" onchange="guardWhiteLabelToggle(this)"><span class="toggle-track"></span><span>Activar</span></span>
           </label>
         </div>
       </div>
@@ -2808,7 +2808,7 @@ body.retail-scanner-open{overflow:hidden!important}
     </div>
 
     <div class="card settings-panel" data-settings-panel="mercadopago" id="restaurantMpSettings">
-      <div class="settings-panel-head"><span class="settings-step">9</span><div><h2>Mercado Pago</h2><p class="mut">Conecta la cuenta del restaurante. Solo aparece en países oficialmente habilitados.</p></div></div>
+      <div class="settings-panel-head"><span class="settings-step">9</span><div><h2>Mercado Pago</h2><p class="mut">Conecta la cuenta del negocio Streaming. Solo aparece en países oficialmente habilitados.</p></div></div>
       <label>Public Key</label><input id="restaurantMpPublicKey" placeholder="APP_USR-...">
       <label>Access Token privado</label><input id="restaurantMpAccessToken" type="password" autocomplete="new-password" placeholder="APP_USR-...">
       <p class="mut">Por seguridad, el Access Token nunca volverá a mostrarse después de guardarlo.</p>
