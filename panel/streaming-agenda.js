@@ -64,7 +64,7 @@ function renderStreamingAgenda(){
 function installStreamingControlV100(){
  const footer=document.querySelector('.admin-version');if(footer)footer.textContent='Streaming · Versión v1.2.12';
  if(document.getElementById('streaming-control-script-v1000'))return;
- const script=document.createElement('script');script.id='streaming-control-script-v1000';script.src='/panel/streaming-control.js?v=1000';document.body.appendChild(script);
+ const script=document.createElement('script');script.id='streaming-control-script-v1000';script.src='./streaming-control.js?v=1000';document.body.appendChild(script);
 }
 
 const streamingReminderRenderBeforeAgenda=renderStreamingReminderQueue;
