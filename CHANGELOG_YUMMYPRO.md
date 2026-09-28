@@ -1,5 +1,10 @@
 # Changelog YummyPro — Streaming
 
+## 2026-09-28 — 1.2.16 — Pruebas
+
+- Tras verificar DNS, el panel inicia el aprovisionamiento seguro del hostname y SSL en backend.
+- Producción no fue modificada.
+
 ## 2026-09-27 — 1.2.15 — Pruebas
 
 - Marca Blanca PLUS queda vinculada a la capacidad `white_label` del plan Streaming Pro, con bloqueo visual y validación de base de datos.
