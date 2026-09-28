@@ -106,15 +106,16 @@ function toggleStreamingTheme(){
 }
 syncStreamingThemeButton();
 
-const YUMMY_IS_STAGING=(location.hostname==="jorge2610g.github.io"&&location.pathname.startsWith("/yummy-streaming-pruebas/"))||["localhost","127.0.0.1"].includes(location.hostname);
-const YUMMY_IS_PRODUCTION=!YUMMY_IS_STAGING;
+const YUMMY_ENV_OVERRIDE=String(window.__YUMMY_ENV||"").trim().toLowerCase();
+const YUMMY_IS_STAGING=YUMMY_ENV_OVERRIDE==="staging"||(!YUMMY_ENV_OVERRIDE&&((location.hostname==="jorge2610g.github.io"&&location.pathname.startsWith("/yummy-streaming-pruebas/"))||["localhost","127.0.0.1"].includes(location.hostname)));
+const YUMMY_IS_PRODUCTION=YUMMY_ENV_OVERRIDE==="production"||!YUMMY_IS_STAGING;
 const SB_URL=YUMMY_IS_PRODUCTION?"https://gulctljitzlwokqydigx.supabase.co":"https://wodqqheeesrelsbacmgx.supabase.co";
 const SB_KEY=YUMMY_IS_PRODUCTION?"sb_publishable__moppTxObowifx6rJbW_tw_3GiCkqhG":"sb_publishable_yiuYVYAAwVLtzlTdEM1kUg_s1Z7BiyE";
 const WEB_PUSH_PUBLIC_KEY="BEhtHznJex6P3ANNL3SZzgiyXTrilvU-On1qpSwdx0MqmPhrpikxI1sCAbXUFFfkVczLAHdyDFQQS9_Wm5mahpw";
 const db=supabase.createClient(SB_URL,SB_KEY,{auth:{storageKey:"yummypro_streaming_client_auth_v1",persistSession:true,autoRefreshToken:true,detectSessionInUrl:false}});
 const params=new URLSearchParams(location.search);
-const STREAMING_PLATFORM_HOSTS=["streaming.yummypro.online","jorge2610g.github.io","localhost","127.0.0.1"];
-const customDomainHost=YUMMY_IS_PRODUCTION&&!STREAMING_PLATFORM_HOSTS.includes(location.hostname.toLowerCase())?location.hostname.toLowerCase().replace(/^www\./,""):null;
+const STREAMING_PLATFORM_HOSTS=["streaming.yummypro.online","domains.yummypro.online","domains-pruebas.yummypro.online","jorge2610g.github.io","localhost","127.0.0.1"];
+const customDomainHost=!STREAMING_PLATFORM_HOSTS.includes(location.hostname.toLowerCase())?location.hostname.toLowerCase().replace(/^www\./,""):null;
 let businessId=Number(params.get("business")||(!customDomainHost?localStorage.getItem("yummypro_streaming_last_business"):0)||0);
 let businessRef=params.get("business")||customDomainHost||(businessId?String(businessId):null);
 if(businessId&&!params.get("business")&&!customDomainHost)history.replaceState({},document.title,location.pathname+"?business="+businessId+(params.get("source")?"&source="+encodeURIComponent(params.get("source")):""));
