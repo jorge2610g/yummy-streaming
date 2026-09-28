@@ -1,5 +1,7 @@
 // Validación E2E final YummyPro Streaming v1.2.3
 const { test, expect } = require('@playwright/test');
+const { readFileSync } = require('node:fs');
+const expectedVersion = readFileSync('VERSION','utf8').trim();
 
 test('tienda Streaming muestra la experiencia de compra del cliente sin etiquetas demo', async ({ page }) => {
   await page.goto('/demo/');
@@ -94,7 +96,7 @@ test('panel carga recordatorios una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.15');
+  expect(body).toContain(`Streaming · Versión v${expectedVersion}`);
   const matches=body.match(/\.\/streaming-reminders\.js\?v=0800/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -114,7 +116,7 @@ test('panel carga agenda una sola vez', async ({ request }) => {
   const response = await request.get('/panel/');
   expect(response.ok()).toBeTruthy();
   const body = await response.text();
-  expect(body).toContain('Streaming · Versión v1.2.15');
+  expect(body).toContain(`Streaming · Versión v${expectedVersion}`);
   const matches=body.match(/\.\/streaming-agenda\.js\?v=0900/g)||[];
   expect(matches).toHaveLength(1);
 });
@@ -174,7 +176,7 @@ test('panel publica catálogo global y herramientas administrativas v1.2.0', asy
   const panelResponse = await request.get('/panel/');
   expect(panelResponse.ok()).toBeTruthy();
   const panel = await panelResponse.text();
-  expect(panel).toContain('Streaming · Versión v1.2.15');
+  expect(panel).toContain(`Streaming · Versión v${expectedVersion}`);
   expect(panel).toContain('./streaming.js?v=1202');
   expect(panel).toContain('./streaming-admin-tools.js?v=1200');
 
