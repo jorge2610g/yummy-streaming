@@ -8,6 +8,7 @@ if (!rootIndex.includes('new URL("demo/",location.href)') || !rootIndex.includes
 if (/location\.replace\('\/panel\/'\)|href="\/panel\/"|Landing comercial|Planes y precios|Mercado Pago|restaurante\/manager\/editor/i.test(rootIndex)) throw new Error('index.html raíz expone el panel real, documentación o contenido heredado');
 
 const panel = readFileSync('panel/index.html','utf8');
+const expectedVersion = readFileSync('VERSION','utf8').trim();
 const streaming = readFileSync('panel/streaming.js','utf8');
 const delivery = readFileSync('panel/streaming-delivery.js','utf8');
 const reminders = readFileSync('panel/streaming-reminders.js','utf8');
@@ -39,7 +40,7 @@ for (const [file,html] of [['panel/index.html',panel],['panel/demo.html',demo],[
 }
 
 for (const marker of [
-  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace','Streaming · Versión v1.2.15','create_my_trial_restaurant_v3','manifest.webmanifest','./streaming.js?v=1202','./streaming-admin-tools.js?v=1200','./streaming-delivery.js?v=0600','./streaming-reminders.js?v=0800','./streaming-agenda.js?v=0900'
+  'YummyPro Streaming','isStreamingBusiness()','streaming:{','streaming_subscriptions','streaming_customers','streaming_accounts','streaming_platforms','streaming_renewals','QR / Enlace',`Streaming · Versión v${expectedVersion}`,'create_my_trial_restaurant_v3','manifest.webmanifest','./streaming.js?v=1202','./streaming-admin-tools.js?v=1200','./streaming-delivery.js?v=0600','./streaming-reminders.js?v=0800','./streaming-agenda.js?v=0900'
 ]) if (!panel.includes(marker)) throw new Error(`panel/index.html: falta ${marker}`);
 const reminderScriptCount=(panel.match(/\.\/streaming-reminders\.js\?v=0800/g)||[]).length;
 if(reminderScriptCount!==1) throw new Error(`panel/index.html debe cargar streaming-reminders.js exactamente una vez; encontró ${reminderScriptCount}`);
